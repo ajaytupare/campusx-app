@@ -275,7 +275,7 @@ const UserProfile = () => {
           <div className="mb-6">
             <h1 className="text-2xl sm:text-3xl font-extrabold text-[var(--cx-text-main)] tracking-tight mb-1">{profileData.name || 'Anonymous Student'}</h1>
             <p className="text-[15px] sm:text-[16px] font-bold text-[var(--cx-text-muted)] mb-4">
-              {profileData.major || profileData.department || 'Undeclared Major'} • {profileData.college || 'Unknown College'}
+              {profileData.major || profileData.department || 'Undeclared Major'} &bull; {profileData.college || 'Unknown College'}
             </p>
             
             <p className="text-[14px] sm:text-[15px] text-[var(--cx-text-main)] font-medium leading-relaxed mb-5 max-w-3xl whitespace-pre-wrap">
@@ -285,7 +285,7 @@ const UserProfile = () => {
             <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-[13px] sm:text-[14px] font-semibold text-[var(--cx-text-muted)] mb-5">
               <div className="flex items-center gap-1.5">
                 <Calendar className="w-4 h-4 text-[var(--cx-primary)]" />
-                {profileData.year || 'Unknown Year'} • {profileData.semester || 'Unknown Semester'}
+                {profileData.year || 'Unknown Year'} &bull; {profileData.semester || 'Unknown Semester'}
               </div>
               <div className="flex items-center gap-1.5">
                 <MapPin className="w-4 h-4 text-[var(--cx-primary)]" />
