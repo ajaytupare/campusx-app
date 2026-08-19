@@ -43,10 +43,12 @@ const UserProfile = () => {
   
   // Edit Profile State
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [editName, setEditName] = useState(''); // Added name state
-  const [editAvatar, setEditAvatar] = useState(''); // Added avatar state
-  const [editCover, setEditCover] = useState(''); // Added cover state
+  const [editName, setEditName] = useState(''); 
+  const [editAvatar, setEditAvatar] = useState(''); 
+  const [editCover, setEditCover] = useState(''); 
   const [editMajor, setEditMajor] = useState('');
+  const [editCollege, setEditCollege] = useState('');
+  const [editSemester, setEditSemester] = useState('');
   const [editYear, setEditYear] = useState('');
   const [editBio, setEditBio] = useState('');
   const [editLocation, setEditLocation] = useState('');
@@ -63,6 +65,8 @@ const UserProfile = () => {
           avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80',
           cover: 'https://images.unsplash.com/photo-1557683316-973673baf926?auto=format&fit=crop&w=1200&q=80',
           major: 'Undeclared',
+          college: '',
+          semester: '',
           year: 'Class of 2027',
           bio: 'Just joined CampusX!',
           location: 'Campus',
@@ -85,6 +89,8 @@ const UserProfile = () => {
       setEditAvatar(storedProfile.avatar || '');
       setEditCover(storedProfile.cover || '');
       setEditMajor(storedProfile.major || storedProfile.department || '');
+      setEditCollege(storedProfile.college || '');
+      setEditSemester(storedProfile.semester || '');
       setEditYear(storedProfile.year || '');
       setEditBio(storedProfile.bio || '');
       setEditLocation(storedProfile.location || '');
@@ -138,6 +144,8 @@ const UserProfile = () => {
       avatar: sanitize(editAvatar),
       cover: sanitize(editCover),
       major: sanitize(editMajor),
+      college: sanitize(editCollege),
+      semester: sanitize(editSemester),
       year: sanitize(editYear),
       bio: sanitize(editBio),
       location: sanitize(editLocation)
@@ -273,8 +281,12 @@ const UserProfile = () => {
 
             <div className="flex flex-wrap items-center gap-6 text-[14px] font-semibold text-[var(--cx-text-muted)]">
               <div className="flex items-center gap-2">
+                <GraduationCap className="w-4 h-4 text-[var(--cx-primary)]" />
+                {profileData.college || 'Unknown College'}
+              </div>
+              <div className="flex items-center gap-2">
                 <Calendar className="w-4 h-4 text-[var(--cx-primary)]" />
-                {profileData.year || 'Unknown Year'}
+                {profileData.year || 'Unknown Year'} • {profileData.semester || 'Unknown Semester'}
               </div>
               <div className="flex items-center gap-2">
                 <MapPin className="w-4 h-4 text-[var(--cx-primary)]" />
@@ -369,10 +381,19 @@ const UserProfile = () => {
                   </label>
                 </div>
               </div>
-
+              
               <div className="flex gap-4 flex-col sm:flex-row">
                 <div className="flex-1">
-                  <label className="block text-[13px] font-bold text-[var(--cx-text-muted)] mb-1.5">Major</label>
+                  <label className="block text-[13px] font-bold text-[var(--cx-text-muted)] mb-1.5">College</label>
+                  <input 
+                    type="text" 
+                    value={editCollege}
+                    onChange={e => setEditCollege(e.target.value)}
+                    className="w-full bg-[var(--cx-bg-base)] border border-transparent rounded-[16px] px-4 py-3 text-[15px] outline-none transition-all focus:border-[var(--cx-primary)]/30 text-[var(--cx-text-main)] font-medium"
+                  />
+                </div>
+                <div className="flex-1">
+                  <label className="block text-[13px] font-bold text-[var(--cx-text-muted)] mb-1.5">Department / Major</label>
                   <input 
                     type="text" 
                     value={editMajor}
@@ -380,12 +401,24 @@ const UserProfile = () => {
                     className="w-full bg-[var(--cx-bg-base)] border border-transparent rounded-[16px] px-4 py-3 text-[15px] outline-none transition-all focus:border-[var(--cx-primary)]/30 text-[var(--cx-text-main)] font-medium"
                   />
                 </div>
+              </div>
+
+              <div className="flex gap-4 flex-col sm:flex-row">
                 <div className="flex-1">
-                  <label className="block text-[13px] font-bold text-[var(--cx-text-muted)] mb-1.5">Graduation Year</label>
+                  <label className="block text-[13px] font-bold text-[var(--cx-text-muted)] mb-1.5">Year</label>
                   <input 
                     type="text" 
                     value={editYear}
                     onChange={e => setEditYear(e.target.value)}
+                    className="w-full bg-[var(--cx-bg-base)] border border-transparent rounded-[16px] px-4 py-3 text-[15px] outline-none transition-all focus:border-[var(--cx-primary)]/30 text-[var(--cx-text-main)] font-medium"
+                  />
+                </div>
+                <div className="flex-1">
+                  <label className="block text-[13px] font-bold text-[var(--cx-text-muted)] mb-1.5">Semester</label>
+                  <input 
+                    type="text" 
+                    value={editSemester}
+                    onChange={e => setEditSemester(e.target.value)}
                     className="w-full bg-[var(--cx-bg-base)] border border-transparent rounded-[16px] px-4 py-3 text-[15px] outline-none transition-all focus:border-[var(--cx-primary)]/30 text-[var(--cx-text-main)] font-medium"
                   />
                 </div>
