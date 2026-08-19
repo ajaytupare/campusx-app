@@ -59,9 +59,12 @@ const Register = () => {
         year: formData.year,
         semester: formData.semester
       });
-      navigate('/verify-email');
+      // Redirect to home explicitly to prevent routing race conditions
+      window.location.href = '/home';
     } catch (err) {
-      setError(handleFirebaseError(err.code));
+      console.error("Registration Error:", err);
+      // Show exact message for debugging
+      setError(err.code ? handleFirebaseError(err.code) : err.message);
     } finally {
       setLoading(false);
     }

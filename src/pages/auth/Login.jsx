@@ -33,7 +33,9 @@ const Login = () => {
       await login(email, password);
       navigate('/home');
     } catch (err) {
-      setError(handleFirebaseError(err.code));
+      console.error("Login Error:", err);
+      // Show exact message for easier debugging
+      setError(err.code ? handleFirebaseError(err.code) : err.message);
     } finally {
       setLoading(false);
     }
