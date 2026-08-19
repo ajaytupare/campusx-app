@@ -4,7 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import { MessageSquare, UserPlus, MapPin, GraduationCap, Edit2, Clock, Calendar, Upload, Ghost } from 'lucide-react';
 import PostCard from '../../components/cards/PostCard'; // Added import for PostCard
 import { db } from '../../config/firebase';
-import { collection, query, where, getDocs, doc, updateDoc } from 'firebase/firestore';
+import { collection, query, where, getDocs, doc, updateDoc, setDoc } from 'firebase/firestore';
 
 // Mock other users on the platform
 const MOCK_OTHER_USERS = {
@@ -148,7 +148,7 @@ const UserProfile = () => {
       
       // Save to Firestore
       if (currentUser?.uid) {
-        await updateDoc(doc(db, 'users', currentUser.uid), updatedProfile);
+        await setDoc(doc(db, 'users', currentUser.uid), updatedProfile, { merge: true });
         
         // Note: For a production app, we would use a Cloud Function or Batch Write to update
         // all existing posts to reflect the new name. For this prototype, we'll just update 
