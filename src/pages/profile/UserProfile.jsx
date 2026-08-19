@@ -167,7 +167,33 @@ const UserProfile = () => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setFileState(reader.result);
+        // Compress image using canvas to ensure it fits in Firestore 1MB limit
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+          
+          // Max dimension 800px
+          const MAX_DIMENSION = 800;
+          if (width > height && width > MAX_DIMENSION) {
+            height *= MAX_DIMENSION / width;
+            width = MAX_DIMENSION;
+          } else if (height > MAX_DIMENSION) {
+            width *= MAX_DIMENSION / height;
+            height = MAX_DIMENSION;
+          }
+          
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          
+          // Export as JPEG with 0.7 quality to reduce size
+          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+          setFileState(compressedDataUrl);
+        };
+        img.src = reader.result;
       };
       reader.readAsDataURL(file);
     }
