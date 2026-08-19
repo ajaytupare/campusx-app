@@ -57,7 +57,12 @@ const Register = () => {
         college: formData.college,
         department: formData.department,
         year: formData.year,
-        semester: formData.semester
+        semester: formData.semester,
+        avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80',
+        cover: 'https://images.unsplash.com/photo-1557683316-973673baf926?auto=format&fit=crop&w=1200&q=80',
+        bio: 'Just joined CampusX!',
+        location: 'Campus',
+        friendsCount: 0
       });
       // Redirect to home explicitly to prevent routing race conditions
       window.location.href = '/home';

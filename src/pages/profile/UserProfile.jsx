@@ -336,7 +336,7 @@ const UserProfile = () => {
                 <div className="flex-1">
                   <label className="block text-[13px] font-bold text-[var(--cx-text-muted)] mb-1.5">Avatar Image</label>
                   <label className="w-full flex items-center justify-center gap-2 bg-[var(--cx-bg-base)] border border-dashed border-[var(--cx-text-muted)]/30 rounded-[16px] px-4 py-3 text-[15px] cursor-pointer hover:bg-zinc-200 transition-colors text-[var(--cx-text-main)] font-medium">
-                    <Upload className="w-4 h-4" /> {editAvatar.startsWith('data:') ? 'Image Selected' : 'Choose File'}
+                    <Upload className="w-4 h-4" /> {editAvatar?.startsWith('data:') ? 'Image Selected' : 'Choose File'}
                     <input 
                       type="file" 
                       accept="image/*"
@@ -348,7 +348,7 @@ const UserProfile = () => {
                 <div className="flex-1">
                   <label className="block text-[13px] font-bold text-[var(--cx-text-muted)] mb-1.5">Cover Image</label>
                   <label className="w-full flex items-center justify-center gap-2 bg-[var(--cx-bg-base)] border border-dashed border-[var(--cx-text-muted)]/30 rounded-[16px] px-4 py-3 text-[15px] cursor-pointer hover:bg-zinc-200 transition-colors text-[var(--cx-text-main)] font-medium">
-                    <Upload className="w-4 h-4" /> {editCover.startsWith('data:') ? 'Image Selected' : 'Choose File'}
+                    <Upload className="w-4 h-4" /> {editCover?.startsWith('data:') ? 'Image Selected' : 'Choose File'}
                     <input 
                       type="file" 
                       accept="image/*"
