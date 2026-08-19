@@ -242,14 +242,14 @@ const UserProfile = () => {
         {/* Profile Info Section */}
         <div className="px-6 sm:px-8 pb-8 relative">
           
-          <div className="flex justify-between items-center -mt-12 sm:-mt-16 mb-4">
-            {/* Avatar */}
-            <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-4 border-[var(--cx-bg-surface)] overflow-hidden bg-[var(--cx-bg-base)] shadow-md relative z-10 shrink-0">
-              <img src={profileData.avatar} alt={profileData.name} className="w-full h-full object-cover" />
-            </div>
+          {/* Avatar (Absolutely Positioned to overlap cover) */}
+          <div className="absolute -top-12 sm:-top-16 left-6 sm:left-8 w-24 h-24 sm:w-32 sm:h-32 rounded-full border-4 border-[var(--cx-bg-surface)] overflow-hidden bg-[var(--cx-bg-base)] shadow-md z-10 shrink-0">
+            <img src={profileData.avatar} alt={profileData.name} className="w-full h-full object-cover" />
+          </div>
 
-            {/* Instagram-style Stats */}
-            <div className="flex justify-around flex-1 ml-4 sm:ml-8 mt-12 sm:mt-16 z-10">
+          {/* Instagram-style Stats Bar */}
+          <div className="flex justify-end pt-4 sm:pt-6 mb-6 sm:mb-8">
+            <div className="flex justify-around w-[65%] sm:w-[70%]">
               <div className="flex flex-col items-center">
                 <span className="text-[18px] sm:text-[22px] font-extrabold text-[var(--cx-text-main)]">{userPosts.length}</span>
                 <span className="text-[12px] sm:text-[14px] font-semibold text-[var(--cx-text-muted)]">Posts</span>
