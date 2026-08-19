@@ -4,7 +4,7 @@ import CreatePost from '../components/forms/CreatePost';
 import PostCard from '../components/cards/PostCard';
 import { useAuth } from '../context/AuthContext';
 import { db } from '../config/firebase';
-import { collection, query, orderBy, onSnapshot } from 'firebase/firestore';
+import { collection, query, orderBy, onSnapshot, limit } from 'firebase/firestore';
 
 const Dashboard = () => {
   const [posts, setPosts] = useState([]);
@@ -12,7 +12,7 @@ const Dashboard = () => {
   const { userProfile } = useAuth();
 
   useEffect(() => {
-    const q = query(collection(db, 'posts'), orderBy('createdAt', 'desc'));
+    const q = query(collection(db, 'posts'), orderBy('createdAt', 'desc'), limit(50));
     
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const fetchedPosts = snapshot.docs.map(doc => ({

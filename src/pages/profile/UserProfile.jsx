@@ -4,7 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import { MessageSquare, UserPlus, MapPin, GraduationCap, Edit2, Clock, Calendar, Upload, Ghost } from 'lucide-react';
 import PostCard from '../../components/cards/PostCard'; // Added import for PostCard
 import { db } from '../../config/firebase';
-import { collection, query, where, getDocs, doc, updateDoc, setDoc } from 'firebase/firestore';
+import { collection, query, where, getDocs, doc, updateDoc, setDoc, limit } from 'firebase/firestore';
 
 // Mock other users on the platform
 const MOCK_OTHER_USERS = {
@@ -111,7 +111,8 @@ const UserProfile = () => {
         const q = query(
           collection(db, 'posts'),
           where('authorId', '==', profile.id),
-          where('isGhost', '==', false)
+          where('isGhost', '==', false),
+          limit(20)
         );
         const querySnapshot = await getDocs(q);
         const fetchedPosts = querySnapshot.docs.map(doc => ({
