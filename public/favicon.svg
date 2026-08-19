@@ -1,4 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
   <rect width="100" height="100" rx="24" fill="#412D15"/>
-  <text x="50" y="65" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="44" font-weight="900" fill="#E1DCC9" text-anchor="middle">CX</text>
+  <g stroke="#E1DCC9" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <!-- The "C" wrapping around the left -->
+    <path d="M 62 30 A 24 24 0 1 0 62 70" />
+    <!-- The "X" interlocking on the right -->
+    <path d="M 45 28 L 78 72" />
+    <path d="M 78 28 L 45 72" />
+  </g>
 </svg>
