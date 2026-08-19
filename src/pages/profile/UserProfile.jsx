@@ -133,75 +133,65 @@ const UserProfile = () => {
         </div>
 
         {/* Profile Info Section */}
-        <div className="px-6 sm:px-8 pb-8 relative">
+        <div className="px-8 pb-8 relative">
           
-          <div className="flex justify-between items-end mb-4 sm:mb-6">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end -mt-16 mb-6 gap-4">
             {/* Avatar */}
-            <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-full border-[6px] border-[var(--cx-bg-surface)] overflow-hidden bg-[var(--cx-bg-base)] shadow-md relative z-10 shrink-0 -mt-16 sm:-mt-20">
+            <div className="w-32 h-32 rounded-full border-4 border-[var(--cx-bg-surface)] overflow-hidden bg-[var(--cx-bg-base)] shadow-md relative z-10 shrink-0">
               <img src={profileData.avatar} alt={profileData.name} className="w-full h-full object-cover" />
             </div>
 
             {/* Action Buttons */}
-            <div className="flex gap-2">
+            <div className="flex items-center gap-3 w-full sm:w-auto">
               {isMe ? (
                 <Link 
                   to="/settings"
-                  className="px-5 py-2 bg-[var(--cx-bg-base)] border border-[var(--cx-text-muted)]/30 rounded-full font-bold text-[14px] text-[var(--cx-text-main)] hover:bg-zinc-200 transition-colors flex items-center justify-center gap-2"
+                  className="flex-1 sm:flex-none px-6 py-2.5 bg-[var(--cx-bg-base)] border border-[var(--cx-text-muted)]/20 rounded-[12px] font-bold text-[14px] text-[var(--cx-text-main)] hover:bg-zinc-200 transition-colors flex items-center justify-center gap-2"
                 >
                   <Edit2 className="w-4 h-4" /> Edit Profile
                 </Link>
               ) : (
                 <>
-                  <Link to="/chat" className="px-4 py-2 bg-[var(--cx-bg-base)] border border-[var(--cx-text-muted)]/30 rounded-full font-bold text-[14px] text-[var(--cx-text-main)] hover:bg-zinc-200 transition-colors flex items-center justify-center">
-                    <MessageSquare className="w-4 h-4" />
-                  </Link>
-                  <button className="px-6 py-2 bg-[var(--cx-primary)] text-white rounded-full font-bold text-[14px] hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2 shadow-sm shadow-indigo-500/20">
-                    <UserPlus className="w-4 h-4" /> Follow
+                  <button className="flex-1 sm:flex-none px-6 py-2.5 bg-[var(--cx-primary)] text-white rounded-[12px] font-bold text-[14px] hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2 shadow-sm shadow-indigo-500/20">
+                    <UserPlus className="w-4 h-4" /> Add Friend
                   </button>
+                  <Link to="/chat" className="flex-1 sm:flex-none px-6 py-2.5 bg-[var(--cx-bg-base)] border border-[var(--cx-text-muted)]/20 rounded-[12px] font-bold text-[14px] text-[var(--cx-text-main)] hover:bg-zinc-200 transition-colors flex items-center justify-center gap-2">
+                    <MessageSquare className="w-4 h-4" /> Message
+                  </Link>
                 </>
               )}
             </div>
           </div>
 
           {/* Details */}
-          <div className="mb-6">
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-[var(--cx-text-main)] tracking-tight mb-1">{profileData.name || 'Anonymous Student'}</h1>
-            <p className="text-[15px] sm:text-[16px] font-bold text-[var(--cx-text-muted)] mb-4">
-              {profileData.major || profileData.department || 'Undeclared Major'} &bull; {profileData.college || 'Unknown College'}
-            </p>
+          <div>
+            <h1 className="text-3xl font-extrabold text-[var(--cx-text-main)] tracking-tight mb-1">{profileData.name || 'Anonymous Student'}</h1>
+            <p className="text-[16px] font-bold text-[var(--cx-text-muted)] mb-4">{profileData.major || profileData.department || 'Undeclared Major'}</p>
             
-            <p className="text-[14px] sm:text-[15px] text-[var(--cx-text-main)] font-medium leading-relaxed mb-5 max-w-3xl whitespace-pre-wrap">
+            <p className="text-[15px] text-[var(--cx-text-main)] font-medium leading-relaxed mb-6 max-w-2xl whitespace-pre-wrap">
               {profileData.bio || 'This user hasn\'t written a bio yet.'}
             </p>
 
-            <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-[13px] sm:text-[14px] font-semibold text-[var(--cx-text-muted)] mb-5">
-              <div className="flex items-center gap-1.5">
+            <div className="flex flex-wrap items-center gap-6 text-[14px] font-semibold text-[var(--cx-text-muted)]">
+              <div className="flex items-center gap-2">
+                <GraduationCap className="w-4 h-4 text-[var(--cx-primary)]" />
+                {profileData.college || 'Unknown College'}
+              </div>
+              <div className="flex items-center gap-2">
                 <Calendar className="w-4 h-4 text-[var(--cx-primary)]" />
                 {profileData.year || 'Unknown Year'} &bull; {profileData.semester || 'Unknown Semester'}
               </div>
-              <div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-2">
                 <MapPin className="w-4 h-4 text-[var(--cx-primary)]" />
                 {profileData.location || 'Campus'}
               </div>
-            </div>
-
-            {/* Subtle Stats */}
-            <div className="flex items-center gap-6">
-              <div className="flex items-center gap-1.5 cursor-pointer hover:underline">
-                <span className="font-extrabold text-[var(--cx-text-main)] text-[16px]">{profileData.friendsCount || 0}</span>
-                <span className="text-[14px] font-medium text-[var(--cx-text-muted)]">Followers</span>
-              </div>
-              <div className="flex items-center gap-1.5 cursor-pointer hover:underline">
-                <span className="font-extrabold text-[var(--cx-text-main)] text-[16px]">{Math.floor((profileData.friendsCount || 0) * 0.8)}</span>
-                <span className="text-[14px] font-medium text-[var(--cx-text-muted)]">Following</span>
-              </div>
-              <div className="flex items-center gap-1.5 cursor-pointer hover:underline">
-                <span className="font-extrabold text-[var(--cx-text-main)] text-[16px]">{userPosts.length}</span>
-                <span className="text-[14px] font-medium text-[var(--cx-text-muted)]">Posts</span>
+              <div className="flex items-center gap-2">
+                <span className="font-extrabold text-[var(--cx-text-main)]">{profileData.friendsCount}</span> Friends
               </div>
             </div>
           </div>
-        </div>
+
+        </div>        </div>
       </div>
 
       {/* Recent Activity Feed */}
