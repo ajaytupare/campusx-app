@@ -52,9 +52,7 @@ const Dashboard = () => {
         </div>
 
         {/* Create Post */}
-        <CreatePost 
-          onPostCreated={fetchPosts}
-        />
+        <CreatePost />
 
         {/* Feed Posts */}
         <div className="space-y-4 pb-8">
