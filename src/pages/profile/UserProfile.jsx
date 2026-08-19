@@ -242,41 +242,46 @@ const UserProfile = () => {
         {/* Profile Info Section */}
         <div className="px-6 sm:px-8 pb-8 relative">
           
-          {/* Avatar (Absolutely Positioned to overlap cover) */}
-          <div className="absolute -top-12 sm:-top-16 left-6 sm:left-8 w-24 h-24 sm:w-32 sm:h-32 rounded-full border-4 border-[var(--cx-bg-surface)] overflow-hidden bg-[var(--cx-bg-base)] shadow-md z-10 shrink-0">
-            <img src={profileData.avatar} alt={profileData.name} className="w-full h-full object-cover" />
-          </div>
+          <div className="flex justify-between items-end mb-4 sm:mb-6">
+            {/* Avatar */}
+            <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-full border-[6px] border-[var(--cx-bg-surface)] overflow-hidden bg-[var(--cx-bg-base)] shadow-md relative z-10 shrink-0 -mt-16 sm:-mt-20">
+              <img src={profileData.avatar} alt={profileData.name} className="w-full h-full object-cover" />
+            </div>
 
-          {/* Instagram-style Stats Bar */}
-          <div className="flex justify-end pt-4 sm:pt-6 mb-6 sm:mb-8">
-            <div className="flex justify-around w-[65%] sm:w-[70%]">
-              <div className="flex flex-col items-center">
-                <span className="text-[18px] sm:text-[22px] font-extrabold text-[var(--cx-text-main)]">{userPosts.length}</span>
-                <span className="text-[12px] sm:text-[14px] font-semibold text-[var(--cx-text-muted)]">Posts</span>
-              </div>
-              <div className="flex flex-col items-center">
-                <span className="text-[18px] sm:text-[22px] font-extrabold text-[var(--cx-text-main)]">{profileData.friendsCount || 0}</span>
-                <span className="text-[12px] sm:text-[14px] font-semibold text-[var(--cx-text-muted)]">Followers</span>
-              </div>
-              <div className="flex flex-col items-center">
-                <span className="text-[18px] sm:text-[22px] font-extrabold text-[var(--cx-text-main)]">{Math.floor((profileData.friendsCount || 0) * 0.8)}</span>
-                <span className="text-[12px] sm:text-[14px] font-semibold text-[var(--cx-text-muted)]">Following</span>
-              </div>
+            {/* Action Buttons */}
+            <div className="flex gap-2">
+              {isMe ? (
+                <button 
+                  onClick={() => setIsEditModalOpen(true)}
+                  className="px-5 py-2 bg-[var(--cx-bg-base)] border border-[var(--cx-text-muted)]/30 rounded-full font-bold text-[14px] text-[var(--cx-text-main)] hover:bg-zinc-200 transition-colors flex items-center justify-center gap-2"
+                >
+                  <Edit2 className="w-4 h-4" /> Edit Profile
+                </button>
+              ) : (
+                <>
+                  <Link to="/chat" className="px-4 py-2 bg-[var(--cx-bg-base)] border border-[var(--cx-text-muted)]/30 rounded-full font-bold text-[14px] text-[var(--cx-text-main)] hover:bg-zinc-200 transition-colors flex items-center justify-center">
+                    <MessageSquare className="w-4 h-4" />
+                  </Link>
+                  <button className="px-6 py-2 bg-[var(--cx-primary)] text-white rounded-full font-bold text-[14px] hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2 shadow-sm shadow-indigo-500/20">
+                    <UserPlus className="w-4 h-4" /> Follow
+                  </button>
+                </>
+              )}
             </div>
           </div>
 
           {/* Details */}
           <div className="mb-6">
-            <h1 className="text-[20px] sm:text-2xl font-extrabold text-[var(--cx-text-main)] tracking-tight">{profileData.name || 'Anonymous Student'}</h1>
-            <p className="text-[14px] sm:text-[15px] font-bold text-[var(--cx-text-muted)] mb-2">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-[var(--cx-text-main)] tracking-tight mb-1">{profileData.name || 'Anonymous Student'}</h1>
+            <p className="text-[15px] sm:text-[16px] font-bold text-[var(--cx-text-muted)] mb-4">
               {profileData.major || profileData.department || 'Undeclared Major'} • {profileData.college || 'Unknown College'}
             </p>
             
-            <p className="text-[14px] sm:text-[15px] text-[var(--cx-text-main)] font-medium leading-relaxed mb-3 whitespace-pre-wrap">
+            <p className="text-[14px] sm:text-[15px] text-[var(--cx-text-main)] font-medium leading-relaxed mb-5 max-w-3xl whitespace-pre-wrap">
               {profileData.bio || 'This user hasn\'t written a bio yet.'}
             </p>
 
-            <div className="flex flex-wrap items-center gap-4 text-[13px] sm:text-[14px] font-semibold text-[var(--cx-text-muted)]">
+            <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-[13px] sm:text-[14px] font-semibold text-[var(--cx-text-muted)] mb-5">
               <div className="flex items-center gap-1.5">
                 <Calendar className="w-4 h-4 text-[var(--cx-primary)]" />
                 {profileData.year || 'Unknown Year'} • {profileData.semester || 'Unknown Semester'}
@@ -286,27 +291,22 @@ const UserProfile = () => {
                 {profileData.location || 'Campus'}
               </div>
             </div>
-          </div>
 
-          {/* Action Buttons (Instagram Style Full Width) */}
-          <div className="flex items-center gap-2 w-full">
-            {isMe ? (
-              <button 
-                onClick={() => setIsEditModalOpen(true)}
-                className="flex-1 px-4 py-2 bg-[var(--cx-bg-base)] border border-[var(--cx-text-muted)]/20 rounded-[12px] font-bold text-[14px] text-[var(--cx-text-main)] hover:bg-zinc-200 transition-colors flex items-center justify-center gap-2"
-              >
-                <Edit2 className="w-4 h-4" /> Edit Profile
-              </button>
-            ) : (
-              <>
-                <button className="flex-1 px-4 py-2 bg-[var(--cx-primary)] text-white rounded-[12px] font-bold text-[14px] hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2 shadow-sm shadow-indigo-500/20">
-                  <UserPlus className="w-4 h-4" /> Follow
-                </button>
-                <Link to="/chat" className="flex-1 px-4 py-2 bg-[var(--cx-bg-base)] border border-[var(--cx-text-muted)]/20 rounded-[12px] font-bold text-[14px] text-[var(--cx-text-main)] hover:bg-zinc-200 transition-colors flex items-center justify-center gap-2">
-                  <MessageSquare className="w-4 h-4" /> Message
-                </Link>
-              </>
-            )}
+            {/* Subtle Stats */}
+            <div className="flex items-center gap-6">
+              <div className="flex items-center gap-1.5 cursor-pointer hover:underline">
+                <span className="font-extrabold text-[var(--cx-text-main)] text-[16px]">{profileData.friendsCount || 0}</span>
+                <span className="text-[14px] font-medium text-[var(--cx-text-muted)]">Followers</span>
+              </div>
+              <div className="flex items-center gap-1.5 cursor-pointer hover:underline">
+                <span className="font-extrabold text-[var(--cx-text-main)] text-[16px]">{Math.floor((profileData.friendsCount || 0) * 0.8)}</span>
+                <span className="text-[14px] font-medium text-[var(--cx-text-muted)]">Following</span>
+              </div>
+              <div className="flex items-center gap-1.5 cursor-pointer hover:underline">
+                <span className="font-extrabold text-[var(--cx-text-main)] text-[16px]">{userPosts.length}</span>
+                <span className="text-[14px] font-medium text-[var(--cx-text-muted)]">Posts</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
