@@ -26,7 +26,9 @@ export const AuthProvider = ({ children }) => {
           const docRef = doc(db, 'users', user.uid);
           const docSnap = await getDoc(docRef);
           if (docSnap.exists()) {
-            setUserProfile(docSnap.data());
+            const data = docSnap.data();
+            setUserProfile(data);
+            localStorage.setItem('cx_current_user_profile', JSON.stringify(data));
           }
         } catch (error) {
           console.error("Error fetching user profile:", error);
@@ -34,6 +36,7 @@ export const AuthProvider = ({ children }) => {
       } else {
         setCurrentUser(null);
         setUserProfile(null);
+        localStorage.removeItem('cx_current_user_profile');
       }
       setLoading(false);
     });
@@ -49,7 +52,9 @@ export const AuthProvider = ({ children }) => {
     const docRef = doc(db, 'users', user.uid);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
-      setUserProfile(docSnap.data());
+      const data = docSnap.data();
+      setUserProfile(data);
+      localStorage.setItem('cx_current_user_profile', JSON.stringify(data));
     }
     
     return userCredential;
@@ -61,18 +66,21 @@ export const AuthProvider = ({ children }) => {
 
     // Create user profile document in Firestore
     const newProfile = {
+      id: user.uid,
       ...profileData,
       createdAt: new Date().toISOString()
     };
     
     await setDoc(doc(db, 'users', user.uid), newProfile);
     setUserProfile(newProfile);
+    localStorage.setItem('cx_current_user_profile', JSON.stringify(newProfile));
     
     return userCredential;
   };
 
   const logout = async () => {
     await signOut(auth);
+    localStorage.removeItem('cx_current_user_profile');
   };
 
   const value = {
