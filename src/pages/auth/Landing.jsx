@@ -6,18 +6,18 @@ const Landing = () => {
     <div className="min-h-screen bg-[var(--cx-bg-base)] flex flex-col font-sans overflow-hidden">
       
       {/* Navbar */}
-      <nav className="w-full flex justify-between items-center px-6 md:px-12 py-6 max-w-7xl mx-auto relative z-20">
-        <div className="flex items-center gap-2">
+      <nav className="w-full flex justify-between items-center px-4 md:px-12 py-6 max-w-7xl mx-auto relative z-20 gap-4 flex-wrap">
+        <div className="flex items-center gap-2 shrink-0">
           <div className="w-8 h-8 bg-[var(--cx-primary)] rounded-[10px] flex items-center justify-center shrink-0">
             <span className="text-white font-extrabold text-lg">C</span>
           </div>
-          <h1 className="text-2xl font-extrabold tracking-tight text-[var(--cx-text-main)] leading-none">CampusX</h1>
+          <h1 className="text-xl md:text-2xl font-extrabold tracking-tight text-[var(--cx-text-main)] leading-none">CampusX</h1>
         </div>
-        <div className="flex items-center gap-4 md:gap-6">
+        <div className="flex items-center gap-3 md:gap-6 shrink-0">
           <Link to="/login" className="text-[var(--cx-text-main)] font-semibold hover:text-[var(--cx-primary)] transition-colors text-[14px] md:text-[15px]">
             Log in
           </Link>
-          <Link to="/register" className="px-5 py-2.5 bg-[var(--cx-text-main)] text-[var(--cx-bg-surface)] font-bold rounded-[16px] hover:bg-black transition-colors text-[14px] md:text-[15px]">
+          <Link to="/register" className="px-4 md:px-5 py-2 md:py-2.5 bg-[var(--cx-text-main)] text-[var(--cx-bg-surface)] font-bold rounded-[16px] hover:bg-black transition-colors text-[14px] md:text-[15px]">
             Join CampusX
           </Link>
         </div>
