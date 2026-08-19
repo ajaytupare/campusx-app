@@ -128,16 +128,27 @@ const UserProfile = () => {
 
   const handleSaveProfile = async (e) => {
     e.preventDefault();
-    const updatedProfile = {
+    
+    // Firestore strictly rejects 'undefined' values. We must sanitize them.
+    const sanitize = (val) => val === undefined ? null : val;
+    
+    let updatedProfile = {
       ...profileData,
-      name: editName,
-      avatar: editAvatar,
-      cover: editCover,
-      major: editMajor,
-      year: editYear,
-      bio: editBio,
-      location: editLocation
+      name: sanitize(editName),
+      avatar: sanitize(editAvatar),
+      cover: sanitize(editCover),
+      major: sanitize(editMajor),
+      year: sanitize(editYear),
+      bio: sanitize(editBio),
+      location: sanitize(editLocation)
     };
+    
+    // Deep strip any undefined values that might have sneaked in from profileData
+    Object.keys(updatedProfile).forEach(key => {
+      if (updatedProfile[key] === undefined) {
+        updatedProfile[key] = null;
+      }
+    });
     
     setProfileData(updatedProfile);
     
@@ -156,7 +167,7 @@ const UserProfile = () => {
       }
     } catch (err) {
       console.warn("Could not save profile properly.", err);
-      alert("Profile updated locally, but failed to sync to database.");
+      alert("Database Sync Failed: " + err.message);
     }
     
     setIsEditModalOpen(false);
