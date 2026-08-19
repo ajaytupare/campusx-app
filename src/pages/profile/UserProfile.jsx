@@ -80,14 +80,14 @@ const UserProfile = () => {
       setProfileData(storedProfile);
       currentProfile = storedProfile;
       
-      // Init edit form
-      setEditName(storedProfile.name);
-      setEditAvatar(storedProfile.avatar);
-      setEditCover(storedProfile.cover);
-      setEditMajor(storedProfile.major);
-      setEditYear(storedProfile.year);
-      setEditBio(storedProfile.bio);
-      setEditLocation(storedProfile.location);
+      // Init edit form with fallbacks to prevent undefined wiping data
+      setEditName(storedProfile.name || '');
+      setEditAvatar(storedProfile.avatar || '');
+      setEditCover(storedProfile.cover || '');
+      setEditMajor(storedProfile.major || storedProfile.department || '');
+      setEditYear(storedProfile.year || '');
+      setEditBio(storedProfile.bio || '');
+      setEditLocation(storedProfile.location || '');
     } else {
       // Load another user's profile
       const user = MOCK_OTHER_USERS[userId];
@@ -264,21 +264,21 @@ const UserProfile = () => {
 
           {/* Details */}
           <div>
-            <h1 className="text-3xl font-extrabold text-[var(--cx-text-main)] tracking-tight mb-1">{profileData.name}</h1>
-            <p className="text-[16px] font-bold text-[var(--cx-text-muted)] mb-4">{profileData.major}</p>
+            <h1 className="text-3xl font-extrabold text-[var(--cx-text-main)] tracking-tight mb-1">{profileData.name || 'Anonymous Student'}</h1>
+            <p className="text-[16px] font-bold text-[var(--cx-text-muted)] mb-4">{profileData.major || profileData.department || 'Undeclared Major'}</p>
             
             <p className="text-[15px] text-[var(--cx-text-main)] font-medium leading-relaxed mb-6 max-w-2xl">
-              {profileData.bio}
+              {profileData.bio || 'This user hasn\'t written a bio yet.'}
             </p>
 
             <div className="flex flex-wrap items-center gap-6 text-[14px] font-semibold text-[var(--cx-text-muted)]">
               <div className="flex items-center gap-2">
                 <Calendar className="w-4 h-4 text-[var(--cx-primary)]" />
-                {profileData.year}
+                {profileData.year || 'Unknown Year'}
               </div>
               <div className="flex items-center gap-2">
                 <MapPin className="w-4 h-4 text-[var(--cx-primary)]" />
-                {profileData.location}
+                {profileData.location || 'Campus'}
               </div>
               <div className="flex items-center gap-2">
                 <span className="font-extrabold text-[var(--cx-text-main)]">{profileData.friendsCount}</span> Friends
