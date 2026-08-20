@@ -2,7 +2,7 @@
 
 @theme {
   /* Apple System Fonts */
-  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", "Segoe UI", Arial, sans-serif;
 
   /* Colors */
   --color-primary: var(--cx-primary);
@@ -20,22 +20,24 @@
 @layer base {
   :root {
     /* Apple Human Interface Guidelines Palette */
-    --cx-primary: #0071E3; /* Apple System Blue */
-    --cx-accent: #0077ED; 
+    --cx-primary: #0071E3;
+    --cx-accent: #0077ED;
     
     /* Ghost mode (Siri-esque purples) */
-    --cx-ghost-start: #5E5CE6; 
-    --cx-ghost-end: #AF52DE; 
+    --cx-ghost-start: #5E5CE6;
+    --cx-ghost-end: #AF52DE;
     
     /* Light Theme */
-    --cx-bg-base: #F5F5F7; /* Apple's standard device background */
-    --cx-bg-surface: #FFFFFF; /* Pure white */
+    --cx-bg-base: #F5F5F7;
+    --cx-bg-surface: #FFFFFF;
     
-    --cx-text-main: #1D1D1F; /* Apple's near-black */
-    --cx-text-muted: #86868B; /* Apple's secondary gray */
+    --cx-text-main: #1D1D1F;
+    --cx-text-muted: #86868B;
   }
+}
 
-  
+* {
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -44,10 +46,12 @@ body {
   background-color: var(--cx-bg-base);
   color: var(--cx-text-main);
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Custom Scrollbar */
+/* Apple-style invisible scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -56,9 +60,11 @@ body {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--cx-text-muted);
-  opacity: 0.2;
+  background: rgba(0, 0, 0, 0.15);
   border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.25);
 }
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
@@ -68,13 +74,19 @@ body {
   scrollbar-width: none;
 }
 
-
-
+/* Apple-style selection */
+::selection {
+  background: rgba(0, 113, 227, 0.2);
+  color: #1D1D1F;
+}
 
 .dark-theme {
-  --cx-bg-base: #2a1d0d;
-  --cx-bg-surface: #382813;
-  --cx-text-main: #E1DCC9;
-  --cx-text-muted: #a39278;
-  --cx-primary: #8a6c4c;
+  --cx-bg-base: #000000;
+  --cx-bg-surface: #1C1C1E;
+  --cx-text-main: #F5F5F7;
+  --cx-text-muted: #98989D;
+  --cx-primary: #0A84FF;
+  --cx-accent: #0A84FF;
+  --cx-ghost-start: #5E5CE6;
+  --cx-ghost-end: #BF5AF2;
 }

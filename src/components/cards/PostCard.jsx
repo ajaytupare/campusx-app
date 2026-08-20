@@ -21,38 +21,38 @@ const PostCard = ({ post }) => {
   const timeAgo = getRelativeTime(createdAt);
 
   return (
-    <div className="bg-[var(--cx-bg-surface)] rounded-[24px] p-5 shadow-sm border border-black/5 hover:shadow-md transition-shadow">
+    <div className="bg-white rounded-2xl p-5 shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-black/[0.04] hover:shadow-[0_4px_16px_rgba(0,0,0,0.06)] transition-all duration-300">
       
       {/* Post Header */}
-      <div className="flex justify-between items-start mb-3">
+      <div className="flex justify-between items-start mb-3.5">
         <div className="flex items-center gap-3">
-          <div className={`w-11 h-11 rounded-2xl flex items-center justify-center overflow-hidden shrink-0 border border-black/5
-            ${isGhost ? 'bg-zinc-900 text-xl' : 'bg-[var(--cx-bg-base)]'}`}>
-            {isGhost ? '👻' : (
-              <span className="font-bold text-[var(--cx-primary)] text-sm">
+          <div className={`w-10 h-10 rounded-full flex items-center justify-center overflow-hidden shrink-0
+            ${isGhost ? 'bg-[#1D1D1F] text-lg' : 'bg-[#F5F5F7]'}`}>
+            {isGhost ? '\uD83D\uDC7B' : (
+              <span className="font-semibold text-[#0071E3] text-[14px]">
                 {displayAuthor.charAt(0)}
               </span>
             )}
           </div>
           <div>
-            <h4 className="font-bold text-[14px] text-[var(--cx-text-main)] flex items-center gap-2 leading-tight">
+            <h4 className="font-semibold text-[15px] text-[#1D1D1F] flex items-center gap-2 leading-tight">
               {displayAuthor}
               {isGhost && (
-                <span className="bg-[var(--cx-ghost-start)]/10 text-[var(--cx-ghost-start)] text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded-md font-bold">
+                <span className="bg-[#5E5CE6]/[0.08] text-[#5E5CE6] text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full font-semibold">
                   Incognito
                 </span>
               )}
             </h4>
-            <span className="text-[11px] font-semibold text-[var(--cx-text-muted)]">{timeAgo}</span>
+            <span className="text-[12px] font-medium text-[#86868B]">{timeAgo}</span>
           </div>
         </div>
-        <button className="text-[var(--cx-text-muted)] hover:bg-[var(--cx-bg-base)] hover:text-[var(--cx-text-main)] p-2 rounded-full transition-colors">
-          <MoreHorizontal className="w-5 h-5" />
+        <button className="text-[#86868B] hover:bg-black/[0.04] hover:text-[#1D1D1F] p-2 rounded-full transition-all duration-200">
+          <MoreHorizontal className="w-[18px] h-[18px]" />
         </button>
       </div>
 
       {/* Post Content */}
-      <p className="text-[14px] text-[var(--cx-text-main)] leading-relaxed font-medium mb-4 whitespace-pre-wrap">
+      <p className="text-[15px] text-[#1D1D1F] leading-relaxed font-normal mb-4 whitespace-pre-wrap">
         {content}
       </p>
 
@@ -60,7 +60,7 @@ const PostCard = ({ post }) => {
       {tags && tags.length > 0 && (
         <div className="flex gap-2 mb-4 flex-wrap">
           {tags.map(tag => (
-            <span key={tag} className="font-mono text-[11px] font-bold px-2 py-1 rounded-lg bg-[var(--cx-primary)]/10 text-[var(--cx-primary)]">
+            <span key={tag} className="text-[12px] font-medium px-3 py-1 rounded-full bg-[#0071E3]/[0.07] text-[#0071E3]">
               {tag}
             </span>
           ))}
@@ -68,24 +68,19 @@ const PostCard = ({ post }) => {
       )}
 
       {/* Action Buttons */}
-      <div className="flex items-center justify-between pt-3 border-t border-black/5">
-        <div className="flex gap-4">
-          <button className="flex items-center gap-1.5 text-[var(--cx-text-muted)] hover:text-pink-500 transition-colors group font-bold text-[12px]">
-            <div className="p-1.5 rounded-full group-hover:bg-pink-50 transition-colors">
-              {isGhost ? <Flame className="w-4 h-4" /> : <Heart className="w-4 h-4" />}
-            </div>
+      <div className="flex items-center justify-between pt-3.5">
+        <div className="h-px bg-black/[0.04] absolute left-5 right-5"></div>
+        <div className="flex gap-1">
+          <button className="flex items-center gap-1.5 text-[#86868B] hover:text-[#FF2D55] transition-all duration-200 group font-medium text-[13px] px-3 py-1.5 rounded-full hover:bg-[#FF2D55]/[0.06]">
+            {isGhost ? <Flame className="w-[16px] h-[16px]" /> : <Heart className="w-[16px] h-[16px]" />}
             {likes || 0}
           </button>
-          <button className="flex items-center gap-1.5 text-[var(--cx-text-muted)] hover:text-[var(--cx-accent)] transition-colors group font-bold text-[12px]">
-            <div className="p-1.5 rounded-full group-hover:bg-sky-50 transition-colors">
-              <MessageCircle className="w-4 h-4" />
-            </div>
+          <button className="flex items-center gap-1.5 text-[#86868B] hover:text-[#0071E3] transition-all duration-200 group font-medium text-[13px] px-3 py-1.5 rounded-full hover:bg-[#0071E3]/[0.06]">
+            <MessageCircle className="w-[16px] h-[16px]" />
             {commentsCount || 0}
           </button>
-          <button className="flex items-center gap-1.5 text-[var(--cx-text-muted)] hover:text-green-500 transition-colors group font-bold text-[12px]">
-            <div className="p-1.5 rounded-full group-hover:bg-green-50 transition-colors">
-              <Repeat2 className="w-4 h-4" />
-            </div>
+          <button className="flex items-center gap-1.5 text-[#86868B] hover:text-[#34C759] transition-all duration-200 group font-medium text-[13px] px-3 py-1.5 rounded-full hover:bg-[#34C759]/[0.06]">
+            <Repeat2 className="w-[16px] h-[16px]" />
           </button>
         </div>
       </div>

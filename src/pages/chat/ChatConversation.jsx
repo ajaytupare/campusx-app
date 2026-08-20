@@ -97,13 +97,13 @@ const ChatConversation = () => {
         <div className="w-24 h-24 bg-[var(--cx-ghost-start)]/10 rounded-[32px] flex items-center justify-center mb-6">
           <Ghost className="w-12 h-12 text-[var(--cx-ghost-start)]" />
         </div>
-        <h1 className="text-3xl font-extrabold text-[var(--cx-text-main)] tracking-tight mb-4">
+        <h1 className="text-3xl font-semibold text-[var(--cx-text-main)] tracking-tight mb-4">
           Chat is Disabled
         </h1>
         <p className="text-[var(--cx-text-muted)] text-[16px] font-medium leading-relaxed max-w-md mb-8">
           You cannot read or reply to direct messages while operating as a Ghost. Your conversations are securely locked.
         </p>
-        <Link to="/chat" className="px-6 py-3 bg-[var(--cx-bg-surface)] text-[var(--cx-text-main)] rounded-xl font-bold border border-zinc-200 hover:bg-[var(--cx-bg-base)] transition-colors">
+        <Link to="/chat" className="px-6 py-3 bg-[var(--cx-bg-surface)] text-[var(--cx-text-main)] rounded-xl font-bold border border-black/[0.04] hover:bg-[var(--cx-bg-base)] transition-colors">
           Return to Inbox
         </Link>
       </div>
@@ -111,10 +111,10 @@ const ChatConversation = () => {
   }
 
   return (
-    <div className="flex flex-col w-full h-[calc(100vh-48px)] max-w-4xl mx-auto m-6 bg-[var(--cx-bg-surface)] rounded-[24px] shadow-sm border border-zinc-200 overflow-hidden">
+    <div className="flex flex-col w-full h-[calc(100vh-48px)] max-w-4xl mx-auto m-6 bg-[var(--cx-bg-surface)] rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-black/[0.04] overflow-hidden">
       
       {/* Header */}
-      <div className="p-4 border-b border-zinc-200 flex items-center gap-4 bg-[var(--cx-bg-surface)] z-10 shadow-sm">
+      <div className="p-4 border-b border-black/[0.04] flex items-center gap-4 bg-[var(--cx-bg-surface)] z-10 shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
         <Link to="/chat" className="p-2 rounded-xl text-[var(--cx-text-muted)] hover:bg-[var(--cx-bg-base)] transition-colors">
           <ArrowLeft className="w-5 h-5" />
         </Link>
@@ -123,7 +123,7 @@ const ChatConversation = () => {
             {otherUser.name.charAt(0)}
           </div>
           <div>
-            <h2 className="text-[16px] font-extrabold text-[var(--cx-text-main)] leading-tight">{otherUser.name}</h2>
+            <h2 className="text-[16px] font-semibold text-[var(--cx-text-main)] leading-tight">{otherUser.name}</h2>
             <span className="text-[12px] font-bold text-green-500">Online</span>
           </div>
         </div>
@@ -149,8 +149,8 @@ const ChatConversation = () => {
               
               <div className={`max-w-[70%] rounded-[20px] px-4 py-2.5 text-[15px] font-medium leading-relaxed
                 ${isMe 
-                  ? 'bg-[var(--cx-primary)] text-white rounded-br-sm shadow-sm shadow-indigo-500/20' 
-                  : 'bg-white border border-zinc-200 text-[var(--cx-text-main)] rounded-bl-sm shadow-sm'}`}>
+                  ? 'bg-[var(--cx-primary)] text-white rounded-br-sm shadow-[0_2px_8px_rgba(0,0,0,0.04)] shadow-indigo-500/20' 
+                  : 'bg-white border border-black/[0.04] text-[var(--cx-text-main)] rounded-bl-sm shadow-[0_2px_8px_rgba(0,0,0,0.04)]'}`}>
                 {msg.text}
               </div>
             </div>
@@ -160,7 +160,7 @@ const ChatConversation = () => {
       </div>
 
       {/* Input Area */}
-      <div className="p-4 bg-[var(--cx-bg-surface)] border-t border-zinc-200">
+      <div className="p-4 bg-[var(--cx-bg-surface)] border-t border-black/[0.04]">
         <form onSubmit={handleSend} className="flex items-end gap-2 relative">
           <button type="button" className="p-3 text-[var(--cx-text-muted)] hover:bg-[var(--cx-bg-base)] rounded-xl transition-colors shrink-0 mb-0.5">
             <ImageIcon className="w-5 h-5" />

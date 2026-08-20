@@ -113,55 +113,55 @@ const UserProfile = () => {
 
   if (!profileData) {
     return (
-      <div className="flex flex-col items-center justify-center h-full w-full p-8 text-center bg-[var(--cx-bg-surface)] rounded-[24px] shadow-sm border border-[var(--cx-text-muted)]/10">
-        <h2 className="text-2xl font-bold text-[var(--cx-text-main)] mb-2">User Not Found</h2>
-        <p className="text-[var(--cx-text-muted)] font-medium">This profile doesn't exist or has been deleted.</p>
+      <div className="flex flex-col items-center justify-center h-full w-full p-8 text-center bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-black/[0.04]">
+        <h2 className="text-[22px] font-semibold text-[#1D1D1F] mb-2">User Not Found</h2>
+        <p className="text-[15px] font-normal text-[#86868B]">This profile doesn't exist or has been deleted.</p>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col w-full h-full max-w-[1050px] mx-auto gap-6 pb-12">
+    <div className="flex flex-col w-full h-full max-w-[980px] mx-auto gap-5 pb-12">
       
       {/* Profile Header Card */}
-      <div className="bg-white rounded-b-[24px] overflow-hidden shadow-sm border border-black/5">
+      <div className="bg-white rounded-2xl overflow-hidden shadow-[0_2px_10px_rgba(0,0,0,0.06)] border border-black/[0.04]">
         
         {/* Cover Photo */}
-        <div className="h-48 sm:h-72 lg:h-80 w-full relative bg-zinc-100">
+        <div className="h-44 sm:h-64 lg:h-72 w-full relative bg-[#F5F5F7]">
           <img src={profileData.cover} alt="Cover" className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
         </div>
 
         {/* Profile Header Info */}
-        <div className="px-4 sm:px-8 relative">
+        <div className="px-5 sm:px-8 relative">
           
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end -mt-12 sm:-mt-20 mb-4 gap-4">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end -mt-14 sm:-mt-20 mb-4 gap-4">
             
             <div className="flex flex-col sm:flex-row items-start sm:items-end gap-4 sm:gap-6 z-10 w-full">
               {/* Avatar */}
-              <div className="w-32 h-32 sm:w-[168px] sm:h-[168px] rounded-full border-4 border-white overflow-hidden bg-zinc-100 shadow-sm shrink-0">
+              <div className="w-28 h-28 sm:w-[152px] sm:h-[152px] rounded-full border-[3px] border-white overflow-hidden bg-[#F5F5F7] shadow-[0_2px_12px_rgba(0,0,0,0.1)] shrink-0">
                 <img src={profileData.avatar} alt={profileData.name} className="w-full h-full object-cover" />
               </div>
               
               {/* Name & Basic Info */}
-              <div className="flex-1 pb-2 sm:pb-6 w-full">
-                <h1 className="text-[32px] font-black text-zinc-900 tracking-tight leading-none mb-2">{profileData.name || 'Anonymous Student'}</h1>
-                <p className="text-[15px] font-bold text-zinc-500">
-                  <span className="text-zinc-900">{profileData.friendsCount}</span> friends
+              <div className="flex-1 pb-2 sm:pb-5 w-full">
+                <h1 className="text-[28px] sm:text-[34px] font-bold text-[#1D1D1F] tracking-tight leading-tight mb-1">{profileData.name || 'Anonymous Student'}</h1>
+                <p className="text-[15px] font-medium text-[#86868B]">
+                  <span className="text-[#1D1D1F] font-semibold">{profileData.friendsCount}</span> friends
                 </p>
                 
                 {/* Mobile action buttons */}
-                <div className="flex items-center gap-2 mt-4 sm:hidden w-full">
+                <div className="flex items-center gap-2.5 mt-4 sm:hidden w-full">
                   {isMe ? (
-                    <Link to="/settings" className="flex-1 py-2.5 bg-zinc-100 rounded-[8px] font-bold text-[14px] text-zinc-900 text-center flex items-center justify-center gap-2">
+                    <Link to="/settings" className="flex-1 py-2.5 bg-[#F5F5F7] rounded-full font-semibold text-[14px] text-[#1D1D1F] text-center flex items-center justify-center gap-2 hover:bg-black/[0.08] transition-all duration-200">
                       <Edit2 className="w-4 h-4" /> Edit Profile
                     </Link>
                   ) : (
                     <>
-                      <button className="flex-1 py-2.5 bg-blue-600 text-white rounded-[8px] font-bold text-[14px] flex items-center justify-center gap-2 shadow-sm shadow-blue-500/20">
+                      <button className="flex-1 py-2.5 bg-[#0071E3] text-white rounded-full font-semibold text-[14px] flex items-center justify-center gap-2 hover:bg-[#0077ED] transition-all duration-200">
                         <UserPlus className="w-4 h-4" /> Add Friend
                       </button>
-                      <Link to="/chat" className="flex-1 py-2.5 bg-zinc-100 rounded-[8px] font-bold text-[14px] text-zinc-900 text-center flex items-center justify-center gap-2">
+                      <Link to="/chat" className="flex-1 py-2.5 bg-[#F5F5F7] rounded-full font-semibold text-[14px] text-[#1D1D1F] text-center flex items-center justify-center gap-2 hover:bg-black/[0.08] transition-all duration-200">
                         <MessageSquare className="w-4 h-4" /> Message
                       </Link>
                     </>
@@ -171,20 +171,20 @@ const UserProfile = () => {
             </div>
 
             {/* Desktop Action Buttons */}
-            <div className="hidden sm:flex items-center gap-3 pb-6 shrink-0">
+            <div className="hidden sm:flex items-center gap-2.5 pb-5 shrink-0">
               {isMe ? (
                 <Link 
                   to="/settings"
-                  className="px-5 py-2.5 bg-zinc-100 rounded-[8px] font-bold text-[14px] text-zinc-900 hover:bg-zinc-200 transition-colors flex items-center gap-2 shadow-sm"
+                  className="px-5 py-2.5 bg-[#F5F5F7] rounded-full font-semibold text-[14px] text-[#1D1D1F] hover:bg-black/[0.08] transition-all duration-200 flex items-center gap-2"
                 >
                   <Edit2 className="w-4 h-4" /> Edit Profile
                 </Link>
               ) : (
                 <>
-                  <button className="px-5 py-2.5 bg-blue-600 text-white rounded-[8px] font-bold text-[14px] hover:bg-blue-700 transition-colors flex items-center gap-2 shadow-sm shadow-blue-500/20">
+                  <button className="px-5 py-2.5 bg-[#0071E3] text-white rounded-full font-semibold text-[14px] hover:bg-[#0077ED] transition-all duration-200 flex items-center gap-2">
                     <UserPlus className="w-4 h-4" /> Add Friend
                   </button>
-                  <Link to="/chat" className="px-5 py-2.5 bg-zinc-100 rounded-[8px] font-bold text-[14px] text-zinc-900 hover:bg-zinc-200 transition-colors flex items-center gap-2 shadow-sm">
+                  <Link to="/chat" className="px-5 py-2.5 bg-[#F5F5F7] rounded-full font-semibold text-[14px] text-[#1D1D1F] hover:bg-black/[0.08] transition-all duration-200 flex items-center gap-2">
                     <MessageSquare className="w-4 h-4" /> Message
                   </Link>
                 </>
@@ -192,76 +192,76 @@ const UserProfile = () => {
             </div>
           </div>
 
-          <div className="w-full h-px bg-zinc-200/60 mt-2"></div>
+          <div className="w-full h-px bg-black/[0.04] mt-1"></div>
 
-          {/* Facebook-style Tabs */}
+          {/* Tabs */}
           <div className="flex items-center overflow-x-auto hide-scrollbar">
-            <button className="px-6 py-4 text-[15px] font-bold text-violet-600 border-b-[3px] border-indigo-600 whitespace-nowrap">Posts</button>
-            <button className="px-6 py-4 text-[15px] font-bold text-zinc-500 hover:bg-zinc-50 transition-colors whitespace-nowrap">About</button>
-            <button className="px-6 py-4 text-[15px] font-bold text-zinc-500 hover:bg-zinc-50 transition-colors whitespace-nowrap">Friends</button>
-            <button className="px-6 py-4 text-[15px] font-bold text-zinc-500 hover:bg-zinc-50 transition-colors whitespace-nowrap">Photos</button>
+            <button className="px-5 py-3.5 text-[14px] font-semibold text-[#1D1D1F] border-b-2 border-[#1D1D1F] whitespace-nowrap">Posts</button>
+            <button className="px-5 py-3.5 text-[14px] font-medium text-[#86868B] hover:bg-black/[0.03] transition-all duration-200 whitespace-nowrap">About</button>
+            <button className="px-5 py-3.5 text-[14px] font-medium text-[#86868B] hover:bg-black/[0.03] transition-all duration-200 whitespace-nowrap">Friends</button>
+            <button className="px-5 py-3.5 text-[14px] font-medium text-[#86868B] hover:bg-black/[0.03] transition-all duration-200 whitespace-nowrap">Photos</button>
           </div>
         </div>
       </div>
 
       {/* Main Content (Two Columns on Desktop) */}
-      <div className="grid grid-cols-1 lg:grid-cols-[360px_1fr] gap-6 px-4 lg:px-0">
+      <div className="grid grid-cols-1 lg:grid-cols-[340px_1fr] gap-5 px-4 lg:px-0">
         
         {/* Left Column: Intro */}
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-5">
           
-          <div className="bg-white rounded-[16px] p-5 shadow-sm border border-black/5">
-            <h2 className="text-[20px] font-extrabold text-zinc-900 mb-4">Intro</h2>
+          <div className="bg-white rounded-2xl p-6 shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-black/[0.04]">
+            <h2 className="text-[20px] font-semibold text-[#1D1D1F] mb-4">Intro</h2>
             
-            <p className="text-[15px] text-zinc-700 font-medium text-center mb-6 px-2 leading-relaxed">
+            <p className="text-[15px] text-[#1D1D1F]/70 font-normal text-center mb-5 px-1 leading-relaxed">
               {profileData.bio || 'This user hasn\'t written a bio yet.'}
             </p>
             
-            <div className="w-full h-px bg-zinc-200/60 mb-6"></div>
+            <div className="w-full h-px bg-black/[0.04] mb-5"></div>
 
-            <div className="flex flex-col gap-4 text-[14px] text-zinc-700">
+            <div className="flex flex-col gap-3.5 text-[14px] text-[#1D1D1F]/80">
               <div className="flex items-center gap-3">
-                <GraduationCap className="w-5 h-5 text-zinc-400 shrink-0" />
-                <span className="font-medium">Studies <strong>{profileData.major || profileData.department || 'Undeclared'}</strong></span>
+                <GraduationCap className="w-[18px] h-[18px] text-[#86868B] shrink-0" />
+                <span className="font-normal">Studies <strong className="font-semibold">{profileData.major || profileData.department || 'Undeclared'}</strong></span>
               </div>
               <div className="flex items-center gap-3">
-                <GraduationCap className="w-5 h-5 text-zinc-400 shrink-0" />
-                <span className="font-medium">Goes to <strong>{profileData.college || 'Unknown College'}</strong></span>
+                <GraduationCap className="w-[18px] h-[18px] text-[#86868B] shrink-0" />
+                <span className="font-normal">Goes to <strong className="font-semibold">{profileData.college || 'Unknown College'}</strong></span>
               </div>
               <div className="flex items-center gap-3">
-                <Calendar className="w-5 h-5 text-zinc-400 shrink-0" />
-                <span className="font-medium">{profileData.year || 'Unknown Year'} &bull; {profileData.semester || 'Unknown Semester'}</span>
+                <Calendar className="w-[18px] h-[18px] text-[#86868B] shrink-0" />
+                <span className="font-normal">{profileData.year || 'Unknown Year'} &bull; {profileData.semester || 'Unknown Semester'}</span>
               </div>
               <div className="flex items-center gap-3">
-                <MapPin className="w-5 h-5 text-zinc-400 shrink-0" />
-                <span className="font-medium">Lives in <strong>{profileData.location || 'Campus'}</strong></span>
+                <MapPin className="w-[18px] h-[18px] text-[#86868B] shrink-0" />
+                <span className="font-normal">Lives in <strong className="font-semibold">{profileData.location || 'Campus'}</strong></span>
               </div>
             </div>
             
             {isMe && (
-              <Link to="/settings" className="mt-6 w-full py-2.5 bg-zinc-100 rounded-[8px] font-bold text-[14px] text-zinc-900 flex items-center justify-center hover:bg-zinc-200 transition-colors">
+              <Link to="/settings" className="mt-5 w-full py-2.5 bg-[#F5F5F7] rounded-xl font-semibold text-[14px] text-[#1D1D1F] flex items-center justify-center hover:bg-black/[0.06] transition-all duration-200">
                 Edit Details
               </Link>
             )}
           </div>
           
-          <div className="bg-white rounded-[16px] p-5 shadow-sm border border-black/5">
+          <div className="bg-white rounded-2xl p-6 shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-black/[0.04]">
              <div className="flex items-center justify-between mb-4">
                <div>
-                 <h2 className="text-[20px] font-extrabold text-zinc-900 hover:underline cursor-pointer">Friends</h2>
-                 <p className="text-[14px] font-medium text-zinc-500">{profileData.friendsCount} friends</p>
+                 <h2 className="text-[20px] font-semibold text-[#1D1D1F] hover:underline cursor-pointer">Friends</h2>
+                 <p className="text-[13px] font-medium text-[#86868B] mt-0.5">{profileData.friendsCount} friends</p>
                </div>
-               <button className="text-[14px] font-bold text-blue-600 hover:bg-blue-50 px-3 py-1.5 rounded-lg transition-colors">See all friends</button>
+               <button className="text-[14px] font-medium text-[#0071E3] hover:bg-[#0071E3]/[0.06] px-3 py-1.5 rounded-lg transition-all duration-200">See all</button>
              </div>
              
              {/* Mock Friends Grid */}
              <div className="grid grid-cols-3 gap-3">
                {[1,2,3,4,5,6].map(i => (
                  <div key={i} className="flex flex-col gap-1.5 cursor-pointer group">
-                   <div className="w-full aspect-square rounded-[8px] bg-zinc-100 overflow-hidden shadow-sm">
+                   <div className="w-full aspect-square rounded-xl bg-[#F5F5F7] overflow-hidden">
                      <img src={`https://images.unsplash.com/photo-${1500000000000 + i * 10000}?auto=format&fit=crop&w=150&q=80`} alt="Friend" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                    </div>
-                   <span className="text-[12px] font-bold text-zinc-700 truncate group-hover:underline">Student {i}</span>
+                   <span className="text-[12px] font-medium text-[#1D1D1F] truncate group-hover:underline">Student {i}</span>
                  </div>
                ))}
              </div>
@@ -269,21 +269,21 @@ const UserProfile = () => {
         </div>
 
         {/* Right Column: Feed */}
-        <div className="flex flex-col gap-4">
-          <div className="bg-white rounded-[16px] p-5 shadow-sm border border-black/5">
-            <h3 className="font-extrabold text-[20px] text-zinc-900 mb-6">Posts</h3>
+        <div className="flex flex-col gap-5">
+          <div className="bg-white rounded-2xl p-6 shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-black/[0.04]">
+            <h3 className="font-semibold text-[20px] text-[#1D1D1F] mb-5">Posts</h3>
             
             {isMe && userPosts.length === 0 && (
-              <div className="mb-6 p-4 bg-indigo-50 border border-indigo-100 rounded-[12px] flex items-start gap-3">
-                <Ghost className="w-5 h-5 text-violet-600 shrink-0 mt-0.5" />
-                <p className="text-[13px] font-medium text-violet-900/80 leading-relaxed">
-                  <strong>Ghost Mode Notice:</strong> Posts created while Ghost Mode is active are completely anonymous and stripped of your identity. They will <span className="text-violet-600 font-bold">never</span> appear on your public profile feed.
+              <div className="mb-5 p-4 bg-[#5E5CE6]/[0.06] border border-[#5E5CE6]/[0.08] rounded-xl flex items-start gap-3">
+                <Ghost className="w-[18px] h-[18px] text-[#5E5CE6] shrink-0 mt-0.5" />
+                <p className="text-[13px] font-normal text-[#1D1D1F]/70 leading-relaxed">
+                  <strong className="font-semibold">Ghost Mode Notice:</strong> Posts created while Ghost Mode is active are completely anonymous and stripped of your identity. They will <span className="text-[#5E5CE6] font-semibold">never</span> appear on your public profile feed.
                 </p>
               </div>
             )}
 
             {userPosts.length > 0 ? (
-              <div className="flex flex-col gap-6">
+              <div className="flex flex-col gap-5">
                 {userPosts.map(post => (
                   <PostCard 
                     key={post.id} 
@@ -294,9 +294,9 @@ const UserProfile = () => {
                 ))}
               </div>
             ) : (
-              <div className="flex flex-col items-center justify-center py-16 border-2 border-dashed border-black/5 rounded-[12px]">
-                <Clock className="w-8 h-8 text-zinc-300 mb-3" />
-                <p className="text-[15px] font-bold text-zinc-400">
+              <div className="flex flex-col items-center justify-center py-16 border border-dashed border-[#D2D2D7] rounded-2xl">
+                <Clock className="w-7 h-7 text-[#D2D2D7] mb-3" />
+                <p className="text-[15px] font-medium text-[#86868B]">
                   {isMe ? "You haven't posted anything recently." : "This user hasn't posted anything recently."}
                 </p>
               </div>
