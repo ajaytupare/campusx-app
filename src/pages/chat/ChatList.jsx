@@ -49,10 +49,10 @@ const ChatList = () => {
   }
 
   return (
-    <div className="flex flex-col w-full h-[calc(100vh-48px)] max-w-3xl mx-auto m-6 bg-[var(--cx-bg-surface)] rounded-[24px] shadow-sm border border-[var(--cx-text-muted)]/10 overflow-hidden">
+    <div className="flex flex-col w-full h-[calc(100vh-48px)] max-w-3xl mx-auto m-6 bg-[var(--cx-bg-surface)] rounded-[24px] shadow-sm border border-zinc-200 overflow-hidden">
       
       {/* Header */}
-      <div className="p-6 border-b border-[var(--cx-text-muted)]/10">
+      <div className="p-6 border-b border-zinc-200">
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-[var(--cx-primary)]/10 rounded-xl flex items-center justify-center text-[var(--cx-primary)]">
@@ -88,7 +88,7 @@ const ChatList = () => {
             <Link 
               key={conv.id}
               to={`/chat/${conv.id}`}
-              className="flex items-center gap-4 p-4 border-b border-[var(--cx-text-muted)]/5 hover:bg-[var(--cx-bg-base)] transition-colors group"
+              className="flex items-center gap-4 p-4 border-b border-zinc-100 hover:bg-[var(--cx-bg-base)] transition-colors group"
             >
               <div className="relative">
                 <div className="w-12 h-12 rounded-full bg-zinc-200 flex items-center justify-center text-xl font-black text-zinc-500 shrink-0">

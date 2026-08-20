@@ -35,7 +35,7 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className="w-[260px] h-[calc(100vh-48px)] bg-[var(--cx-bg-surface)] rounded-[24px] shadow-sm border border-[var(--cx-bg-base)] flex flex-col p-5 m-6 overflow-y-auto">
+    <div className="w-[260px] h-[calc(100vh-48px)] bg-[var(--cx-bg-surface)] rounded-[24px] shadow-sm border border-zinc-200 flex flex-col p-5 m-6 overflow-y-auto">
       
       {/* Brand Header */}
       <div className="flex items-center gap-3 px-2 mb-8 mt-2">
@@ -94,7 +94,7 @@ const Sidebar = () => {
       </nav>
 
       {/* Bottom Settings Profile placeholder */}
-      <div className="mt-8 pt-4 border-t border-[var(--cx-bg-base)]">
+      <div className="mt-8 pt-4 border-t border-zinc-200">
         <Link to="/profile/me" className="flex items-center gap-3 px-3 py-3 rounded-[16px] hover:bg-[var(--cx-bg-base)] transition-colors group mb-1">
           <div className="w-9 h-9 rounded-full bg-[var(--cx-bg-base)] shrink-0 overflow-hidden">
             <img src={profile.avatar} alt="Avatar" className="w-full h-full object-cover" />

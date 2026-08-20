@@ -20,19 +20,20 @@
 
 @layer base {
   :root {
-    /* Custom Coffee / Parchment Palette */
-    --cx-primary: #412D15; 
-    --cx-accent: #5D4323; 
+    /* Warm Minimalist + Clean Modern Palette */
+    --cx-primary: #ea580c; /* Orange-600 */
+    --cx-accent: #f97316; /* Orange-500 */
     
-    --cx-ghost-start: #412D15; 
-    --cx-ghost-end: #5D4323; 
+    /* Ghost mode remains cool/mysterious to stand out */
+    --cx-ghost-start: #8b5cf6; /* Violet-500 */
+    --cx-ghost-end: #6366f1; /* Indigo-500 */
     
     /* Light Theme */
-    --cx-bg-base: #d5ceb8;
-    --cx-bg-surface: #E1DCC9;
+    --cx-bg-base: #f4f4f5; /* Zinc-100 (Clean light gray/warm undertone) */
+    --cx-bg-surface: #ffffff; /* Pure white for cards */
     
-    --cx-text-main: #412D15;
-    --cx-text-muted: #826c53;
+    --cx-text-main: #18181b; /* Zinc-900 */
+    --cx-text-muted: #71717a; /* Zinc-500 */
   }
 
   

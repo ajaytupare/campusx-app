@@ -158,7 +158,7 @@ const UserProfile = () => {
                     </Link>
                   ) : (
                     <>
-                      <button className="flex-1 py-2.5 bg-indigo-600 text-white rounded-[8px] font-bold text-[14px] flex items-center justify-center gap-2 shadow-sm shadow-indigo-500/20">
+                      <button className="flex-1 py-2.5 bg-orange-600 text-white rounded-[8px] font-bold text-[14px] flex items-center justify-center gap-2 shadow-sm shadow-orange-500/20">
                         <UserPlus className="w-4 h-4" /> Add Friend
                       </button>
                       <Link to="/chat" className="flex-1 py-2.5 bg-zinc-100 rounded-[8px] font-bold text-[14px] text-zinc-900 text-center flex items-center justify-center gap-2">
@@ -181,7 +181,7 @@ const UserProfile = () => {
                 </Link>
               ) : (
                 <>
-                  <button className="px-5 py-2.5 bg-indigo-600 text-white rounded-[8px] font-bold text-[14px] hover:bg-indigo-700 transition-colors flex items-center gap-2 shadow-sm shadow-indigo-500/20">
+                  <button className="px-5 py-2.5 bg-orange-600 text-white rounded-[8px] font-bold text-[14px] hover:bg-orange-700 transition-colors flex items-center gap-2 shadow-sm shadow-orange-500/20">
                     <UserPlus className="w-4 h-4" /> Add Friend
                   </button>
                   <Link to="/chat" className="px-5 py-2.5 bg-zinc-100 rounded-[8px] font-bold text-[14px] text-zinc-900 hover:bg-zinc-200 transition-colors flex items-center gap-2 shadow-sm">
@@ -196,7 +196,7 @@ const UserProfile = () => {
 
           {/* Facebook-style Tabs */}
           <div className="flex items-center overflow-x-auto hide-scrollbar">
-            <button className="px-6 py-4 text-[15px] font-bold text-indigo-600 border-b-[3px] border-indigo-600 whitespace-nowrap">Posts</button>
+            <button className="px-6 py-4 text-[15px] font-bold text-violet-600 border-b-[3px] border-indigo-600 whitespace-nowrap">Posts</button>
             <button className="px-6 py-4 text-[15px] font-bold text-zinc-500 hover:bg-zinc-50 transition-colors whitespace-nowrap">About</button>
             <button className="px-6 py-4 text-[15px] font-bold text-zinc-500 hover:bg-zinc-50 transition-colors whitespace-nowrap">Friends</button>
             <button className="px-6 py-4 text-[15px] font-bold text-zinc-500 hover:bg-zinc-50 transition-colors whitespace-nowrap">Photos</button>
@@ -251,7 +251,7 @@ const UserProfile = () => {
                  <h2 className="text-[20px] font-extrabold text-zinc-900 hover:underline cursor-pointer">Friends</h2>
                  <p className="text-[14px] font-medium text-zinc-500">{profileData.friendsCount} friends</p>
                </div>
-               <button className="text-[14px] font-bold text-indigo-600 hover:bg-indigo-50 px-3 py-1.5 rounded-lg transition-colors">See all friends</button>
+               <button className="text-[14px] font-bold text-orange-600 hover:bg-orange-50 px-3 py-1.5 rounded-lg transition-colors">See all friends</button>
              </div>
              
              {/* Mock Friends Grid */}
@@ -275,9 +275,9 @@ const UserProfile = () => {
             
             {isMe && userPosts.length === 0 && (
               <div className="mb-6 p-4 bg-indigo-50 border border-indigo-100 rounded-[12px] flex items-start gap-3">
-                <Ghost className="w-5 h-5 text-indigo-600 shrink-0 mt-0.5" />
-                <p className="text-[13px] font-medium text-indigo-900/80 leading-relaxed">
-                  <strong>Ghost Mode Notice:</strong> Posts created while Ghost Mode is active are completely anonymous and stripped of your identity. They will <span className="text-indigo-600 font-bold">never</span> appear on your public profile feed.
+                <Ghost className="w-5 h-5 text-violet-600 shrink-0 mt-0.5" />
+                <p className="text-[13px] font-medium text-violet-900/80 leading-relaxed">
+                  <strong>Ghost Mode Notice:</strong> Posts created while Ghost Mode is active are completely anonymous and stripped of your identity. They will <span className="text-violet-600 font-bold">never</span> appear on your public profile feed.
                 </p>
               </div>
             )}

@@ -165,10 +165,10 @@ const Settings = () => {
               onClick={() => setActiveTab(tab.id)}
               className={`flex items-center gap-3 px-4 py-3.5 rounded-[12px] font-bold text-[14px] transition-all whitespace-nowrap lg:w-full text-left
                 ${activeTab === tab.id 
-                  ? 'bg-white text-indigo-600 shadow-sm border border-zinc-200/60' 
+                  ? 'bg-white text-orange-600 shadow-sm border border-zinc-200/60' 
                   : 'text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 border border-transparent'}`}
             >
-              <tab.icon className={`w-5 h-5 ${activeTab === tab.id ? 'text-indigo-600' : 'text-zinc-400'}`} />
+              <tab.icon className={`w-5 h-5 ${activeTab === tab.id ? 'text-orange-600' : 'text-zinc-400'}`} />
               {tab.label}
             </button>
           ))}
@@ -264,7 +264,7 @@ const Settings = () => {
                     value={editName}
                     onChange={e => setEditName(e.target.value)}
                     placeholder="Enter your name"
-                    className="w-full bg-zinc-50 border border-zinc-200 rounded-[12px] px-4 py-3 text-[14px] font-medium text-zinc-900 outline-none focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all"
+                    className="w-full bg-zinc-50 border border-zinc-200 rounded-[12px] px-4 py-3 text-[14px] font-medium text-zinc-900 outline-none focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 transition-all"
                   />
                 </div>
 
@@ -285,7 +285,7 @@ const Settings = () => {
                     value={editBio}
                     onChange={e => setEditBio(e.target.value)}
                     placeholder="Write a short intro about yourself..."
-                    className="w-full bg-zinc-50 border border-zinc-200 rounded-[12px] px-4 py-3 text-[14px] font-medium text-zinc-900 outline-none focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all min-h-[100px] resize-y"
+                    className="w-full bg-zinc-50 border border-zinc-200 rounded-[12px] px-4 py-3 text-[14px] font-medium text-zinc-900 outline-none focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 transition-all min-h-[100px] resize-y"
                   />
                 </div>
 
@@ -296,7 +296,7 @@ const Settings = () => {
                     value={editCollege}
                     onChange={e => setEditCollege(e.target.value)}
                     placeholder="e.g. Stanford University"
-                    className="w-full bg-zinc-50 border border-zinc-200 rounded-[12px] px-4 py-3 text-[14px] font-medium text-zinc-900 outline-none focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all"
+                    className="w-full bg-zinc-50 border border-zinc-200 rounded-[12px] px-4 py-3 text-[14px] font-medium text-zinc-900 outline-none focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 transition-all"
                   />
                 </div>
 
@@ -307,7 +307,7 @@ const Settings = () => {
                     value={editDepartment}
                     onChange={e => setEditDepartment(e.target.value)}
                     placeholder="e.g. Computer Science"
-                    className="w-full bg-zinc-50 border border-zinc-200 rounded-[12px] px-4 py-3 text-[14px] font-medium text-zinc-900 outline-none focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all"
+                    className="w-full bg-zinc-50 border border-zinc-200 rounded-[12px] px-4 py-3 text-[14px] font-medium text-zinc-900 outline-none focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 transition-all"
                   />
                 </div>
 
@@ -318,7 +318,7 @@ const Settings = () => {
                     value={editYear}
                     onChange={e => setEditYear(e.target.value)}
                     placeholder="e.g. Junior, Class of 2026"
-                    className="w-full bg-zinc-50 border border-zinc-200 rounded-[12px] px-4 py-3 text-[14px] font-medium text-zinc-900 outline-none focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all"
+                    className="w-full bg-zinc-50 border border-zinc-200 rounded-[12px] px-4 py-3 text-[14px] font-medium text-zinc-900 outline-none focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 transition-all"
                   />
                 </div>
 
@@ -329,7 +329,7 @@ const Settings = () => {
                     value={editLocation}
                     onChange={e => setEditLocation(e.target.value)}
                     placeholder="e.g. San Francisco, CA"
-                    className="w-full bg-zinc-50 border border-zinc-200 rounded-[12px] px-4 py-3 text-[14px] font-medium text-zinc-900 outline-none focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all"
+                    className="w-full bg-zinc-50 border border-zinc-200 rounded-[12px] px-4 py-3 text-[14px] font-medium text-zinc-900 outline-none focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 transition-all"
                   />
                 </div>
               </div>
@@ -342,7 +342,7 @@ const Settings = () => {
                 onClick={handleSaveProfile}
                 disabled={isSaving}
                 className={`px-8 py-3 rounded-[12px] font-bold text-[14px] text-white transition-all shadow-sm
-                  ${isSaving ? 'bg-indigo-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700 hover:shadow-indigo-500/20'}`}
+                  ${isSaving ? 'bg-orange-400 cursor-not-allowed' : 'bg-orange-600 hover:bg-orange-700 hover:shadow-orange-500/20'}`}
               >
                 {isSaving ? 'Saving Changes...' : 'Save Changes'}
               </button>
@@ -365,7 +365,7 @@ const Settings = () => {
                 </div>
                 <button 
                   onClick={() => handleToggle('privateProfile')}
-                  className={`w-12 h-6 rounded-full transition-colors relative flex items-center shrink-0 ${settings.privateProfile ? 'bg-indigo-600' : 'bg-zinc-300'}`}
+                  className={`w-12 h-6 rounded-full transition-colors relative flex items-center shrink-0 ${settings.privateProfile ? 'bg-orange-600' : 'bg-zinc-300'}`}
                 >
                   <div className={`w-4 h-4 bg-white rounded-full mx-1 transition-transform shadow-sm ${settings.privateProfile ? 'translate-x-6' : 'translate-x-0'}`}></div>
                 </button>
@@ -378,19 +378,19 @@ const Settings = () => {
                 <div className="flex flex-col sm:flex-row gap-3">
                   <button 
                     onClick={() => handleSelect('allowMessagesFrom', 'everyone')}
-                    className={`flex-1 py-3 rounded-[12px] font-bold text-[13px] transition-all border ${settings.allowMessagesFrom === 'everyone' ? 'bg-white border-indigo-600 text-indigo-600 shadow-sm' : 'bg-white border-zinc-200 hover:border-zinc-300 text-zinc-600'}`}
+                    className={`flex-1 py-3 rounded-[12px] font-bold text-[13px] transition-all border ${settings.allowMessagesFrom === 'everyone' ? 'bg-white border-orange-600 text-orange-600 shadow-sm' : 'bg-white border-zinc-200 hover:border-zinc-300 text-zinc-600'}`}
                   >
                     Everyone
                   </button>
                   <button 
                     onClick={() => handleSelect('allowMessagesFrom', 'friends')}
-                    className={`flex-1 py-3 rounded-[12px] font-bold text-[13px] transition-all border ${settings.allowMessagesFrom === 'friends' ? 'bg-white border-indigo-600 text-indigo-600 shadow-sm' : 'bg-white border-zinc-200 hover:border-zinc-300 text-zinc-600'}`}
+                    className={`flex-1 py-3 rounded-[12px] font-bold text-[13px] transition-all border ${settings.allowMessagesFrom === 'friends' ? 'bg-white border-orange-600 text-orange-600 shadow-sm' : 'bg-white border-zinc-200 hover:border-zinc-300 text-zinc-600'}`}
                   >
                     Friends Only
                   </button>
                   <button 
                     onClick={() => handleSelect('allowMessagesFrom', 'nobody')}
-                    className={`flex-1 py-3 rounded-[12px] font-bold text-[13px] transition-all border ${settings.allowMessagesFrom === 'nobody' ? 'bg-white border-indigo-600 text-indigo-600 shadow-sm' : 'bg-white border-zinc-200 hover:border-zinc-300 text-zinc-600'}`}
+                    className={`flex-1 py-3 rounded-[12px] font-bold text-[13px] transition-all border ${settings.allowMessagesFrom === 'nobody' ? 'bg-white border-orange-600 text-orange-600 shadow-sm' : 'bg-white border-zinc-200 hover:border-zinc-300 text-zinc-600'}`}
                   >
                     Nobody
                   </button>
@@ -415,7 +415,7 @@ const Settings = () => {
                 </div>
                 <button 
                   onClick={() => handleToggle('emailNotifs')}
-                  className={`w-12 h-6 rounded-full transition-colors relative flex items-center shrink-0 ${settings.emailNotifs ? 'bg-indigo-600' : 'bg-zinc-300'}`}
+                  className={`w-12 h-6 rounded-full transition-colors relative flex items-center shrink-0 ${settings.emailNotifs ? 'bg-orange-600' : 'bg-zinc-300'}`}
                 >
                   <div className={`w-4 h-4 bg-white rounded-full mx-1 transition-transform shadow-sm ${settings.emailNotifs ? 'translate-x-6' : 'translate-x-0'}`}></div>
                 </button>
@@ -428,20 +428,20 @@ const Settings = () => {
                 </div>
                 <button 
                   onClick={() => handleToggle('pushNotifs')}
-                  className={`w-12 h-6 rounded-full transition-colors relative flex items-center shrink-0 ${settings.pushNotifs ? 'bg-indigo-600' : 'bg-zinc-300'}`}
+                  className={`w-12 h-6 rounded-full transition-colors relative flex items-center shrink-0 ${settings.pushNotifs ? 'bg-orange-600' : 'bg-zinc-300'}`}
                 >
                   <div className={`w-4 h-4 bg-white rounded-full mx-1 transition-transform shadow-sm ${settings.pushNotifs ? 'translate-x-6' : 'translate-x-0'}`}></div>
                 </button>
               </div>
 
-              <div className="flex items-center justify-between p-6 bg-indigo-50/50 rounded-[16px] border border-indigo-100">
+              <div className="flex items-center justify-between p-6 bg-orange-50/50 rounded-[16px] border border-orange-100">
                 <div>
-                  <h4 className="font-extrabold text-[15px] text-indigo-900">Ghost Mode Mentions</h4>
-                  <p className="text-[13px] font-medium text-indigo-700/70 mt-1 max-w-sm">Allow push notifications if someone replies to your anonymous Ghost post.</p>
+                  <h4 className="font-extrabold text-[15px] text-orange-900">Ghost Mode Mentions</h4>
+                  <p className="text-[13px] font-medium text-orange-700/70 mt-1 max-w-sm">Allow push notifications if someone replies to your anonymous Ghost post.</p>
                 </div>
                 <button 
                   onClick={() => handleToggle('ghostMentions')}
-                  className={`w-12 h-6 rounded-full transition-colors relative flex items-center shrink-0 ${settings.ghostMentions ? 'bg-indigo-600' : 'bg-indigo-300'}`}
+                  className={`w-12 h-6 rounded-full transition-colors relative flex items-center shrink-0 ${settings.ghostMentions ? 'bg-orange-600' : 'bg-orange-300'}`}
                 >
                   <div className={`w-4 h-4 bg-white rounded-full mx-1 transition-transform shadow-sm ${settings.ghostMentions ? 'translate-x-6' : 'translate-x-0'}`}></div>
                 </button>

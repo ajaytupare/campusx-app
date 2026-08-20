@@ -103,7 +103,7 @@ const ChatConversation = () => {
         <p className="text-[var(--cx-text-muted)] text-[16px] font-medium leading-relaxed max-w-md mb-8">
           You cannot read or reply to direct messages while operating as a Ghost. Your conversations are securely locked.
         </p>
-        <Link to="/chat" className="px-6 py-3 bg-[var(--cx-bg-surface)] text-[var(--cx-text-main)] rounded-xl font-bold border border-[var(--cx-text-muted)]/10 hover:bg-[var(--cx-bg-base)] transition-colors">
+        <Link to="/chat" className="px-6 py-3 bg-[var(--cx-bg-surface)] text-[var(--cx-text-main)] rounded-xl font-bold border border-zinc-200 hover:bg-[var(--cx-bg-base)] transition-colors">
           Return to Inbox
         </Link>
       </div>
@@ -111,10 +111,10 @@ const ChatConversation = () => {
   }
 
   return (
-    <div className="flex flex-col w-full h-[calc(100vh-48px)] max-w-4xl mx-auto m-6 bg-[var(--cx-bg-surface)] rounded-[24px] shadow-sm border border-[var(--cx-text-muted)]/10 overflow-hidden">
+    <div className="flex flex-col w-full h-[calc(100vh-48px)] max-w-4xl mx-auto m-6 bg-[var(--cx-bg-surface)] rounded-[24px] shadow-sm border border-zinc-200 overflow-hidden">
       
       {/* Header */}
-      <div className="p-4 border-b border-[var(--cx-text-muted)]/10 flex items-center gap-4 bg-[var(--cx-bg-surface)] z-10 shadow-sm">
+      <div className="p-4 border-b border-zinc-200 flex items-center gap-4 bg-[var(--cx-bg-surface)] z-10 shadow-sm">
         <Link to="/chat" className="p-2 rounded-xl text-[var(--cx-text-muted)] hover:bg-[var(--cx-bg-base)] transition-colors">
           <ArrowLeft className="w-5 h-5" />
         </Link>
@@ -150,7 +150,7 @@ const ChatConversation = () => {
               <div className={`max-w-[70%] rounded-[20px] px-4 py-2.5 text-[15px] font-medium leading-relaxed
                 ${isMe 
                   ? 'bg-[var(--cx-primary)] text-white rounded-br-sm shadow-sm shadow-indigo-500/20' 
-                  : 'bg-white border border-[var(--cx-text-muted)]/10 text-[var(--cx-text-main)] rounded-bl-sm shadow-sm'}`}>
+                  : 'bg-white border border-zinc-200 text-[var(--cx-text-main)] rounded-bl-sm shadow-sm'}`}>
                 {msg.text}
               </div>
             </div>
@@ -160,7 +160,7 @@ const ChatConversation = () => {
       </div>
 
       {/* Input Area */}
-      <div className="p-4 bg-[var(--cx-bg-surface)] border-t border-[var(--cx-text-muted)]/10">
+      <div className="p-4 bg-[var(--cx-bg-surface)] border-t border-zinc-200">
         <form onSubmit={handleSend} className="flex items-end gap-2 relative">
           <button type="button" className="p-3 text-[var(--cx-text-muted)] hover:bg-[var(--cx-bg-base)] rounded-xl transition-colors shrink-0 mb-0.5">
             <ImageIcon className="w-5 h-5" />
