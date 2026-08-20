@@ -152,207 +152,199 @@ const Settings = () => {
   ];
 
   return (
-    <div className="flex flex-col lg:flex-row w-full h-full max-w-5xl mx-auto gap-8 pb-12">
+    <div className="flex flex-col lg:flex-row w-full min-h-[80vh] max-w-[1100px] mx-auto bg-white rounded-[24px] shadow-sm border border-zinc-200 overflow-hidden mb-12">
       
       {/* Sidebar Navigation */}
-      <div className="w-full lg:w-64 shrink-0 flex flex-col gap-2">
-        <h1 className="text-2xl font-extrabold text-[var(--cx-text-main)] mb-6 tracking-tight">Settings</h1>
+      <div className="w-full lg:w-[280px] shrink-0 bg-zinc-50/50 flex flex-col p-6 border-b lg:border-b-0 lg:border-r border-zinc-200 gap-2">
+        <h1 className="text-[28px] font-black text-zinc-900 mb-6 tracking-tight px-2">Settings</h1>
         
-        {tabs.map(tab => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            className={`flex items-center gap-3 px-4 py-3.5 rounded-[16px] font-bold text-[14px] transition-all w-full text-left
-              ${activeTab === tab.id 
-                ? 'bg-[var(--cx-bg-surface)] text-[var(--cx-primary)] shadow-sm border border-[var(--cx-text-muted)]/10' 
-                : 'text-[var(--cx-text-muted)] hover:bg-[var(--cx-bg-surface)] hover:text-[var(--cx-text-main)] border border-transparent'}`}
-          >
-            <tab.icon className="w-5 h-5" />
-            {tab.label}
-          </button>
-        ))}
+        <div className="flex lg:flex-col gap-2 overflow-x-auto hide-scrollbar pb-2 lg:pb-0">
+          {tabs.map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`flex items-center gap-3 px-4 py-3.5 rounded-[12px] font-bold text-[14px] transition-all whitespace-nowrap lg:w-full text-left
+                ${activeTab === tab.id 
+                  ? 'bg-white text-indigo-600 shadow-sm border border-zinc-200/60' 
+                  : 'text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 border border-transparent'}`}
+            >
+              <tab.icon className={`w-5 h-5 ${activeTab === tab.id ? 'text-indigo-600' : 'text-zinc-400'}`} />
+              {tab.label}
+            </button>
+          ))}
+        </div>
 
-        <div className="mt-8 border-t border-[var(--cx-text-muted)]/10 pt-4">
+        <div className="hidden lg:block mt-auto pt-6">
           <button 
             onClick={logout}
-            className="flex items-center gap-3 px-4 py-3.5 rounded-[16px] font-bold text-[14px] text-red-500 hover:bg-red-500/10 transition-colors w-full text-left"
+            className="flex items-center gap-3 px-4 py-3.5 rounded-[12px] font-bold text-[14px] text-red-600 hover:bg-red-50 transition-colors w-full text-left"
           >
-            <LogOut className="w-5 h-5" />
+            <LogOut className="w-5 h-5 text-red-500" />
             Log Out
           </button>
         </div>
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 min-w-0 bg-[var(--cx-bg-surface)] rounded-[24px] shadow-sm border border-[var(--cx-text-muted)]/10 overflow-hidden">
+      <div className="flex-1 min-w-0 bg-white flex flex-col">
         
         {activeTab === 'account' && (
-          <div className="animate-in fade-in duration-300">
-            <div className="p-8 border-b border-[var(--cx-text-muted)]/10">
-              <h2 className="text-2xl font-extrabold text-[var(--cx-text-main)]">Account</h2>
+          <div className="animate-in fade-in duration-300 flex flex-col h-full">
+            <div className="px-8 py-8 border-b border-zinc-100">
+              <h2 className="text-2xl font-extrabold text-zinc-900">Account Settings</h2>
+              <p className="text-[14px] font-medium text-zinc-500 mt-1">Manage your public profile and personal details.</p>
             </div>
             
-            <div className="p-8 space-y-8">
+            <div className="p-8 space-y-10 overflow-y-auto">
               
-              {/* Profile Picture Section */}
-              <div className="flex flex-col sm:flex-row gap-6 items-start">
-                <div className="w-24 h-24 rounded-full border-2 border-[var(--cx-text-muted)]/10 overflow-hidden bg-[var(--cx-bg-base)] shrink-0">
-                  {editAvatar ? (
-                    <img src={editAvatar} alt="Avatar" className="w-full h-full object-cover" />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-[var(--cx-text-muted)]">No Img</div>
-                  )}
-                </div>
-                <div>
-                  <h4 className="font-extrabold text-[16px] text-[var(--cx-text-main)] mb-3">Profile Picture</h4>
-                  <div className="flex gap-3 mb-2">
-                    <label className="cursor-pointer bg-[var(--cx-primary)] hover:bg-indigo-700 transition-colors text-white px-4 py-2 rounded-[12px] font-bold text-[14px] flex items-center gap-2 shadow-sm shadow-indigo-500/20">
-                      <Upload className="w-4 h-4" /> Upload Image
-                      <input type="file" className="hidden" accept="image/*" onChange={(e) => handleFileUpload(e, setEditAvatar)} />
-                    </label>
-                    <button 
-                      onClick={() => setEditAvatar(null)}
-                      className="px-4 py-2 bg-[var(--cx-bg-base)] border border-[var(--cx-text-muted)]/20 rounded-[12px] font-bold text-[14px] text-[var(--cx-text-main)] hover:bg-zinc-200 transition-colors"
-                    >
-                      Remove
-                    </button>
+              {/* Profile & Cover Images */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                {/* Avatar */}
+                <div className="flex flex-col gap-4">
+                  <h4 className="font-extrabold text-[15px] text-zinc-900">Profile Picture</h4>
+                  <div className="flex items-center gap-6">
+                    <div className="w-24 h-24 rounded-full border-4 border-zinc-50 overflow-hidden bg-zinc-100 shadow-sm shrink-0">
+                      {editAvatar ? (
+                        <img src={editAvatar} alt="Avatar" className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-zinc-400">
+                          <User className="w-8 h-8 opacity-50" />
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <div className="flex gap-2">
+                        <label className="cursor-pointer bg-zinc-900 hover:bg-zinc-800 transition-colors text-white px-4 py-2 rounded-[8px] font-bold text-[13px] flex items-center justify-center gap-2 shadow-sm">
+                          <Upload className="w-4 h-4" /> Upload
+                          <input type="file" className="hidden" accept="image/*" onChange={(e) => handleFileUpload(e, setEditAvatar)} />
+                        </label>
+                        <button 
+                          onClick={() => setEditAvatar(null)}
+                          className="px-4 py-2 bg-white border border-zinc-200 rounded-[8px] font-bold text-[13px] text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900 transition-colors shadow-sm"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                      <p className="text-[12px] font-medium text-zinc-400">JPG, GIF or PNG. Max 5MB.</p>
+                    </div>
                   </div>
-                  <p className="text-[12px] font-medium text-[var(--cx-text-muted)]">We support PNGs, JPEGs and GIFs under 10MB</p>
                 </div>
-              </div>
 
-              {/* Cover Picture Section */}
-              <div className="flex flex-col sm:flex-row gap-6 items-start pt-6 border-t border-[var(--cx-text-muted)]/5">
-                <div className="w-48 h-24 rounded-[12px] border-2 border-[var(--cx-text-muted)]/10 overflow-hidden bg-[var(--cx-bg-base)] shrink-0">
-                  {editCover ? (
-                    <img src={editCover} alt="Cover" className="w-full h-full object-cover" />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-[var(--cx-text-muted)]">No Cover</div>
-                  )}
-                </div>
-                <div>
-                  <h4 className="font-extrabold text-[16px] text-[var(--cx-text-main)] mb-3">Cover Photo</h4>
-                  <div className="flex gap-3 mb-2">
-                    <label className="cursor-pointer bg-[var(--cx-bg-base)] border border-[var(--cx-text-muted)]/20 hover:bg-zinc-200 transition-colors text-[var(--cx-text-main)] px-4 py-2 rounded-[12px] font-bold text-[14px] flex items-center gap-2">
-                      <Upload className="w-4 h-4" /> Change Cover
+                {/* Cover Photo */}
+                <div className="flex flex-col gap-4">
+                  <h4 className="font-extrabold text-[15px] text-zinc-900">Cover Photo</h4>
+                  <div className="w-full h-32 rounded-[16px] border-2 border-zinc-100 overflow-hidden bg-zinc-50 shrink-0 relative group">
+                    {editCover ? (
+                      <img src={editCover} alt="Cover" className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full flex flex-col items-center justify-center text-zinc-400 gap-2">
+                        <Palette className="w-6 h-6 opacity-30" />
+                      </div>
+                    )}
+                    <label className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer flex items-center justify-center">
+                      <span className="bg-white text-zinc-900 px-4 py-2 rounded-[8px] font-bold text-[13px] flex items-center gap-2 shadow-sm">
+                        <Upload className="w-4 h-4" /> Change Cover
+                      </span>
                       <input type="file" className="hidden" accept="image/*" onChange={(e) => handleFileUpload(e, setEditCover)} />
                     </label>
                   </div>
-                  <p className="text-[12px] font-medium text-[var(--cx-text-muted)]">Recommended resolution is 1200x480</p>
                 </div>
               </div>
 
-              {/* Inputs Grid */}
-              <div className="pt-6 border-t border-[var(--cx-text-muted)]/5 space-y-6">
-                
-                <div className="flex flex-col sm:flex-row gap-6">
-                  <div className="flex-1">
-                    <label className="block text-[13px] font-extrabold text-[var(--cx-text-main)] mb-2">Full Name</label>
-                    <input 
-                      type="text" 
-                      value={editName}
-                      onChange={e => setEditName(e.target.value)}
-                      className="w-full bg-[var(--cx-bg-base)] border border-[var(--cx-text-muted)]/10 rounded-[12px] px-4 py-2.5 text-[14px] font-medium text-[var(--cx-text-main)] outline-none focus:border-[var(--cx-primary)]/50 transition-colors"
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <label className="block text-[13px] font-extrabold text-[var(--cx-text-main)] mb-2">Email</label>
-                    <div className="flex gap-2">
-                      <input 
-                        type="email" 
-                        disabled
-                        value={currentUser?.email || ''}
-                        className="w-full bg-[var(--cx-bg-base)]/50 border border-[var(--cx-text-muted)]/10 rounded-[12px] px-4 py-2.5 text-[14px] font-medium text-[var(--cx-text-muted)] outline-none cursor-not-allowed"
-                      />
-                      <button className="shrink-0 px-4 py-2 bg-[var(--cx-bg-base)] border border-[var(--cx-text-muted)]/20 rounded-[12px] font-bold text-[13px] text-[var(--cx-text-main)] hover:bg-zinc-200 transition-colors">
-                        Edit Email
-                      </button>
-                    </div>
-                    <p className="text-[11px] text-[var(--cx-text-muted)] mt-1.5 font-medium">Used to log in to your account</p>
-                  </div>
-                </div>
+              <hr className="border-zinc-100" />
 
-                <div>
-                  <label className="block text-[13px] font-extrabold text-[var(--cx-text-main)] mb-2">Bio</label>
-                  <textarea 
-                    value={editBio}
-                    onChange={e => setEditBio(e.target.value)}
-                    className="w-full bg-[var(--cx-bg-base)] border border-[var(--cx-text-muted)]/10 rounded-[12px] px-4 py-3 text-[14px] font-medium text-[var(--cx-text-main)] outline-none focus:border-[var(--cx-primary)]/50 transition-colors min-h-[100px] resize-y"
+              {/* Form Inputs */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                
+                <div className="flex flex-col gap-2">
+                  <label className="text-[13px] font-extrabold text-zinc-700">Full Name</label>
+                  <input 
+                    type="text" 
+                    value={editName}
+                    onChange={e => setEditName(e.target.value)}
+                    placeholder="Enter your name"
+                    className="w-full bg-zinc-50 border border-zinc-200 rounded-[12px] px-4 py-3 text-[14px] font-medium text-zinc-900 outline-none focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all"
                   />
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-6">
-                  <div className="flex-1">
-                    <label className="block text-[13px] font-extrabold text-[var(--cx-text-main)] mb-2">College</label>
-                    <input 
-                      type="text" 
-                      value={editCollege}
-                      onChange={e => setEditCollege(e.target.value)}
-                      className="w-full bg-[var(--cx-bg-base)] border border-[var(--cx-text-muted)]/10 rounded-[12px] px-4 py-2.5 text-[14px] font-medium text-[var(--cx-text-main)] outline-none focus:border-[var(--cx-primary)]/50 transition-colors"
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <label className="block text-[13px] font-extrabold text-[var(--cx-text-main)] mb-2">Department / Major</label>
-                    <input 
-                      type="text" 
-                      value={editDepartment}
-                      onChange={e => setEditDepartment(e.target.value)}
-                      className="w-full bg-[var(--cx-bg-base)] border border-[var(--cx-text-muted)]/10 rounded-[12px] px-4 py-2.5 text-[14px] font-medium text-[var(--cx-text-main)] outline-none focus:border-[var(--cx-primary)]/50 transition-colors"
-                    />
-                  </div>
+                <div className="flex flex-col gap-2">
+                  <label className="text-[13px] font-extrabold text-zinc-700">Email Address</label>
+                  <input 
+                    type="email" 
+                    disabled
+                    value={currentUser?.email || ''}
+                    className="w-full bg-zinc-50 border border-zinc-200 rounded-[12px] px-4 py-3 text-[14px] font-medium text-zinc-500 outline-none cursor-not-allowed opacity-70"
+                  />
+                  <p className="text-[12px] font-medium text-zinc-400">Your email cannot be changed here.</p>
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-6">
-                  <div className="flex-1">
-                    <label className="block text-[13px] font-extrabold text-[var(--cx-text-main)] mb-2">Year</label>
-                    <input 
-                      type="text" 
-                      value={editYear}
-                      onChange={e => setEditYear(e.target.value)}
-                      className="w-full bg-[var(--cx-bg-base)] border border-[var(--cx-text-muted)]/10 rounded-[12px] px-4 py-2.5 text-[14px] font-medium text-[var(--cx-text-main)] outline-none focus:border-[var(--cx-primary)]/50 transition-colors"
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <label className="block text-[13px] font-extrabold text-[var(--cx-text-main)] mb-2">Semester</label>
-                    <input 
-                      type="text" 
-                      value={editSemester}
-                      onChange={e => setEditSemester(e.target.value)}
-                      className="w-full bg-[var(--cx-bg-base)] border border-[var(--cx-text-muted)]/10 rounded-[12px] px-4 py-2.5 text-[14px] font-medium text-[var(--cx-text-main)] outline-none focus:border-[var(--cx-primary)]/50 transition-colors"
-                    />
-                  </div>
+                <div className="flex flex-col gap-2 md:col-span-2">
+                  <label className="text-[13px] font-extrabold text-zinc-700">Bio</label>
+                  <textarea 
+                    value={editBio}
+                    onChange={e => setEditBio(e.target.value)}
+                    placeholder="Write a short intro about yourself..."
+                    className="w-full bg-zinc-50 border border-zinc-200 rounded-[12px] px-4 py-3 text-[14px] font-medium text-zinc-900 outline-none focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all min-h-[100px] resize-y"
+                  />
                 </div>
 
-              </div>
-
-              {/* Password Section from reference image */}
-              <div className="pt-8 mt-8 border-t border-[var(--cx-text-muted)]/10 flex items-center justify-between">
-                <div>
-                  <h4 className="font-extrabold text-[16px] text-[var(--cx-text-main)]">Password</h4>
-                  <p className="text-[12px] font-medium text-[var(--cx-text-muted)] mt-1">Log in with your password instead of using temporary login codes</p>
+                <div className="flex flex-col gap-2">
+                  <label className="text-[13px] font-extrabold text-zinc-700">College / University</label>
+                  <input 
+                    type="text" 
+                    value={editCollege}
+                    onChange={e => setEditCollege(e.target.value)}
+                    placeholder="e.g. Stanford University"
+                    className="w-full bg-zinc-50 border border-zinc-200 rounded-[12px] px-4 py-3 text-[14px] font-medium text-zinc-900 outline-none focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all"
+                  />
                 </div>
-                <button className="px-4 py-2 bg-[var(--cx-bg-base)] border border-[var(--cx-text-muted)]/20 rounded-[12px] font-bold text-[14px] text-[var(--cx-text-main)] hover:bg-zinc-200 transition-colors">
-                  Change Password
-                </button>
+
+                <div className="flex flex-col gap-2">
+                  <label className="text-[13px] font-extrabold text-zinc-700">Department / Major</label>
+                  <input 
+                    type="text" 
+                    value={editDepartment}
+                    onChange={e => setEditDepartment(e.target.value)}
+                    placeholder="e.g. Computer Science"
+                    className="w-full bg-zinc-50 border border-zinc-200 rounded-[12px] px-4 py-3 text-[14px] font-medium text-zinc-900 outline-none focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all"
+                  />
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <label className="text-[13px] font-extrabold text-zinc-700">Year / Batch</label>
+                  <input 
+                    type="text" 
+                    value={editYear}
+                    onChange={e => setEditYear(e.target.value)}
+                    placeholder="e.g. Junior, Class of 2026"
+                    className="w-full bg-zinc-50 border border-zinc-200 rounded-[12px] px-4 py-3 text-[14px] font-medium text-zinc-900 outline-none focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all"
+                  />
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <label className="text-[13px] font-extrabold text-zinc-700">Location</label>
+                  <input 
+                    type="text" 
+                    value={editLocation}
+                    onChange={e => setEditLocation(e.target.value)}
+                    placeholder="e.g. San Francisco, CA"
+                    className="w-full bg-zinc-50 border border-zinc-200 rounded-[12px] px-4 py-3 text-[14px] font-medium text-zinc-900 outline-none focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all"
+                  />
+                </div>
               </div>
 
             </div>
 
-            {/* Bottom Save Bar */}
-            <div className="p-6 border-t border-[var(--cx-text-muted)]/10 bg-[var(--cx-bg-surface)] flex justify-end gap-3">
-              <button 
-                onClick={() => window.history.back()}
-                className="px-6 py-2.5 bg-[var(--cx-bg-base)] border border-[var(--cx-text-muted)]/20 rounded-[12px] font-bold text-[14px] text-[var(--cx-text-main)] hover:bg-zinc-200 transition-colors"
-              >
-                Cancel
-              </button>
+            {/* Save Button Footer */}
+            <div className="mt-auto p-6 bg-zinc-50 border-t border-zinc-200 flex justify-end">
               <button 
                 onClick={handleSaveProfile}
                 disabled={isSaving}
-                className={`px-8 py-2.5 rounded-[12px] font-bold text-[14px] text-white transition-colors shadow-sm
-                  ${isSaving ? 'bg-[var(--cx-primary)]/50 cursor-not-allowed' : 'bg-[var(--cx-primary)] hover:bg-indigo-700 shadow-indigo-500/20'}`}
+                className={`px-8 py-3 rounded-[12px] font-bold text-[14px] text-white transition-all shadow-sm
+                  ${isSaving ? 'bg-indigo-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700 hover:shadow-indigo-500/20'}`}
               >
-                {isSaving ? 'Saving...' : 'Save'}
+                {isSaving ? 'Saving Changes...' : 'Save Changes'}
               </button>
             </div>
           </div>
@@ -360,42 +352,45 @@ const Settings = () => {
 
         {activeTab === 'privacy' && (
           <div className="animate-in fade-in duration-300">
-            <h2 className="text-xl font-extrabold text-[var(--cx-text-main)] mb-6">Privacy & Safety</h2>
+            <div className="px-8 py-8 border-b border-zinc-100">
+              <h2 className="text-2xl font-extrabold text-zinc-900">Privacy & Safety</h2>
+              <p className="text-[14px] font-medium text-zinc-500 mt-1">Control who can see your profile and contact you.</p>
+            </div>
             
-            <div className="space-y-6">
-              <div className="flex items-center justify-between p-4 bg-[var(--cx-bg-base)] rounded-[20px] border border-[var(--cx-text-muted)]/5">
+            <div className="p-8 space-y-6">
+              <div className="flex items-center justify-between p-6 bg-zinc-50 rounded-[16px] border border-zinc-200/60">
                 <div>
-                  <h4 className="font-bold text-[15px] text-[var(--cx-text-main)]">Private Profile</h4>
-                  <p className="text-[13px] font-medium text-[var(--cx-text-muted)] max-w-sm mt-1">Only your friends will be able to see your full profile, posts, and details.</p>
+                  <h4 className="font-extrabold text-[15px] text-zinc-900">Private Profile</h4>
+                  <p className="text-[13px] font-medium text-zinc-500 max-w-md mt-1 leading-relaxed">When your profile is private, only approved friends can see your posts and details. Your name and avatar remain visible.</p>
                 </div>
                 <button 
                   onClick={() => handleToggle('privateProfile')}
-                  className={`w-12 h-6 rounded-full transition-colors relative flex items-center ${settings.privateProfile ? 'bg-[var(--cx-primary)]' : 'bg-zinc-300'}`}
+                  className={`w-12 h-6 rounded-full transition-colors relative flex items-center shrink-0 ${settings.privateProfile ? 'bg-indigo-600' : 'bg-zinc-300'}`}
                 >
-                  <div className={`w-4 h-4 bg-white rounded-full mx-1 transition-transform ${settings.privateProfile ? 'translate-x-6' : 'translate-x-0'}`}></div>
+                  <div className={`w-4 h-4 bg-white rounded-full mx-1 transition-transform shadow-sm ${settings.privateProfile ? 'translate-x-6' : 'translate-x-0'}`}></div>
                 </button>
               </div>
 
-              <div className="p-4 bg-[var(--cx-bg-base)] rounded-[20px] border border-[var(--cx-text-muted)]/5">
-                <h4 className="font-bold text-[15px] text-[var(--cx-text-main)] mb-1">Direct Messages</h4>
-                <p className="text-[13px] font-medium text-[var(--cx-text-muted)] mb-4">Who is allowed to send you direct messages?</p>
+              <div className="p-6 bg-zinc-50 rounded-[16px] border border-zinc-200/60">
+                <h4 className="font-extrabold text-[15px] text-zinc-900 mb-1">Direct Messages</h4>
+                <p className="text-[13px] font-medium text-zinc-500 mb-4">Who is allowed to send you direct messages?</p>
                 
-                <div className="flex gap-3">
+                <div className="flex flex-col sm:flex-row gap-3">
                   <button 
                     onClick={() => handleSelect('allowMessagesFrom', 'everyone')}
-                    className={`flex-1 py-2.5 rounded-[12px] font-bold text-[13px] transition-colors border ${settings.allowMessagesFrom === 'everyone' ? 'bg-[var(--cx-bg-surface)] border-[var(--cx-primary)] text-[var(--cx-primary)]' : 'border-transparent hover:bg-zinc-200 text-[var(--cx-text-main)]'}`}
+                    className={`flex-1 py-3 rounded-[12px] font-bold text-[13px] transition-all border ${settings.allowMessagesFrom === 'everyone' ? 'bg-white border-indigo-600 text-indigo-600 shadow-sm' : 'bg-white border-zinc-200 hover:border-zinc-300 text-zinc-600'}`}
                   >
                     Everyone
                   </button>
                   <button 
                     onClick={() => handleSelect('allowMessagesFrom', 'friends')}
-                    className={`flex-1 py-2.5 rounded-[12px] font-bold text-[13px] transition-colors border ${settings.allowMessagesFrom === 'friends' ? 'bg-[var(--cx-bg-surface)] border-[var(--cx-primary)] text-[var(--cx-primary)]' : 'border-transparent hover:bg-zinc-200 text-[var(--cx-text-main)]'}`}
+                    className={`flex-1 py-3 rounded-[12px] font-bold text-[13px] transition-all border ${settings.allowMessagesFrom === 'friends' ? 'bg-white border-indigo-600 text-indigo-600 shadow-sm' : 'bg-white border-zinc-200 hover:border-zinc-300 text-zinc-600'}`}
                   >
                     Friends Only
                   </button>
                   <button 
                     onClick={() => handleSelect('allowMessagesFrom', 'nobody')}
-                    className={`flex-1 py-2.5 rounded-[12px] font-bold text-[13px] transition-colors border ${settings.allowMessagesFrom === 'nobody' ? 'bg-[var(--cx-bg-surface)] border-[var(--cx-primary)] text-[var(--cx-primary)]' : 'border-transparent hover:bg-zinc-200 text-[var(--cx-text-main)]'}`}
+                    className={`flex-1 py-3 rounded-[12px] font-bold text-[13px] transition-all border ${settings.allowMessagesFrom === 'nobody' ? 'bg-white border-indigo-600 text-indigo-600 shadow-sm' : 'bg-white border-zinc-200 hover:border-zinc-300 text-zinc-600'}`}
                   >
                     Nobody
                   </button>
@@ -407,45 +402,48 @@ const Settings = () => {
 
         {activeTab === 'notifications' && (
           <div className="animate-in fade-in duration-300">
-            <h2 className="text-xl font-extrabold text-[var(--cx-text-main)] mb-6">Notifications</h2>
+            <div className="px-8 py-8 border-b border-zinc-100">
+              <h2 className="text-2xl font-extrabold text-zinc-900">Notifications</h2>
+              <p className="text-[14px] font-medium text-zinc-500 mt-1">Manage how and when CampusX contacts you.</p>
+            </div>
             
-            <div className="space-y-4">
-              <div className="flex items-center justify-between p-4 bg-[var(--cx-bg-base)] rounded-[20px] border border-[var(--cx-text-muted)]/5">
+            <div className="p-8 space-y-4">
+              <div className="flex items-center justify-between p-6 bg-zinc-50 rounded-[16px] border border-zinc-200/60">
                 <div>
-                  <h4 className="font-bold text-[15px] text-[var(--cx-text-main)]">Email Notifications</h4>
-                  <p className="text-[13px] font-medium text-[var(--cx-text-muted)] mt-1">Receive daily digests and major announcements.</p>
+                  <h4 className="font-extrabold text-[15px] text-zinc-900">Email Notifications</h4>
+                  <p className="text-[13px] font-medium text-zinc-500 mt-1">Receive daily digests and major announcements.</p>
                 </div>
                 <button 
                   onClick={() => handleToggle('emailNotifs')}
-                  className={`w-12 h-6 rounded-full transition-colors relative flex items-center ${settings.emailNotifs ? 'bg-[var(--cx-primary)]' : 'bg-zinc-300'}`}
+                  className={`w-12 h-6 rounded-full transition-colors relative flex items-center shrink-0 ${settings.emailNotifs ? 'bg-indigo-600' : 'bg-zinc-300'}`}
                 >
-                  <div className={`w-4 h-4 bg-white rounded-full mx-1 transition-transform ${settings.emailNotifs ? 'translate-x-6' : 'translate-x-0'}`}></div>
+                  <div className={`w-4 h-4 bg-white rounded-full mx-1 transition-transform shadow-sm ${settings.emailNotifs ? 'translate-x-6' : 'translate-x-0'}`}></div>
                 </button>
               </div>
 
-              <div className="flex items-center justify-between p-4 bg-[var(--cx-bg-base)] rounded-[20px] border border-[var(--cx-text-muted)]/5">
+              <div className="flex items-center justify-between p-6 bg-zinc-50 rounded-[16px] border border-zinc-200/60">
                 <div>
-                  <h4 className="font-bold text-[15px] text-[var(--cx-text-main)]">Push Notifications</h4>
-                  <p className="text-[13px] font-medium text-[var(--cx-text-muted)] mt-1">Get instantly alerted for direct messages and event reminders.</p>
+                  <h4 className="font-extrabold text-[15px] text-zinc-900">Push Notifications</h4>
+                  <p className="text-[13px] font-medium text-zinc-500 mt-1">Get instantly alerted for direct messages and event reminders.</p>
                 </div>
                 <button 
                   onClick={() => handleToggle('pushNotifs')}
-                  className={`w-12 h-6 rounded-full transition-colors relative flex items-center ${settings.pushNotifs ? 'bg-[var(--cx-primary)]' : 'bg-zinc-300'}`}
+                  className={`w-12 h-6 rounded-full transition-colors relative flex items-center shrink-0 ${settings.pushNotifs ? 'bg-indigo-600' : 'bg-zinc-300'}`}
                 >
-                  <div className={`w-4 h-4 bg-white rounded-full mx-1 transition-transform ${settings.pushNotifs ? 'translate-x-6' : 'translate-x-0'}`}></div>
+                  <div className={`w-4 h-4 bg-white rounded-full mx-1 transition-transform shadow-sm ${settings.pushNotifs ? 'translate-x-6' : 'translate-x-0'}`}></div>
                 </button>
               </div>
 
-              <div className="flex items-center justify-between p-4 bg-[var(--cx-ghost-start)]/10 rounded-[20px] border border-[var(--cx-ghost-start)]/20">
+              <div className="flex items-center justify-between p-6 bg-indigo-50/50 rounded-[16px] border border-indigo-100">
                 <div>
-                  <h4 className="font-bold text-[15px] text-[var(--cx-text-main)]">Ghost Mode Mentions</h4>
-                  <p className="text-[13px] font-medium text-[var(--cx-text-muted)] mt-1 max-w-sm">Allow push notifications if someone replies to your anonymous Ghost post.</p>
+                  <h4 className="font-extrabold text-[15px] text-indigo-900">Ghost Mode Mentions</h4>
+                  <p className="text-[13px] font-medium text-indigo-700/70 mt-1 max-w-sm">Allow push notifications if someone replies to your anonymous Ghost post.</p>
                 </div>
                 <button 
                   onClick={() => handleToggle('ghostMentions')}
-                  className={`w-12 h-6 rounded-full transition-colors relative flex items-center ${settings.ghostMentions ? 'bg-[var(--cx-ghost-start)]' : 'bg-[var(--cx-ghost-start)]/30'}`}
+                  className={`w-12 h-6 rounded-full transition-colors relative flex items-center shrink-0 ${settings.ghostMentions ? 'bg-indigo-600' : 'bg-indigo-300'}`}
                 >
-                  <div className={`w-4 h-4 bg-white rounded-full mx-1 transition-transform ${settings.ghostMentions ? 'translate-x-6' : 'translate-x-0'}`}></div>
+                  <div className={`w-4 h-4 bg-white rounded-full mx-1 transition-transform shadow-sm ${settings.ghostMentions ? 'translate-x-6' : 'translate-x-0'}`}></div>
                 </button>
               </div>
             </div>
@@ -454,19 +452,22 @@ const Settings = () => {
 
         {activeTab === 'appearance' && (
           <div className="animate-in fade-in duration-300">
-            <h2 className="text-xl font-extrabold text-[var(--cx-text-main)] mb-6">Appearance</h2>
+            <div className="px-8 py-8 border-b border-zinc-100">
+              <h2 className="text-2xl font-extrabold text-zinc-900">Appearance</h2>
+              <p className="text-[14px] font-medium text-zinc-500 mt-1">Customize how CampusX looks on this device.</p>
+            </div>
             
-            <div className="space-y-6">
-              <div className="flex items-center justify-between p-4 bg-[var(--cx-bg-base)] rounded-[20px] border border-[var(--cx-text-muted)]/5">
+            <div className="p-8 space-y-6">
+              <div className="flex items-center justify-between p-6 bg-zinc-50 rounded-[16px] border border-zinc-200/60">
                 <div>
-                  <h4 className="font-bold text-[15px] text-[var(--cx-text-main)]">Dark Mode</h4>
-                  <p className="text-[13px] font-medium text-[var(--cx-text-muted)] mt-1">Easier on the eyes in low light.</p>
+                  <h4 className="font-extrabold text-[15px] text-zinc-900">Dark Mode</h4>
+                  <p className="text-[13px] font-medium text-zinc-500 mt-1">Easier on the eyes in low light.</p>
                 </div>
                 <button 
                   onClick={() => handleToggle('darkMode')}
-                  className={`w-12 h-6 rounded-full transition-colors relative flex items-center ${settings.darkMode ? 'bg-zinc-800' : 'bg-zinc-300'}`}
+                  className={`w-12 h-6 rounded-full transition-colors relative flex items-center shrink-0 ${settings.darkMode ? 'bg-zinc-800' : 'bg-zinc-300'}`}
                 >
-                  <div className={`w-4 h-4 bg-white rounded-full mx-1 transition-transform ${settings.darkMode ? 'translate-x-6' : 'translate-x-0'}`}></div>
+                  <div className={`w-4 h-4 bg-white rounded-full mx-1 transition-transform shadow-sm ${settings.darkMode ? 'translate-x-6' : 'translate-x-0'}`}></div>
                 </button>
               </div>
             </div>
