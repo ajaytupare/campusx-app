@@ -190,8 +190,7 @@ const UserProfile = () => {
               </div>
             </div>
           </div>
-
-        </div>        </div>
+        </div>
       </div>
 
       {/* Recent Activity Feed */}
