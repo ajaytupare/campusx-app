@@ -152,10 +152,10 @@ const Settings = () => {
   ];
 
   return (
-    <div className="flex flex-col lg:flex-row w-full min-h-[80vh] max-w-[1100px] mx-auto bg-white rounded-[24px] shadow-sm border border-zinc-200 overflow-hidden mb-12">
+    <div className="flex flex-col lg:flex-row w-full min-h-[80vh] max-w-[1100px] mx-auto bg-white rounded-[24px] shadow-sm border border-black/5 overflow-hidden mb-12">
       
       {/* Sidebar Navigation */}
-      <div className="w-full lg:w-[280px] shrink-0 bg-zinc-50/50 flex flex-col p-6 border-b lg:border-b-0 lg:border-r border-zinc-200 gap-2">
+      <div className="w-full lg:w-[280px] shrink-0 bg-zinc-50/50 flex flex-col p-6 border-b lg:border-b-0 lg:border-r border-black/5 gap-2">
         <h1 className="text-[28px] font-black text-zinc-900 mb-6 tracking-tight px-2">Settings</h1>
         
         <div className="flex lg:flex-col gap-2 overflow-x-auto hide-scrollbar pb-2 lg:pb-0">
@@ -165,10 +165,10 @@ const Settings = () => {
               onClick={() => setActiveTab(tab.id)}
               className={`flex items-center gap-3 px-4 py-3.5 rounded-[12px] font-bold text-[14px] transition-all whitespace-nowrap lg:w-full text-left
                 ${activeTab === tab.id 
-                  ? 'bg-white text-orange-600 shadow-sm border border-zinc-200/60' 
+                  ? 'bg-white text-blue-600 shadow-sm border border-black/5/60' 
                   : 'text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 border border-transparent'}`}
             >
-              <tab.icon className={`w-5 h-5 ${activeTab === tab.id ? 'text-orange-600' : 'text-zinc-400'}`} />
+              <tab.icon className={`w-5 h-5 ${activeTab === tab.id ? 'text-blue-600' : 'text-zinc-400'}`} />
               {tab.label}
             </button>
           ))}
@@ -221,7 +221,7 @@ const Settings = () => {
                         </label>
                         <button 
                           onClick={() => setEditAvatar(null)}
-                          className="px-4 py-2 bg-white border border-zinc-200 rounded-[8px] font-bold text-[13px] text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900 transition-colors shadow-sm"
+                          className="px-4 py-2 bg-white border border-black/5 rounded-[8px] font-bold text-[13px] text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900 transition-colors shadow-sm"
                         >
                           Remove
                         </button>
@@ -264,7 +264,7 @@ const Settings = () => {
                     value={editName}
                     onChange={e => setEditName(e.target.value)}
                     placeholder="Enter your name"
-                    className="w-full bg-zinc-50 border border-zinc-200 rounded-[12px] px-4 py-3 text-[14px] font-medium text-zinc-900 outline-none focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 transition-all"
+                    className="w-full bg-zinc-50 border border-black/5 rounded-[12px] px-4 py-3 text-[14px] font-medium text-zinc-900 outline-none focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all"
                   />
                 </div>
 
@@ -274,7 +274,7 @@ const Settings = () => {
                     type="email" 
                     disabled
                     value={currentUser?.email || ''}
-                    className="w-full bg-zinc-50 border border-zinc-200 rounded-[12px] px-4 py-3 text-[14px] font-medium text-zinc-500 outline-none cursor-not-allowed opacity-70"
+                    className="w-full bg-zinc-50 border border-black/5 rounded-[12px] px-4 py-3 text-[14px] font-medium text-zinc-500 outline-none cursor-not-allowed opacity-70"
                   />
                   <p className="text-[12px] font-medium text-zinc-400">Your email cannot be changed here.</p>
                 </div>
@@ -285,7 +285,7 @@ const Settings = () => {
                     value={editBio}
                     onChange={e => setEditBio(e.target.value)}
                     placeholder="Write a short intro about yourself..."
-                    className="w-full bg-zinc-50 border border-zinc-200 rounded-[12px] px-4 py-3 text-[14px] font-medium text-zinc-900 outline-none focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 transition-all min-h-[100px] resize-y"
+                    className="w-full bg-zinc-50 border border-black/5 rounded-[12px] px-4 py-3 text-[14px] font-medium text-zinc-900 outline-none focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all min-h-[100px] resize-y"
                   />
                 </div>
 
@@ -296,7 +296,7 @@ const Settings = () => {
                     value={editCollege}
                     onChange={e => setEditCollege(e.target.value)}
                     placeholder="e.g. Stanford University"
-                    className="w-full bg-zinc-50 border border-zinc-200 rounded-[12px] px-4 py-3 text-[14px] font-medium text-zinc-900 outline-none focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 transition-all"
+                    className="w-full bg-zinc-50 border border-black/5 rounded-[12px] px-4 py-3 text-[14px] font-medium text-zinc-900 outline-none focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all"
                   />
                 </div>
 
@@ -307,7 +307,7 @@ const Settings = () => {
                     value={editDepartment}
                     onChange={e => setEditDepartment(e.target.value)}
                     placeholder="e.g. Computer Science"
-                    className="w-full bg-zinc-50 border border-zinc-200 rounded-[12px] px-4 py-3 text-[14px] font-medium text-zinc-900 outline-none focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 transition-all"
+                    className="w-full bg-zinc-50 border border-black/5 rounded-[12px] px-4 py-3 text-[14px] font-medium text-zinc-900 outline-none focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all"
                   />
                 </div>
 
@@ -318,7 +318,7 @@ const Settings = () => {
                     value={editYear}
                     onChange={e => setEditYear(e.target.value)}
                     placeholder="e.g. Junior, Class of 2026"
-                    className="w-full bg-zinc-50 border border-zinc-200 rounded-[12px] px-4 py-3 text-[14px] font-medium text-zinc-900 outline-none focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 transition-all"
+                    className="w-full bg-zinc-50 border border-black/5 rounded-[12px] px-4 py-3 text-[14px] font-medium text-zinc-900 outline-none focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all"
                   />
                 </div>
 
@@ -329,7 +329,7 @@ const Settings = () => {
                     value={editLocation}
                     onChange={e => setEditLocation(e.target.value)}
                     placeholder="e.g. San Francisco, CA"
-                    className="w-full bg-zinc-50 border border-zinc-200 rounded-[12px] px-4 py-3 text-[14px] font-medium text-zinc-900 outline-none focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 transition-all"
+                    className="w-full bg-zinc-50 border border-black/5 rounded-[12px] px-4 py-3 text-[14px] font-medium text-zinc-900 outline-none focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all"
                   />
                 </div>
               </div>
@@ -337,12 +337,12 @@ const Settings = () => {
             </div>
 
             {/* Save Button Footer */}
-            <div className="mt-auto p-6 bg-zinc-50 border-t border-zinc-200 flex justify-end">
+            <div className="mt-auto p-6 bg-zinc-50 border-t border-black/5 flex justify-end">
               <button 
                 onClick={handleSaveProfile}
                 disabled={isSaving}
                 className={`px-8 py-3 rounded-[12px] font-bold text-[14px] text-white transition-all shadow-sm
-                  ${isSaving ? 'bg-orange-400 cursor-not-allowed' : 'bg-orange-600 hover:bg-orange-700 hover:shadow-orange-500/20'}`}
+                  ${isSaving ? 'bg-blue-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 hover:shadow-blue-500/20'}`}
               >
                 {isSaving ? 'Saving Changes...' : 'Save Changes'}
               </button>
@@ -358,39 +358,39 @@ const Settings = () => {
             </div>
             
             <div className="p-8 space-y-6">
-              <div className="flex items-center justify-between p-6 bg-zinc-50 rounded-[16px] border border-zinc-200/60">
+              <div className="flex items-center justify-between p-6 bg-zinc-50 rounded-[16px] border border-black/5/60">
                 <div>
                   <h4 className="font-extrabold text-[15px] text-zinc-900">Private Profile</h4>
                   <p className="text-[13px] font-medium text-zinc-500 max-w-md mt-1 leading-relaxed">When your profile is private, only approved friends can see your posts and details. Your name and avatar remain visible.</p>
                 </div>
                 <button 
                   onClick={() => handleToggle('privateProfile')}
-                  className={`w-12 h-6 rounded-full transition-colors relative flex items-center shrink-0 ${settings.privateProfile ? 'bg-orange-600' : 'bg-zinc-300'}`}
+                  className={`w-12 h-6 rounded-full transition-colors relative flex items-center shrink-0 ${settings.privateProfile ? 'bg-blue-600' : 'bg-zinc-300'}`}
                 >
                   <div className={`w-4 h-4 bg-white rounded-full mx-1 transition-transform shadow-sm ${settings.privateProfile ? 'translate-x-6' : 'translate-x-0'}`}></div>
                 </button>
               </div>
 
-              <div className="p-6 bg-zinc-50 rounded-[16px] border border-zinc-200/60">
+              <div className="p-6 bg-zinc-50 rounded-[16px] border border-black/5/60">
                 <h4 className="font-extrabold text-[15px] text-zinc-900 mb-1">Direct Messages</h4>
                 <p className="text-[13px] font-medium text-zinc-500 mb-4">Who is allowed to send you direct messages?</p>
                 
                 <div className="flex flex-col sm:flex-row gap-3">
                   <button 
                     onClick={() => handleSelect('allowMessagesFrom', 'everyone')}
-                    className={`flex-1 py-3 rounded-[12px] font-bold text-[13px] transition-all border ${settings.allowMessagesFrom === 'everyone' ? 'bg-white border-orange-600 text-orange-600 shadow-sm' : 'bg-white border-zinc-200 hover:border-zinc-300 text-zinc-600'}`}
+                    className={`flex-1 py-3 rounded-[12px] font-bold text-[13px] transition-all border ${settings.allowMessagesFrom === 'everyone' ? 'bg-white border-blue-600 text-blue-600 shadow-sm' : 'bg-white border-black/5 hover:border-zinc-300 text-zinc-600'}`}
                   >
                     Everyone
                   </button>
                   <button 
                     onClick={() => handleSelect('allowMessagesFrom', 'friends')}
-                    className={`flex-1 py-3 rounded-[12px] font-bold text-[13px] transition-all border ${settings.allowMessagesFrom === 'friends' ? 'bg-white border-orange-600 text-orange-600 shadow-sm' : 'bg-white border-zinc-200 hover:border-zinc-300 text-zinc-600'}`}
+                    className={`flex-1 py-3 rounded-[12px] font-bold text-[13px] transition-all border ${settings.allowMessagesFrom === 'friends' ? 'bg-white border-blue-600 text-blue-600 shadow-sm' : 'bg-white border-black/5 hover:border-zinc-300 text-zinc-600'}`}
                   >
                     Friends Only
                   </button>
                   <button 
                     onClick={() => handleSelect('allowMessagesFrom', 'nobody')}
-                    className={`flex-1 py-3 rounded-[12px] font-bold text-[13px] transition-all border ${settings.allowMessagesFrom === 'nobody' ? 'bg-white border-orange-600 text-orange-600 shadow-sm' : 'bg-white border-zinc-200 hover:border-zinc-300 text-zinc-600'}`}
+                    className={`flex-1 py-3 rounded-[12px] font-bold text-[13px] transition-all border ${settings.allowMessagesFrom === 'nobody' ? 'bg-white border-blue-600 text-blue-600 shadow-sm' : 'bg-white border-black/5 hover:border-zinc-300 text-zinc-600'}`}
                   >
                     Nobody
                   </button>
@@ -408,40 +408,40 @@ const Settings = () => {
             </div>
             
             <div className="p-8 space-y-4">
-              <div className="flex items-center justify-between p-6 bg-zinc-50 rounded-[16px] border border-zinc-200/60">
+              <div className="flex items-center justify-between p-6 bg-zinc-50 rounded-[16px] border border-black/5/60">
                 <div>
                   <h4 className="font-extrabold text-[15px] text-zinc-900">Email Notifications</h4>
                   <p className="text-[13px] font-medium text-zinc-500 mt-1">Receive daily digests and major announcements.</p>
                 </div>
                 <button 
                   onClick={() => handleToggle('emailNotifs')}
-                  className={`w-12 h-6 rounded-full transition-colors relative flex items-center shrink-0 ${settings.emailNotifs ? 'bg-orange-600' : 'bg-zinc-300'}`}
+                  className={`w-12 h-6 rounded-full transition-colors relative flex items-center shrink-0 ${settings.emailNotifs ? 'bg-blue-600' : 'bg-zinc-300'}`}
                 >
                   <div className={`w-4 h-4 bg-white rounded-full mx-1 transition-transform shadow-sm ${settings.emailNotifs ? 'translate-x-6' : 'translate-x-0'}`}></div>
                 </button>
               </div>
 
-              <div className="flex items-center justify-between p-6 bg-zinc-50 rounded-[16px] border border-zinc-200/60">
+              <div className="flex items-center justify-between p-6 bg-zinc-50 rounded-[16px] border border-black/5/60">
                 <div>
                   <h4 className="font-extrabold text-[15px] text-zinc-900">Push Notifications</h4>
                   <p className="text-[13px] font-medium text-zinc-500 mt-1">Get instantly alerted for direct messages and event reminders.</p>
                 </div>
                 <button 
                   onClick={() => handleToggle('pushNotifs')}
-                  className={`w-12 h-6 rounded-full transition-colors relative flex items-center shrink-0 ${settings.pushNotifs ? 'bg-orange-600' : 'bg-zinc-300'}`}
+                  className={`w-12 h-6 rounded-full transition-colors relative flex items-center shrink-0 ${settings.pushNotifs ? 'bg-blue-600' : 'bg-zinc-300'}`}
                 >
                   <div className={`w-4 h-4 bg-white rounded-full mx-1 transition-transform shadow-sm ${settings.pushNotifs ? 'translate-x-6' : 'translate-x-0'}`}></div>
                 </button>
               </div>
 
-              <div className="flex items-center justify-between p-6 bg-orange-50/50 rounded-[16px] border border-orange-100">
+              <div className="flex items-center justify-between p-6 bg-blue-50/50 rounded-[16px] border border-blue-100">
                 <div>
-                  <h4 className="font-extrabold text-[15px] text-orange-900">Ghost Mode Mentions</h4>
-                  <p className="text-[13px] font-medium text-orange-700/70 mt-1 max-w-sm">Allow push notifications if someone replies to your anonymous Ghost post.</p>
+                  <h4 className="font-extrabold text-[15px] text-blue-900">Ghost Mode Mentions</h4>
+                  <p className="text-[13px] font-medium text-blue-700/70 mt-1 max-w-sm">Allow push notifications if someone replies to your anonymous Ghost post.</p>
                 </div>
                 <button 
                   onClick={() => handleToggle('ghostMentions')}
-                  className={`w-12 h-6 rounded-full transition-colors relative flex items-center shrink-0 ${settings.ghostMentions ? 'bg-orange-600' : 'bg-orange-300'}`}
+                  className={`w-12 h-6 rounded-full transition-colors relative flex items-center shrink-0 ${settings.ghostMentions ? 'bg-blue-600' : 'bg-blue-300'}`}
                 >
                   <div className={`w-4 h-4 bg-white rounded-full mx-1 transition-transform shadow-sm ${settings.ghostMentions ? 'translate-x-6' : 'translate-x-0'}`}></div>
                 </button>
@@ -458,7 +458,7 @@ const Settings = () => {
             </div>
             
             <div className="p-8 space-y-6">
-              <div className="flex items-center justify-between p-6 bg-zinc-50 rounded-[16px] border border-zinc-200/60">
+              <div className="flex items-center justify-between p-6 bg-zinc-50 rounded-[16px] border border-black/5/60">
                 <div>
                   <h4 className="font-extrabold text-[15px] text-zinc-900">Dark Mode</h4>
                   <p className="text-[13px] font-medium text-zinc-500 mt-1">Easier on the eyes in low light.</p>

@@ -21,12 +21,12 @@ const PostCard = ({ post }) => {
   const timeAgo = getRelativeTime(createdAt);
 
   return (
-    <div className="bg-[var(--cx-bg-surface)] rounded-[24px] p-5 shadow-sm border border-zinc-200 hover:shadow-md transition-shadow">
+    <div className="bg-[var(--cx-bg-surface)] rounded-[24px] p-5 shadow-sm border border-black/5 hover:shadow-md transition-shadow">
       
       {/* Post Header */}
       <div className="flex justify-between items-start mb-3">
         <div className="flex items-center gap-3">
-          <div className={`w-11 h-11 rounded-2xl flex items-center justify-center overflow-hidden shrink-0 border border-zinc-200
+          <div className={`w-11 h-11 rounded-2xl flex items-center justify-center overflow-hidden shrink-0 border border-black/5
             ${isGhost ? 'bg-zinc-900 text-xl' : 'bg-[var(--cx-bg-base)]'}`}>
             {isGhost ? '👻' : (
               <span className="font-bold text-[var(--cx-primary)] text-sm">
@@ -68,7 +68,7 @@ const PostCard = ({ post }) => {
       )}
 
       {/* Action Buttons */}
-      <div className="flex items-center justify-between pt-3 border-t border-zinc-200">
+      <div className="flex items-center justify-between pt-3 border-t border-black/5">
         <div className="flex gap-4">
           <button className="flex items-center gap-1.5 text-[var(--cx-text-muted)] hover:text-pink-500 transition-colors group font-bold text-[12px]">
             <div className="p-1.5 rounded-full group-hover:bg-pink-50 transition-colors">

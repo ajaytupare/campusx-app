@@ -35,7 +35,7 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className="w-[260px] h-[calc(100vh-48px)] bg-[var(--cx-bg-surface)] rounded-[24px] shadow-sm border border-zinc-200 flex flex-col p-5 m-6 overflow-y-auto">
+    <div className="w-[260px] h-[calc(100vh-48px)] bg-white/60 backdrop-blur-2xl rounded-[24px] shadow-sm border border-black/5 flex flex-col p-5 m-6 overflow-y-auto">
       
       {/* Brand Header */}
       <div className="flex items-center gap-3 px-2 mb-8 mt-2">
@@ -53,7 +53,7 @@ const Sidebar = () => {
         className={`flex items-center justify-between px-4 py-3 rounded-[16px] transition-all mb-4 border
           ${isGhostMode 
             ? 'bg-[var(--cx-ghost-start)] text-white shadow-md shadow-purple-500/20 border-transparent' 
-            : 'bg-[var(--cx-bg-base)] text-[var(--cx-text-main)] hover:bg-zinc-200 border-zinc-200/50'}`}
+            : 'bg-[var(--cx-bg-base)] text-[var(--cx-text-main)] hover:bg-zinc-200 border-black/5/50'}`}
       >
         <div className="flex items-center gap-3 font-bold text-[14px]">
           <Ghost className="w-5 h-5" />
@@ -94,7 +94,7 @@ const Sidebar = () => {
       </nav>
 
       {/* Bottom Settings Profile placeholder */}
-      <div className="mt-8 pt-4 border-t border-zinc-200">
+      <div className="mt-8 pt-4 border-t border-black/5">
         <Link to="/profile/me" className="flex items-center gap-3 px-3 py-3 rounded-[16px] hover:bg-[var(--cx-bg-base)] transition-colors group mb-1">
           <div className="w-9 h-9 rounded-full bg-[var(--cx-bg-base)] shrink-0 overflow-hidden">
             <img src={profile.avatar} alt="Avatar" className="w-full h-full object-cover" />

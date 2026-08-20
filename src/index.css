@@ -1,9 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
 @theme {
-  /* Font */
-  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  /* Apple System Fonts */
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
 
   /* Colors */
   --color-primary: var(--cx-primary);
@@ -20,20 +19,20 @@
 
 @layer base {
   :root {
-    /* Warm Minimalist + Clean Modern Palette */
-    --cx-primary: #ea580c; /* Orange-600 */
-    --cx-accent: #f97316; /* Orange-500 */
+    /* Apple Human Interface Guidelines Palette */
+    --cx-primary: #0071E3; /* Apple System Blue */
+    --cx-accent: #0077ED; 
     
-    /* Ghost mode remains cool/mysterious to stand out */
-    --cx-ghost-start: #8b5cf6; /* Violet-500 */
-    --cx-ghost-end: #6366f1; /* Indigo-500 */
+    /* Ghost mode (Siri-esque purples) */
+    --cx-ghost-start: #5E5CE6; 
+    --cx-ghost-end: #AF52DE; 
     
     /* Light Theme */
-    --cx-bg-base: #f4f4f5; /* Zinc-100 (Clean light gray/warm undertone) */
-    --cx-bg-surface: #ffffff; /* Pure white for cards */
+    --cx-bg-base: #F5F5F7; /* Apple's standard device background */
+    --cx-bg-surface: #FFFFFF; /* Pure white */
     
-    --cx-text-main: #18181b; /* Zinc-900 */
-    --cx-text-muted: #71717a; /* Zinc-500 */
+    --cx-text-main: #1D1D1F; /* Apple's near-black */
+    --cx-text-muted: #86868B; /* Apple's secondary gray */
   }
 
   
