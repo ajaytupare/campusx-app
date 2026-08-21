@@ -3,6 +3,7 @@ import Landing from './pages/auth/Landing';
 import Register from './pages/auth/Register';
 import DashboardLayout from './components/layout/DashboardLayout';
 import Dashboard from './pages/Dashboard';
+import Discover from './pages/Discover';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         {/* Main App Routes */}
         <Route element={<DashboardLayout />}>
           <Route path="/home" element={<Dashboard />} />
+          <Route path="/discover" element={<Discover />} />
         </Route>
       </Routes>
     </BrowserRouter>
