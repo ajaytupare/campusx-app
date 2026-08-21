@@ -93,17 +93,17 @@ const EventProfile = () => {
         <ArrowLeft className="w-4 h-4" /> Back to Events
       </Link>
 
-      <div className="bg-[var(--cx-bg-surface)] rounded-[32px] p-8 shadow-sm border border-[var(--cx-text-muted)]/10">
+      <div className="bg-[var(--cx-bg-surface)] rounded-[32px] p-8 shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-black/[0.04]">
         
         {/* Banner */}
-        <div className="w-full h-48 bg-gradient-to-r from-[var(--cx-primary)] to-blue-500 rounded-[24px] mb-8 relative overflow-hidden flex items-center justify-center">
+        <div className="w-full h-48 bg-gradient-to-r from-[var(--cx-primary)] to-blue-500 rounded-2xl mb-8 relative overflow-hidden flex items-center justify-center">
           <Calendar className="w-24 h-24 text-white/20" />
         </div>
 
         <div className="flex flex-col lg:flex-row gap-12">
           
           <div className="flex-1">
-            <h1 className="text-3xl font-extrabold text-[var(--cx-text-main)] tracking-tight mb-4 leading-tight">
+            <h1 className="text-3xl font-semibold text-[var(--cx-text-main)] tracking-tight mb-4 leading-tight">
               {event.title}
             </h1>
             
@@ -111,10 +111,10 @@ const EventProfile = () => {
               {event.description}
             </p>
 
-            <h3 className="font-extrabold text-[18px] text-[var(--cx-text-main)] mb-4">Attendees ({event.rsvps})</h3>
+            <h3 className="font-semibold text-[18px] text-[var(--cx-text-main)] mb-4">Attendees ({event.rsvps})</h3>
             <div className="flex flex-wrap gap-2">
               {rsvps.map((rsvp, idx) => (
-                <div key={idx} className="bg-[var(--cx-bg-base)] px-4 py-2 rounded-xl text-[14px] font-bold text-[var(--cx-text-main)] border border-[var(--cx-text-muted)]/10">
+                <div key={idx} className="bg-[var(--cx-bg-base)] px-4 py-2 rounded-xl text-[14px] font-bold text-[var(--cx-text-main)] border border-black/[0.04]">
                   {rsvp.name}
                 </div>
               ))}
@@ -125,11 +125,11 @@ const EventProfile = () => {
           </div>
 
           <div className="lg:w-80 shrink-0">
-            <div className="bg-[var(--cx-bg-base)] rounded-[24px] p-6 border border-[var(--cx-text-muted)]/10 sticky top-6">
+            <div className="bg-[var(--cx-bg-base)] rounded-2xl p-6 border border-black/[0.04] sticky top-6">
               
               <div className="flex flex-col gap-5 mb-8">
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-[12px] bg-[var(--cx-bg-surface)] flex items-center justify-center text-[var(--cx-primary)] shadow-sm shrink-0">
+                  <div className="w-10 h-10 rounded-xl bg-[var(--cx-bg-surface)] flex items-center justify-center text-[var(--cx-primary)] shadow-[0_2px_8px_rgba(0,0,0,0.04)] shrink-0">
                     <Calendar className="w-5 h-5" />
                   </div>
                   <div>
@@ -139,7 +139,7 @@ const EventProfile = () => {
                 </div>
 
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-[12px] bg-[var(--cx-bg-surface)] flex items-center justify-center text-[var(--cx-primary)] shadow-sm shrink-0">
+                  <div className="w-10 h-10 rounded-xl bg-[var(--cx-bg-surface)] flex items-center justify-center text-[var(--cx-primary)] shadow-[0_2px_8px_rgba(0,0,0,0.04)] shrink-0">
                     <Clock className="w-5 h-5" />
                   </div>
                   <div>
@@ -149,7 +149,7 @@ const EventProfile = () => {
                 </div>
 
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-[12px] bg-[var(--cx-bg-surface)] flex items-center justify-center text-[var(--cx-primary)] shadow-sm shrink-0">
+                  <div className="w-10 h-10 rounded-xl bg-[var(--cx-bg-surface)] flex items-center justify-center text-[var(--cx-primary)] shadow-[0_2px_8px_rgba(0,0,0,0.04)] shrink-0">
                     <MapPin className="w-5 h-5" />
                   </div>
                   <div>
@@ -161,7 +161,7 @@ const EventProfile = () => {
 
               {/* RSVP ACTION - WITH GHOST RESTRICTION */}
               {isGhostMode ? (
-                <div className="bg-[var(--cx-ghost-start)]/5 border border-[var(--cx-ghost-start)]/20 rounded-[16px] p-4 text-center">
+                <div className="bg-[var(--cx-ghost-start)]/5 border border-[var(--cx-ghost-start)]/20 rounded-xl p-4 text-center">
                   <AlertTriangle className="w-6 h-6 text-[var(--cx-ghost-start)] mx-auto mb-2" />
                   <p className="text-[13px] font-bold text-[var(--cx-ghost-start)] leading-tight mb-2">
                     RSVP Disabled
@@ -173,7 +173,7 @@ const EventProfile = () => {
               ) : (
                 <button 
                   onClick={handleRSVP}
-                  className={`w-full py-4 rounded-[16px] font-extrabold flex items-center justify-center gap-2 text-[15px] transition-all
+                  className={`w-full py-4 rounded-xl font-semibold flex items-center justify-center gap-2 text-[15px] transition-all
                     ${isGoing 
                       ? 'bg-[var(--cx-bg-surface)] text-[var(--cx-text-main)] border-2 border-[var(--cx-primary)]' 
                       : 'bg-[var(--cx-primary)] text-white hover:shadow-lg hover:shadow-indigo-500/30 hover:scale-105 active:scale-95'}`}
@@ -192,3 +192,5 @@ const EventProfile = () => {
 };
 
 export default EventProfile;
+
+

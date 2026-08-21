@@ -43,20 +43,20 @@ const Login = () => {
 
   return (
     <div className="min-h-screen bg-[var(--cx-bg-base)] flex flex-col items-center justify-center p-6 font-sans">
-      <div className="w-full max-w-[440px] bg-[var(--cx-bg-surface)] rounded-[32px] p-8 md:p-10 shadow-lg border border-[var(--cx-text-muted)]/10">
+      <div className="w-full max-w-[440px] bg-[var(--cx-bg-surface)] rounded-[32px] p-8 md:p-10 shadow-lg border border-black/[0.04]">
         
         <div className="text-center mb-8">
           <Link to="/" className="inline-block mb-6">
             <div className="w-12 h-12 bg-[var(--cx-primary)] rounded-[14px] flex items-center justify-center mx-auto shadow-md shadow-indigo-500/20">
-              <span className="text-white font-extrabold text-2xl">C</span>
+              <span className="text-white font-semibold text-2xl">C</span>
             </div>
           </Link>
-          <h2 className="text-2xl md:text-3xl font-extrabold text-[var(--cx-text-main)] mb-2 tracking-tight">Welcome back</h2>
+          <h2 className="text-2xl md:text-3xl font-semibold text-[var(--cx-text-main)] mb-2 tracking-tight">Welcome back</h2>
           <p className="text-[14px] font-medium text-[var(--cx-text-muted)]">Sign in to your university network.</p>
         </div>
 
         {error && (
-          <div className="mb-6 p-4 bg-red-50 text-red-600 rounded-[16px] text-[13px] font-bold border border-red-100 text-center">
+          <div className="mb-6 p-4 bg-red-50 text-red-600 rounded-xl text-[13px] font-bold border border-red-100 text-center">
             {error}
           </div>
         )}
@@ -67,7 +67,7 @@ const Login = () => {
             <input 
               type="email" 
               required
-              className="w-full bg-[var(--cx-bg-base)] border border-transparent rounded-[16px] px-4 py-3.5 text-[15px] focus:ring-2 focus:ring-[var(--cx-primary)] outline-none transition-all placeholder:text-[var(--cx-text-muted)]/50 font-medium text-[var(--cx-text-main)]"
+              className="w-full bg-[var(--cx-bg-base)] border border-transparent rounded-xl px-4 py-3.5 text-[15px] focus:ring-2 focus:ring-[var(--cx-primary)] outline-none transition-all placeholder:text-[var(--cx-text-muted)]/50 font-medium text-[var(--cx-text-main)]"
               placeholder="name@university.edu"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -81,7 +81,7 @@ const Login = () => {
             <input 
               type="password" 
               required
-              className="w-full bg-[var(--cx-bg-base)] border border-transparent rounded-[16px] px-4 py-3.5 text-[15px] focus:ring-2 focus:ring-[var(--cx-primary)] outline-none transition-all placeholder:text-[var(--cx-text-muted)]/50 font-medium text-[var(--cx-text-main)]"
+              className="w-full bg-[var(--cx-bg-base)] border border-transparent rounded-xl px-4 py-3.5 text-[15px] focus:ring-2 focus:ring-[var(--cx-primary)] outline-none transition-all placeholder:text-[var(--cx-text-muted)]/50 font-medium text-[var(--cx-text-main)]"
               placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -91,8 +91,8 @@ const Login = () => {
           <button 
             type="submit" 
             disabled={loading}
-            className={`w-full py-4 rounded-[16px] font-bold text-[15px] transition-all shadow-md flex items-center justify-center gap-2 mt-2
-              ${loading ? 'bg-zinc-300 text-zinc-500 cursor-not-allowed' : 'bg-[var(--cx-primary)] text-white hover:brightness-110 hover:-translate-y-0.5 shadow-indigo-500/20'}`}
+            className={`w-full py-4 rounded-xl font-bold text-[15px] transition-all shadow-md flex items-center justify-center gap-2 mt-2
+              ${loading ? 'bg-[#D2D2D7] text-[#86868B] cursor-not-allowed' : 'bg-[var(--cx-primary)] text-white hover:brightness-110 hover:-translate-y-0.5 shadow-indigo-500/20'}`}
           >
             {loading ? 'Signing in...' : (
               <>Sign In <ArrowRight className="w-4 h-4" /></>
@@ -114,3 +114,5 @@ const Login = () => {
 };
 
 export default Login;
+
+

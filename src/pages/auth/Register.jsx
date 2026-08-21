@@ -77,18 +77,18 @@ const Register = () => {
 
   return (
     <div className="min-h-screen bg-[var(--cx-bg-base)] flex flex-col items-center justify-center p-6 font-sans overflow-y-auto py-12">
-      <div className="w-full max-w-[500px] bg-[var(--cx-bg-surface)] rounded-[32px] p-8 md:p-10 shadow-lg border border-[var(--cx-text-muted)]/10">
+      <div className="w-full max-w-[500px] bg-[var(--cx-bg-surface)] rounded-[32px] p-8 md:p-10 shadow-lg border border-black/[0.04]">
         
         <div className="text-center mb-8">
           <div className="w-12 h-12 bg-[var(--cx-primary)] rounded-[14px] flex items-center justify-center mx-auto mb-6 shadow-md shadow-indigo-500/20">
-            <span className="text-white font-extrabold text-2xl">C</span>
+            <span className="text-white font-semibold text-2xl">C</span>
           </div>
-          <h2 className="text-2xl md:text-3xl font-extrabold text-[var(--cx-text-main)] mb-2 tracking-tight">Join CampusX</h2>
+          <h2 className="text-2xl md:text-3xl font-semibold text-[var(--cx-text-main)] mb-2 tracking-tight">Join CampusX</h2>
           <p className="text-[14px] font-medium text-[var(--cx-text-muted)]">Connect with your campus community.</p>
         </div>
 
         {error && (
-          <div className="mb-6 p-4 bg-red-50 text-red-600 rounded-[16px] text-[13px] font-bold border border-red-100 text-center">
+          <div className="mb-6 p-4 bg-red-50 text-red-600 rounded-xl text-[13px] font-bold border border-red-100 text-center">
             {error}
           </div>
         )}
@@ -101,7 +101,7 @@ const Register = () => {
               type="text" 
               name="name"
               required
-              className="w-full bg-[var(--cx-bg-base)] border border-transparent rounded-[16px] px-4 py-3.5 text-[15px] focus:ring-2 focus:ring-[var(--cx-primary)] outline-none transition-all placeholder:text-[var(--cx-text-muted)]/50 font-medium text-[var(--cx-text-main)]"
+              className="w-full bg-[var(--cx-bg-base)] border border-transparent rounded-xl px-4 py-3.5 text-[15px] focus:ring-2 focus:ring-[var(--cx-primary)] outline-none transition-all placeholder:text-[var(--cx-text-muted)]/50 font-medium text-[var(--cx-text-main)]"
               placeholder="Alex Chen"
               value={formData.name}
               onChange={handleChange}
@@ -114,7 +114,7 @@ const Register = () => {
               type="email" 
               name="email"
               required
-              className="w-full bg-[var(--cx-bg-base)] border border-transparent rounded-[16px] px-4 py-3.5 text-[15px] focus:ring-2 focus:ring-[var(--cx-primary)] outline-none transition-all placeholder:text-[var(--cx-text-muted)]/50 font-medium text-[var(--cx-text-main)]"
+              className="w-full bg-[var(--cx-bg-base)] border border-transparent rounded-xl px-4 py-3.5 text-[15px] focus:ring-2 focus:ring-[var(--cx-primary)] outline-none transition-all placeholder:text-[var(--cx-text-muted)]/50 font-medium text-[var(--cx-text-main)]"
               placeholder="alex@example.com"
               value={formData.email}
               onChange={handleChange}
@@ -127,7 +127,7 @@ const Register = () => {
               type="password" 
               name="password"
               required
-              className="w-full bg-[var(--cx-bg-base)] border border-transparent rounded-[16px] px-4 py-3.5 text-[15px] focus:ring-2 focus:ring-[var(--cx-primary)] outline-none transition-all placeholder:text-[var(--cx-text-muted)]/50 font-medium text-[var(--cx-text-main)]"
+              className="w-full bg-[var(--cx-bg-base)] border border-transparent rounded-xl px-4 py-3.5 text-[15px] focus:ring-2 focus:ring-[var(--cx-primary)] outline-none transition-all placeholder:text-[var(--cx-text-muted)]/50 font-medium text-[var(--cx-text-main)]"
               placeholder="••••••••"
               value={formData.password}
               onChange={handleChange}
@@ -140,7 +140,7 @@ const Register = () => {
               type="text" 
               name="college"
               required
-              className="w-full bg-[var(--cx-bg-base)] border border-transparent rounded-[16px] px-4 py-3.5 text-[15px] focus:ring-2 focus:ring-[var(--cx-primary)] outline-none transition-all placeholder:text-[var(--cx-text-muted)]/50 font-medium text-[var(--cx-text-main)]"
+              className="w-full bg-[var(--cx-bg-base)] border border-transparent rounded-xl px-4 py-3.5 text-[15px] focus:ring-2 focus:ring-[var(--cx-primary)] outline-none transition-all placeholder:text-[var(--cx-text-muted)]/50 font-medium text-[var(--cx-text-main)]"
               placeholder="e.g. Stanford University"
               value={formData.college}
               onChange={handleChange}
@@ -153,7 +153,7 @@ const Register = () => {
               type="text" 
               name="department"
               required
-              className="w-full bg-[var(--cx-bg-base)] border border-transparent rounded-[16px] px-4 py-3.5 text-[15px] focus:ring-2 focus:ring-[var(--cx-primary)] outline-none transition-all placeholder:text-[var(--cx-text-muted)]/50 font-medium text-[var(--cx-text-main)]"
+              className="w-full bg-[var(--cx-bg-base)] border border-transparent rounded-xl px-4 py-3.5 text-[15px] focus:ring-2 focus:ring-[var(--cx-primary)] outline-none transition-all placeholder:text-[var(--cx-text-muted)]/50 font-medium text-[var(--cx-text-main)]"
               placeholder="e.g. Computer Science"
               value={formData.department}
               onChange={handleChange}
@@ -165,7 +165,7 @@ const Register = () => {
               <label className="block text-[12px] font-bold text-[var(--cx-text-main)] uppercase tracking-wider mb-2 pl-1">Year</label>
               <select 
                 name="year"
-                className="w-full bg-[var(--cx-bg-base)] border border-transparent rounded-[16px] px-4 py-3.5 text-[15px] focus:ring-2 focus:ring-[var(--cx-primary)] outline-none transition-all font-medium text-[var(--cx-text-main)] appearance-none"
+                className="w-full bg-[var(--cx-bg-base)] border border-transparent rounded-xl px-4 py-3.5 text-[15px] focus:ring-2 focus:ring-[var(--cx-primary)] outline-none transition-all font-medium text-[var(--cx-text-main)] appearance-none"
                 value={formData.year}
                 onChange={handleChange}
               >
@@ -180,7 +180,7 @@ const Register = () => {
               <label className="block text-[12px] font-bold text-[var(--cx-text-main)] uppercase tracking-wider mb-2 pl-1">Semester</label>
               <select 
                 name="semester"
-                className="w-full bg-[var(--cx-bg-base)] border border-transparent rounded-[16px] px-4 py-3.5 text-[15px] focus:ring-2 focus:ring-[var(--cx-primary)] outline-none transition-all font-medium text-[var(--cx-text-main)] appearance-none"
+                className="w-full bg-[var(--cx-bg-base)] border border-transparent rounded-xl px-4 py-3.5 text-[15px] focus:ring-2 focus:ring-[var(--cx-primary)] outline-none transition-all font-medium text-[var(--cx-text-main)] appearance-none"
                 value={formData.semester}
                 onChange={handleChange}
               >
@@ -193,8 +193,8 @@ const Register = () => {
           <button 
             type="submit" 
             disabled={loading}
-            className={`w-full py-4 rounded-[16px] font-bold text-[15px] transition-all shadow-md flex items-center justify-center gap-2 mt-6
-              ${loading ? 'bg-zinc-300 text-zinc-500 cursor-not-allowed' : 'bg-[var(--cx-primary)] text-white hover:brightness-110 hover:-translate-y-0.5 shadow-indigo-500/20'}`}
+            className={`w-full py-4 rounded-xl font-bold text-[15px] transition-all shadow-md flex items-center justify-center gap-2 mt-6
+              ${loading ? 'bg-[#D2D2D7] text-[#86868B] cursor-not-allowed' : 'bg-[var(--cx-primary)] text-white hover:brightness-110 hover:-translate-y-0.5 shadow-indigo-500/20'}`}
           >
             {loading ? 'Creating account...' : (
               <>Create Account <ArrowRight className="w-4 h-4" /></>
@@ -202,7 +202,7 @@ const Register = () => {
           </button>
         </form>
 
-        <div className="mt-6 text-center bg-green-50 p-4 rounded-[16px] flex items-start gap-3 border border-green-100 text-left">
+        <div className="mt-6 text-center bg-green-50 p-4 rounded-xl flex items-start gap-3 border border-green-100 text-left">
           <ShieldCheck className="w-5 h-5 text-green-600 shrink-0 mt-0.5" />
           <p className="text-[12px] font-semibold text-green-800 leading-relaxed">
             Your real identity is required to prevent spam, but your personal data is protected. Ghost mode allows for anonymous posting later.
@@ -221,3 +221,5 @@ const Register = () => {
 };
 
 export default Register;
+
+

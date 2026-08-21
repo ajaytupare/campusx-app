@@ -59,11 +59,11 @@ const CommunitiesDirectory = () => {
     <div className="flex flex-col w-full h-full max-w-5xl mx-auto gap-6 pb-12">
       
       {/* Header & Search */}
-      <div className="bg-[var(--cx-bg-surface)] rounded-[24px] p-8 shadow-sm border border-[var(--cx-text-muted)]/10 text-center">
+      <div className="bg-[var(--cx-bg-surface)] rounded-2xl p-8 shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-black/[0.04] text-center">
         <div className="w-16 h-16 bg-[var(--cx-primary)]/10 rounded-2xl flex items-center justify-center mx-auto mb-4 text-[var(--cx-primary)]">
           <UsersRound className="w-8 h-8" />
         </div>
-        <h1 className="text-3xl font-extrabold text-[var(--cx-text-main)] tracking-tight mb-2">Communities</h1>
+        <h1 className="text-3xl font-semibold text-[var(--cx-text-main)] tracking-tight mb-2">Communities</h1>
         <p className="text-[var(--cx-text-muted)] font-medium mb-8 max-w-xl mx-auto">
           Join groups, find your niche, and connect with students who share your interests.
         </p>
@@ -76,12 +76,12 @@ const CommunitiesDirectory = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search communities..." 
-              className="w-full bg-[var(--cx-bg-base)] border border-[var(--cx-text-muted)]/20 rounded-[16px] py-3.5 pl-12 pr-4 text-[15px] outline-none text-[var(--cx-text-main)] font-bold placeholder:text-[var(--cx-text-muted)]/60"
+              className="w-full bg-[var(--cx-bg-base)] border border-[var(--cx-text-muted)]/20 rounded-xl py-3.5 pl-12 pr-4 text-[15px] outline-none text-[var(--cx-text-main)] font-bold placeholder:text-[var(--cx-text-muted)]/60"
             />
           </div>
           <button 
             onClick={() => setIsModalOpen(true)}
-            className="w-full sm:w-auto px-6 py-3.5 rounded-[16px] font-bold flex items-center justify-center gap-2 text-[15px] bg-[var(--cx-primary)] text-white hover:bg-indigo-700 transition-all shrink-0"
+            className="w-full sm:w-auto px-6 py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 text-[15px] bg-[var(--cx-primary)] text-white hover:bg-indigo-700 transition-all shrink-0"
             style={{ backgroundColor: 'var(--cx-primary)', color: 'white' }}
           >
             <Plus className="w-5 h-5" /> Create Community
@@ -95,24 +95,24 @@ const CommunitiesDirectory = () => {
           <Link 
             key={comm.id} 
             to={`/communities/${comm.id}`}
-            className="bg-[var(--cx-bg-surface)] rounded-[24px] p-6 shadow-sm border border-[var(--cx-text-muted)]/10 hover:shadow-md hover:border-[var(--cx-primary)]/30 transition-all group flex flex-col h-full relative overflow-hidden"
+            className="bg-[var(--cx-bg-surface)] rounded-2xl p-6 shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-black/[0.04] hover:shadow-md hover:border-[var(--cx-primary)]/30 transition-all group flex flex-col h-full relative overflow-hidden"
           >
             {/* Banner strip */}
             <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-[var(--cx-primary)] to-purple-500 opacity-50 group-hover:opacity-100 transition-opacity"></div>
             
             <div className="flex items-start justify-between mb-3 mt-1">
-              <div className="w-12 h-12 rounded-[14px] bg-[var(--cx-bg-base)] border border-[var(--cx-text-muted)]/10 flex items-center justify-center text-xl font-black text-[var(--cx-primary)]">
+              <div className="w-12 h-12 rounded-[14px] bg-[var(--cx-bg-base)] border border-black/[0.04] flex items-center justify-center text-xl font-bold text-[var(--cx-primary)]">
                 <Hash className="w-6 h-6 text-[var(--cx-primary)]/50" />
               </div>
-              <div className="flex items-center gap-1.5 bg-[var(--cx-bg-base)] px-2.5 py-1 rounded-lg border border-[var(--cx-text-muted)]/10">
-                {comm.isPrivate ? <Lock className="w-3.5 h-3.5 text-zinc-500" /> : <Globe className="w-3.5 h-3.5 text-zinc-500" />}
-                <span className="text-[11px] font-black text-zinc-500 tracking-wider uppercase">
+              <div className="flex items-center gap-1.5 bg-[var(--cx-bg-base)] px-2.5 py-1 rounded-lg border border-black/[0.04]">
+                {comm.isPrivate ? <Lock className="w-3.5 h-3.5 text-[#86868B]" /> : <Globe className="w-3.5 h-3.5 text-[#86868B]" />}
+                <span className="text-[11px] font-bold text-[#86868B] tracking-wider uppercase">
                   {comm.isPrivate ? 'Private' : 'Public'}
                 </span>
               </div>
             </div>
             
-            <h3 className="text-[18px] font-extrabold text-[var(--cx-text-main)] leading-tight mb-2 group-hover:text-[var(--cx-primary)] transition-colors">
+            <h3 className="text-[18px] font-semibold text-[var(--cx-text-main)] leading-tight mb-2 group-hover:text-[var(--cx-primary)] transition-colors">
               {comm.name}
             </h3>
             
@@ -120,7 +120,7 @@ const CommunitiesDirectory = () => {
               {comm.description}
             </p>
             
-            <div className="mt-auto pt-4 border-t border-[var(--cx-text-muted)]/10 flex items-center justify-between text-[13px] font-bold text-[var(--cx-text-muted)]">
+            <div className="mt-auto pt-4 border-t border-black/[0.04] flex items-center justify-between text-[13px] font-bold text-[var(--cx-text-muted)]">
               <div className="flex items-center gap-1.5">
                 <UsersRound className="w-4 h-4" />
                 {comm.members.toLocaleString()} Members
@@ -129,7 +129,7 @@ const CommunitiesDirectory = () => {
           </Link>
         ))}
         {filteredCommunities.length === 0 && (
-          <div className="col-span-full text-center py-12 text-[var(--cx-text-muted)] font-medium bg-[var(--cx-bg-surface)] rounded-[24px] border border-[var(--cx-text-muted)]/10">
+          <div className="col-span-full text-center py-12 text-[var(--cx-text-muted)] font-medium bg-[var(--cx-bg-surface)] rounded-2xl border border-black/[0.04]">
             No communities found matching "{searchQuery}"
           </div>
         )}
@@ -139,7 +139,7 @@ const CommunitiesDirectory = () => {
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
           <div className="bg-[var(--cx-bg-surface)] w-full max-w-md rounded-[32px] p-8 shadow-2xl border border-white/10 animate-in fade-in zoom-in-95 duration-200">
-            <h2 className="text-2xl font-extrabold text-[var(--cx-text-main)] tracking-tight mb-2">Create Community</h2>
+            <h2 className="text-2xl font-semibold text-[var(--cx-text-main)] tracking-tight mb-2">Create Community</h2>
             <p className="text-[14px] text-[var(--cx-text-muted)] font-medium mb-6">Build a new space for your campus.</p>
             
             <form onSubmit={handleCreateCommunity} className="flex flex-col gap-4">
@@ -151,7 +151,7 @@ const CommunitiesDirectory = () => {
                   value={newCommName}
                   onChange={e => setNewCommName(e.target.value)}
                   placeholder="e.g. Photography Club"
-                  className="w-full bg-[var(--cx-bg-base)] border border-transparent rounded-[16px] px-4 py-3 text-[15px] outline-none transition-all focus:border-[var(--cx-primary)]/30 text-[var(--cx-text-main)] font-medium"
+                  className="w-full bg-[var(--cx-bg-base)] border border-transparent rounded-xl px-4 py-3 text-[15px] outline-none transition-all focus:border-[var(--cx-primary)]/30 text-[var(--cx-text-main)] font-medium"
                 />
               </div>
               
@@ -162,11 +162,11 @@ const CommunitiesDirectory = () => {
                   value={newCommDesc}
                   onChange={e => setNewCommDesc(e.target.value)}
                   placeholder="What is this community about?"
-                  className="w-full bg-[var(--cx-bg-base)] border border-transparent rounded-[16px] px-4 py-3 text-[15px] outline-none resize-none min-h-[80px] transition-all focus:border-[var(--cx-primary)]/30 text-[var(--cx-text-main)] font-medium"
+                  className="w-full bg-[var(--cx-bg-base)] border border-transparent rounded-xl px-4 py-3 text-[15px] outline-none resize-none min-h-[80px] transition-all focus:border-[var(--cx-primary)]/30 text-[var(--cx-text-main)] font-medium"
                 />
               </div>
 
-              <div className="flex items-center gap-3 p-4 bg-[var(--cx-bg-base)] rounded-[16px] border border-[var(--cx-text-muted)]/10">
+              <div className="flex items-center gap-3 p-4 bg-[var(--cx-bg-base)] rounded-xl border border-black/[0.04]">
                 <input 
                   type="checkbox" 
                   id="privacy"
@@ -184,14 +184,14 @@ const CommunitiesDirectory = () => {
                 <button 
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="flex-1 py-3.5 rounded-[16px] font-bold text-[14px] bg-[var(--cx-bg-base)] text-[var(--cx-text-main)] hover:bg-zinc-200 transition-colors"
+                  className="flex-1 py-3.5 rounded-xl font-bold text-[14px] bg-[var(--cx-bg-base)] text-[var(--cx-text-main)] hover:bg-black/[0.06] transition-colors"
                 >
                   Cancel
                 </button>
                 <button 
                   type="submit"
                   disabled={!newCommName.trim()}
-                  className="flex-1 py-3.5 rounded-[16px] font-bold text-[14px] bg-[var(--cx-primary)] text-white hover:shadow-lg hover:shadow-indigo-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 py-3.5 rounded-xl font-bold text-[14px] bg-[var(--cx-primary)] text-white hover:shadow-lg hover:shadow-indigo-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Create
                 </button>
@@ -206,3 +206,5 @@ const CommunitiesDirectory = () => {
 };
 
 export default CommunitiesDirectory;
+
+

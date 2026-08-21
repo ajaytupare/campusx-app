@@ -84,22 +84,22 @@ const CommunityProfile = () => {
       </Link>
 
       {/* Hero Profile */}
-      <div className="bg-[var(--cx-bg-surface)] rounded-[32px] p-8 shadow-sm border border-[var(--cx-text-muted)]/10 relative overflow-hidden">
+      <div className="bg-[var(--cx-bg-surface)] rounded-[32px] p-8 shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-black/[0.04] relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-r from-[var(--cx-primary)]/20 to-purple-500/20 opacity-50"></div>
         <div className="relative z-10 flex flex-col sm:flex-row gap-6 items-start sm:items-end mt-12">
-          <div className="w-24 h-24 rounded-[24px] bg-white border-4 border-[var(--cx-bg-surface)] shadow-md flex items-center justify-center text-4xl font-black text-[var(--cx-primary)] shrink-0">
+          <div className="w-24 h-24 rounded-2xl bg-white border-4 border-[var(--cx-bg-surface)] shadow-md flex items-center justify-center text-4xl font-bold text-[var(--cx-primary)] shrink-0">
             <Hash className="w-12 h-12 text-[var(--cx-primary)]/50" />
           </div>
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-2">
-              <div className="flex items-center gap-1.5 bg-[var(--cx-bg-base)] px-2.5 py-1 rounded-lg border border-[var(--cx-text-muted)]/10 w-fit">
-                {community.isPrivate ? <Lock className="w-3.5 h-3.5 text-zinc-500" /> : <Globe className="w-3.5 h-3.5 text-zinc-500" />}
-                <span className="text-[11px] font-black text-zinc-500 tracking-wider uppercase">
+              <div className="flex items-center gap-1.5 bg-[var(--cx-bg-base)] px-2.5 py-1 rounded-lg border border-black/[0.04] w-fit">
+                {community.isPrivate ? <Lock className="w-3.5 h-3.5 text-[#86868B]" /> : <Globe className="w-3.5 h-3.5 text-[#86868B]" />}
+                <span className="text-[11px] font-bold text-[#86868B] tracking-wider uppercase">
                   {community.isPrivate ? 'Private' : 'Public'}
                 </span>
               </div>
             </div>
-            <h1 className="text-3xl font-extrabold text-[var(--cx-text-main)] tracking-tight mb-2 leading-tight">
+            <h1 className="text-3xl font-semibold text-[var(--cx-text-main)] tracking-tight mb-2 leading-tight">
               {community.name}
             </h1>
             <p className="text-[var(--cx-text-muted)] text-[15px] font-medium max-w-2xl mb-4">
@@ -112,11 +112,11 @@ const CommunityProfile = () => {
           
           <div className="shrink-0 w-full sm:w-auto">
             {!isJoined ? (
-              <button onClick={handleJoin} className="w-full sm:w-auto px-6 py-3 rounded-[16px] font-bold flex items-center justify-center gap-2 text-[14px] bg-[var(--cx-primary)] text-white hover:shadow-lg hover:shadow-indigo-500/30 transition-all active:scale-95">
+              <button onClick={handleJoin} className="w-full sm:w-auto px-6 py-3 rounded-xl font-bold flex items-center justify-center gap-2 text-[14px] bg-[var(--cx-primary)] text-white hover:shadow-lg hover:shadow-indigo-500/30 transition-all active:scale-95">
                 <Plus className="w-4 h-4" /> Join
               </button>
             ) : (
-              <button disabled className="w-full sm:w-auto px-6 py-3 rounded-[16px] font-bold flex items-center justify-center gap-2 text-[14px] bg-[var(--cx-bg-base)] text-[var(--cx-text-main)] border border-[var(--cx-text-muted)]/10 cursor-default">
+              <button disabled className="w-full sm:w-auto px-6 py-3 rounded-xl font-bold flex items-center justify-center gap-2 text-[14px] bg-[var(--cx-bg-base)] text-[var(--cx-text-main)] border border-black/[0.04] cursor-default">
                 Joined
               </button>
             )}
@@ -131,11 +131,11 @@ const CommunityProfile = () => {
           
           {/* Post Box */}
           {(isJoined || !community.isPrivate) && (
-            <div className={`rounded-[24px] p-5 shadow-sm border transition-colors duration-300
-              ${isGhostMode ? 'bg-[var(--cx-ghost-start)]/5 border-[var(--cx-ghost-start)]/20' : 'bg-[var(--cx-bg-surface)] border-[var(--cx-text-muted)]/10'}`}>
+            <div className={`rounded-2xl p-5 shadow-[0_2px_8px_rgba(0,0,0,0.04)] border transition-colors duration-300
+              ${isGhostMode ? 'bg-[var(--cx-ghost-start)]/5 border-[var(--cx-ghost-start)]/20' : 'bg-[var(--cx-bg-surface)] border-black/[0.04]'}`}>
               <div className="flex gap-4">
                 <div className={`w-10 h-10 rounded-full shrink-0 overflow-hidden flex items-center justify-center text-xl transition-colors
-                  ${isGhostMode ? 'bg-[var(--cx-ghost-start)]/10 text-[var(--cx-ghost-start)]' : 'bg-[var(--cx-bg-base)] border border-[var(--cx-text-muted)]/10 text-[var(--cx-primary)]'}`}>
+                  ${isGhostMode ? 'bg-[var(--cx-ghost-start)]/10 text-[var(--cx-ghost-start)]' : 'bg-[var(--cx-bg-base)] border border-black/[0.04] text-[var(--cx-primary)]'}`}>
                   {isGhostMode ? '👻' : (
                     <span className="font-bold text-sm">
                       {userProfile?.name?.charAt(0) || 'S'}
@@ -152,7 +152,7 @@ const CommunityProfile = () => {
                       ${isGhostMode ? 'text-[var(--cx-text-main)] placeholder:text-[var(--cx-ghost-start)]/50' : 'text-[var(--cx-text-main)] placeholder:text-[var(--cx-text-muted)]/50'}`}
                   />
                   
-                  <div className="flex items-center justify-between mt-2 pt-3 border-t border-[var(--cx-text-muted)]/10">
+                  <div className="flex items-center justify-between mt-2 pt-3 border-t border-black/[0.04]">
                     <div className="flex gap-2">
                       <button className={`p-2 rounded-xl transition-colors ${isGhostMode ? 'text-[var(--cx-ghost-start)]/70 hover:bg-[var(--cx-ghost-start)]/10' : 'text-[var(--cx-text-muted)] hover:bg-[var(--cx-bg-base)]'}`}>
                         <ImageIcon className="w-5 h-5" />
@@ -180,15 +180,15 @@ const CommunityProfile = () => {
           {/* Posts List */}
           <div className="space-y-4">
             {posts.length === 0 ? (
-              <div className="text-center py-12 text-[var(--cx-text-muted)] font-medium bg-[var(--cx-bg-surface)] rounded-[24px] border border-[var(--cx-text-muted)]/10">
+              <div className="text-center py-12 text-[var(--cx-text-muted)] font-medium bg-[var(--cx-bg-surface)] rounded-2xl border border-black/[0.04]">
                 No posts yet in this community.
               </div>
             ) : (
               posts.map(post => (
-                <div key={post.id} className="bg-[var(--cx-bg-surface)] rounded-[24px] p-5 shadow-sm border border-[var(--cx-text-muted)]/10">
+                <div key={post.id} className="bg-[var(--cx-bg-surface)] rounded-2xl p-5 shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-black/[0.04]">
                   <div className="flex justify-between items-start mb-3">
                     <div className="flex items-center gap-3">
-                      <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 border border-[var(--cx-text-muted)]/10
+                      <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 border border-black/[0.04]
                         ${post.isGhost ? 'bg-zinc-900 text-lg' : 'bg-[var(--cx-bg-base)]'}`}>
                         {post.isGhost ? '👻' : (
                           <span className="font-bold text-[var(--cx-primary)] text-sm">
@@ -225,8 +225,8 @@ const CommunityProfile = () => {
 
         {/* Sidebar Info */}
         <div className="lg:col-span-1">
-          <div className="bg-[var(--cx-bg-surface)] rounded-[24px] p-6 shadow-sm border border-[var(--cx-text-muted)]/10 sticky top-6">
-            <h3 className="font-extrabold text-[16px] text-[var(--cx-text-main)] mb-4">About Community</h3>
+          <div className="bg-[var(--cx-bg-surface)] rounded-2xl p-6 shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-black/[0.04] sticky top-6">
+            <h3 className="font-semibold text-[16px] text-[var(--cx-text-main)] mb-4">About Community</h3>
             <p className="text-[14px] text-[var(--cx-text-muted)] font-medium mb-6 leading-relaxed">
               {community.description}
             </p>
@@ -257,3 +257,5 @@ const CommunityProfile = () => {
 };
 
 export default CommunityProfile;
+
+

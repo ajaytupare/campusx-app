@@ -51,7 +51,7 @@ const Friends = () => {
         <div className="w-24 h-24 bg-[var(--cx-ghost-start)]/10 rounded-[32px] flex items-center justify-center mb-6">
           <Ghost className="w-12 h-12 text-[var(--cx-ghost-start)]" />
         </div>
-        <h1 className="text-3xl font-extrabold text-[var(--cx-text-main)] tracking-tight mb-4">
+        <h1 className="text-3xl font-semibold text-[var(--cx-text-main)] tracking-tight mb-4">
           Ghost Mode is Active
         </h1>
         <p className="text-[var(--cx-text-muted)] text-[16px] font-medium leading-relaxed max-w-md">
@@ -67,11 +67,11 @@ const Friends = () => {
     <div className="flex flex-col w-full h-full max-w-5xl mx-auto gap-6 pb-12">
       
       {/* Header & Search */}
-      <div className="bg-[var(--cx-bg-surface)] rounded-[24px] p-8 shadow-sm border border-[var(--cx-text-muted)]/10 text-center">
+      <div className="bg-[var(--cx-bg-surface)] rounded-2xl p-8 shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-black/[0.04] text-center">
         <div className="w-16 h-16 bg-[var(--cx-primary)]/10 rounded-2xl flex items-center justify-center mx-auto mb-4 text-[var(--cx-primary)]">
           <Users className="w-8 h-8" />
         </div>
-        <h1 className="text-3xl font-extrabold text-[var(--cx-text-main)] tracking-tight mb-2">Student Network</h1>
+        <h1 className="text-3xl font-semibold text-[var(--cx-text-main)] tracking-tight mb-2">Student Network</h1>
         <p className="text-[var(--cx-text-muted)] font-medium mb-8 max-w-xl mx-auto">
           Find classmates, discover project teammates, and expand your campus circle.
         </p>
@@ -83,7 +83,7 @@ const Friends = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search students by name, college, or major..." 
-            className="w-full bg-[var(--cx-bg-base)] border border-transparent rounded-[16px] py-4 pl-12 pr-4 text-[15px] focus:bg-[var(--cx-bg-surface)] focus:border-[var(--cx-primary)]/30 outline-none transition-all text-[var(--cx-text-main)] font-bold placeholder:text-[var(--cx-text-muted)]/60 shadow-inner"
+            className="w-full bg-[var(--cx-bg-base)] border border-transparent rounded-xl py-4 pl-12 pr-4 text-[15px] focus:bg-[var(--cx-bg-surface)] focus:border-[var(--cx-primary)]/30 outline-none transition-all text-[var(--cx-text-main)] font-bold placeholder:text-[var(--cx-text-muted)]/60 shadow-inner"
           />
         </div>
       </div>
@@ -91,13 +91,13 @@ const Friends = () => {
       {/* Users Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
         {filteredUsers.map(user => (
-          <div key={user.id} className="bg-[var(--cx-bg-surface)] rounded-[24px] p-6 shadow-sm border border-[var(--cx-text-muted)]/10 flex flex-col h-full">
+          <div key={user.id} className="bg-[var(--cx-bg-surface)] rounded-2xl p-6 shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-black/[0.04] flex flex-col h-full">
             <div className="flex items-start gap-4 mb-4">
-              <div className="w-14 h-14 rounded-full bg-[var(--cx-bg-base)] border border-[var(--cx-text-muted)]/10 flex items-center justify-center text-xl font-black text-[var(--cx-primary)] shrink-0">
+              <div className="w-14 h-14 rounded-full bg-[var(--cx-bg-base)] border border-black/[0.04] flex items-center justify-center text-xl font-bold text-[var(--cx-primary)] shrink-0">
                 {user.name.charAt(0)}
               </div>
               <div>
-                <h3 className="text-[16px] font-extrabold text-[var(--cx-text-main)] leading-tight mb-1">
+                <h3 className="text-[16px] font-semibold text-[var(--cx-text-main)] leading-tight mb-1">
                   {user.name}
                 </h3>
                 <div className="text-[13px] font-bold text-[var(--cx-primary)]">
@@ -112,14 +112,14 @@ const Friends = () => {
                 {user.college}
               </div>
               <div className="flex items-center gap-2 text-[var(--cx-text-muted)] text-[13px] font-semibold">
-                <span className="w-4 h-4 flex items-center justify-center text-[10px] bg-[var(--cx-text-muted)]/20 rounded font-black text-[var(--cx-text-main)]">Y</span>
+                <span className="w-4 h-4 flex items-center justify-center text-[10px] bg-[var(--cx-text-muted)]/20 rounded font-bold text-[var(--cx-text-main)]">Y</span>
                 {user.year}
               </div>
             </div>
             
             <div className="mt-auto">
               {connections[user.id] === 'pending' ? (
-                <button disabled className="w-full py-2.5 rounded-[14px] font-bold flex items-center justify-center gap-2 text-[14px] bg-[var(--cx-bg-base)] text-[var(--cx-text-muted)] border border-[var(--cx-text-muted)]/10 cursor-not-allowed">
+                <button disabled className="w-full py-2.5 rounded-[14px] font-bold flex items-center justify-center gap-2 text-[14px] bg-[var(--cx-bg-base)] text-[var(--cx-text-muted)] border border-black/[0.04] cursor-not-allowed">
                   <UserCheck className="w-4 h-4" /> Requested
                 </button>
               ) : (
@@ -134,7 +134,7 @@ const Friends = () => {
           </div>
         ))}
         {filteredUsers.length === 0 && (
-          <div className="col-span-full text-center py-12 text-[var(--cx-text-muted)] font-medium bg-[var(--cx-bg-surface)] rounded-[24px] border border-[var(--cx-text-muted)]/10">
+          <div className="col-span-full text-center py-12 text-[var(--cx-text-muted)] font-medium bg-[var(--cx-bg-surface)] rounded-2xl border border-black/[0.04]">
             No students found matching "{searchQuery}"
           </div>
         )}
@@ -145,3 +145,5 @@ const Friends = () => {
 };
 
 export default Friends;
+
+

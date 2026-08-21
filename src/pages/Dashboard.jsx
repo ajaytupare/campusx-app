@@ -33,7 +33,7 @@ const Dashboard = () => {
       <div className="flex-1 min-w-0 flex flex-col gap-6">
         
         {/* Top Search Bar */}
-        <div className="flex items-center justify-between bg-[var(--cx-bg-surface)] rounded-[20px] p-2 shadow-sm border border-[var(--cx-text-muted)]/10">
+        <div className="flex items-center justify-between bg-[var(--cx-bg-surface)] rounded-[20px] p-2 shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-black/[0.04]">
           <div className="relative flex-1 max-w-md ml-2">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--cx-text-muted)] w-4 h-4" />
             <input 
@@ -61,7 +61,7 @@ const Dashboard = () => {
               Loading campus pulse...
             </div>
           ) : posts.length === 0 ? (
-            <div className="text-center py-10 text-[var(--cx-text-muted)] font-medium text-[14px] bg-[var(--cx-bg-surface)] rounded-[24px] border border-[var(--cx-text-muted)]/10">
+            <div className="text-center py-10 text-[var(--cx-text-muted)] font-medium text-[14px] bg-[var(--cx-bg-surface)] rounded-2xl border border-black/[0.04]">
               No posts yet. Be the first to start a conversation!
             </div>
           ) : (
@@ -75,8 +75,8 @@ const Dashboard = () => {
       {/* Right Widget Column (Hidden on mobile) */}
       <div className="hidden lg:flex flex-col w-[300px] shrink-0 gap-6 pb-8">
         
-        <div className="bg-[var(--cx-bg-surface)] rounded-[24px] p-5 shadow-sm border border-[var(--cx-text-muted)]/10">
-          <h3 className="font-extrabold text-[15px] text-[var(--cx-text-main)] mb-4 uppercase tracking-wide">
+        <div className="bg-[var(--cx-bg-surface)] rounded-2xl p-5 shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-black/[0.04]">
+          <h3 className="font-semibold text-[15px] text-[var(--cx-text-main)] mb-4 uppercase tracking-wide">
             My Campus Info
           </h3>
           <div className="space-y-3">
@@ -96,8 +96,8 @@ const Dashboard = () => {
         </div>
 
         {/* Trending Events Widget */}
-        <div className="bg-[var(--cx-bg-surface)] rounded-[24px] p-5 shadow-sm border border-[var(--cx-text-muted)]/10">
-          <h3 className="font-extrabold text-[15px] text-[var(--cx-text-main)] mb-4 uppercase tracking-wide">
+        <div className="bg-[var(--cx-bg-surface)] rounded-2xl p-5 shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-black/[0.04]">
+          <h3 className="font-semibold text-[15px] text-[var(--cx-text-main)] mb-4 uppercase tracking-wide">
             Trending Events
           </h3>
           <div className="space-y-4">
@@ -108,8 +108,8 @@ const Dashboard = () => {
             ].map((ev, i) => (
               <div key={i} className="flex gap-3 group cursor-pointer">
                 <div className={`w-11 h-11 rounded-[14px] flex flex-col items-center justify-center shrink-0 ${ev.color}`}>
-                  <span className="text-[9px] font-extrabold uppercase leading-none">{ev.mon}</span>
-                  <span className="text-[15px] font-black leading-none mt-0.5">{ev.day}</span>
+                  <span className="text-[9px] font-semibold uppercase leading-none">{ev.mon}</span>
+                  <span className="text-[15px] font-bold leading-none mt-0.5">{ev.day}</span>
                 </div>
                 <div className="flex-1 min-w-0">
                   <h4 className="font-bold text-[13px] text-[var(--cx-text-main)] group-hover:text-[var(--cx-primary)] transition-colors leading-tight mb-0.5 truncate">
@@ -128,3 +128,5 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
+

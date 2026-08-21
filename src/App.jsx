@@ -26,7 +26,7 @@ import Settings from './pages/settings/Settings';
 
 // Simple placeholder for unbuilt pages
 const Placeholder = ({ title }) => (
-  <div className="flex flex-col items-center justify-center h-full w-full p-8 text-center bg-[var(--cx-bg-surface)] rounded-[24px] shadow-sm border border-[var(--cx-text-muted)]/10">
+  <div className="flex flex-col items-center justify-center h-full w-full p-8 text-center bg-[var(--cx-bg-surface)] rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-black/[0.04]">
     <h2 className="text-2xl font-bold text-[var(--cx-text-main)] mb-2">{title}</h2>
     <p className="text-[var(--cx-text-muted)] font-medium">This page is under construction.</p>
   </div>
@@ -102,3 +102,4 @@ function App() {
 }
 
 export default App;
+

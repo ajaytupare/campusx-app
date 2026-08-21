@@ -32,11 +32,11 @@ const CollegesDirectory = () => {
     <div className="flex flex-col w-full h-full max-w-5xl mx-auto gap-6">
       
       {/* Header & Search */}
-      <div className="bg-[var(--cx-bg-surface)] rounded-[24px] p-8 shadow-sm border border-[var(--cx-text-muted)]/10 text-center">
+      <div className="bg-[var(--cx-bg-surface)] rounded-2xl p-8 shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-black/[0.04] text-center">
         <div className="w-16 h-16 bg-[var(--cx-primary)]/10 rounded-2xl flex items-center justify-center mx-auto mb-4 text-[var(--cx-primary)]">
           <GraduationCap className="w-8 h-8" />
         </div>
-        <h1 className="text-3xl font-extrabold text-[var(--cx-text-main)] tracking-tight mb-2">College Directory</h1>
+        <h1 className="text-3xl font-semibold text-[var(--cx-text-main)] tracking-tight mb-2">College Directory</h1>
         <p className="text-[var(--cx-text-muted)] font-medium mb-8 max-w-xl mx-auto">
           Explore universities, read raw anonymous reviews from real students, and find out what campus life is actually like.
         </p>
@@ -48,7 +48,7 @@ const CollegesDirectory = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search by college name or location..." 
-            className="w-full bg-[var(--cx-bg-base)] border border-transparent rounded-[16px] py-4 pl-12 pr-4 text-[15px] focus:bg-[var(--cx-bg-surface)] focus:border-[var(--cx-primary)]/30 outline-none transition-all text-[var(--cx-text-main)] font-bold placeholder:text-[var(--cx-text-muted)]/60 shadow-inner"
+            className="w-full bg-[var(--cx-bg-base)] border border-transparent rounded-xl py-4 pl-12 pr-4 text-[15px] focus:bg-[var(--cx-bg-surface)] focus:border-[var(--cx-primary)]/30 outline-none transition-all text-[var(--cx-text-main)] font-bold placeholder:text-[var(--cx-text-muted)]/60 shadow-inner"
           />
         </div>
       </div>
@@ -59,13 +59,13 @@ const CollegesDirectory = () => {
           <Link 
             key={college.id} 
             to={`/colleges/${college.id}`}
-            className="bg-[var(--cx-bg-surface)] rounded-[24px] p-6 shadow-sm border border-[var(--cx-text-muted)]/10 hover:shadow-md hover:border-[var(--cx-primary)]/30 transition-all group flex flex-col h-full"
+            className="bg-[var(--cx-bg-surface)] rounded-2xl p-6 shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-black/[0.04] hover:shadow-md hover:border-[var(--cx-primary)]/30 transition-all group flex flex-col h-full"
           >
-            <div className="w-12 h-12 rounded-xl bg-[var(--cx-bg-base)] border border-[var(--cx-text-muted)]/10 flex items-center justify-center mb-4 text-xl font-black text-[var(--cx-primary)]">
+            <div className="w-12 h-12 rounded-xl bg-[var(--cx-bg-base)] border border-black/[0.04] flex items-center justify-center mb-4 text-xl font-bold text-[var(--cx-primary)]">
               {college.name.charAt(0)}
             </div>
             
-            <h3 className="text-[18px] font-extrabold text-[var(--cx-text-main)] leading-tight mb-2 group-hover:text-[var(--cx-primary)] transition-colors">
+            <h3 className="text-[18px] font-semibold text-[var(--cx-text-main)] leading-tight mb-2 group-hover:text-[var(--cx-primary)] transition-colors">
               {college.name}
             </h3>
             
@@ -74,12 +74,12 @@ const CollegesDirectory = () => {
               {college.location}
             </div>
             
-            <div className="mt-auto pt-4 border-t border-[var(--cx-text-muted)]/10 flex items-center justify-between">
+            <div className="mt-auto pt-4 border-t border-black/[0.04] flex items-center justify-between">
               <div className="flex items-center gap-1.5 text-[13px] font-bold text-[var(--cx-text-muted)]">
                 <Users className="w-4 h-4" />
                 {(college.students / 1000).toFixed(1)}k
               </div>
-              <div className="flex items-center gap-1 text-[14px] font-black text-amber-500">
+              <div className="flex items-center gap-1 text-[14px] font-bold text-amber-500">
                 <Star className="w-4 h-4 fill-amber-500" />
                 {college.rating.toFixed(1)}
               </div>
@@ -87,7 +87,7 @@ const CollegesDirectory = () => {
           </Link>
         ))}
         {filteredColleges.length === 0 && (
-          <div className="col-span-full text-center py-12 text-[var(--cx-text-muted)] font-medium bg-[var(--cx-bg-surface)] rounded-[24px] border border-[var(--cx-text-muted)]/10">
+          <div className="col-span-full text-center py-12 text-[var(--cx-text-muted)] font-medium bg-[var(--cx-bg-surface)] rounded-2xl border border-black/[0.04]">
             No colleges found matching "{searchQuery}"
           </div>
         )}
@@ -98,3 +98,5 @@ const CollegesDirectory = () => {
 };
 
 export default CollegesDirectory;
+
+

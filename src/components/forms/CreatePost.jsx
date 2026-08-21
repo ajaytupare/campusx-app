@@ -46,12 +46,12 @@ const CreatePost = ({ onPostCreated }) => {
   };
 
   return (
-    <div className={`rounded-[24px] p-5 shadow-sm border transition-colors duration-300
-      ${isGhostMode ? 'bg-[var(--cx-ghost-start)]/5 border-[var(--cx-ghost-start)]/20 shadow-purple-500/5' : 'bg-[var(--cx-bg-surface)] border-[var(--cx-text-muted)]/10'}`}>
+    <div className={`rounded-2xl p-5 shadow-[0_2px_8px_rgba(0,0,0,0.04)] border transition-colors duration-300
+      ${isGhostMode ? 'bg-[var(--cx-ghost-start)]/5 border-[var(--cx-ghost-start)]/20 shadow-purple-500/5' : 'bg-[var(--cx-bg-surface)] border-black/[0.04]'}`}>
       
       <div className="flex gap-4">
         <div className={`w-10 h-10 rounded-full shrink-0 overflow-hidden flex items-center justify-center text-xl transition-colors
-          ${isGhostMode ? 'bg-[var(--cx-ghost-start)]/10 text-[var(--cx-ghost-start)]' : 'bg-[var(--cx-bg-base)] border border-[var(--cx-text-muted)]/10 text-[var(--cx-primary)]'}`}>
+          ${isGhostMode ? 'bg-[var(--cx-ghost-start)]/10 text-[var(--cx-ghost-start)]' : 'bg-[var(--cx-bg-base)] border border-black/[0.04] text-[var(--cx-primary)]'}`}>
           {isGhostMode ? '👻' : (
             <span className="font-bold text-sm">
               {userProfile?.name?.charAt(0) || 'S'}
@@ -69,7 +69,7 @@ const CreatePost = ({ onPostCreated }) => {
               ${isGhostMode ? 'text-[var(--cx-text-main)] placeholder:text-[var(--cx-ghost-start)]/50' : 'text-[var(--cx-text-main)] placeholder:text-[var(--cx-text-muted)]/50'}`}
           />
           
-          <div className="flex items-center justify-between mt-2 pt-3 border-t border-[var(--cx-text-muted)]/10">
+          <div className="flex items-center justify-between mt-2 pt-3 border-t border-black/[0.04]">
             <div className="flex gap-2">
               <button className={`p-2 rounded-xl transition-colors ${isGhostMode ? 'text-[var(--cx-ghost-start)]/70 hover:bg-[var(--cx-ghost-start)]/10' : 'text-[var(--cx-text-muted)] hover:bg-[var(--cx-bg-base)]'}`}>
                 <ImageIcon className="w-5 h-5" />
@@ -98,3 +98,4 @@ const CreatePost = ({ onPostCreated }) => {
 };
 
 export default CreatePost;
+

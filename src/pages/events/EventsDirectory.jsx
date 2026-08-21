@@ -67,11 +67,11 @@ const EventsDirectory = () => {
     <div className="flex flex-col w-full h-full max-w-5xl mx-auto gap-6 pb-12">
       
       {/* Header & Search */}
-      <div className="bg-[var(--cx-bg-surface)] rounded-[24px] p-8 shadow-sm border border-[var(--cx-text-muted)]/10 text-center">
+      <div className="bg-[var(--cx-bg-surface)] rounded-2xl p-8 shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-black/[0.04] text-center">
         <div className="w-16 h-16 bg-[var(--cx-primary)]/10 rounded-2xl flex items-center justify-center mx-auto mb-4 text-[var(--cx-primary)]">
           <Calendar className="w-8 h-8" />
         </div>
-        <h1 className="text-3xl font-extrabold text-[var(--cx-text-main)] tracking-tight mb-2">Campus Events</h1>
+        <h1 className="text-3xl font-semibold text-[var(--cx-text-main)] tracking-tight mb-2">Campus Events</h1>
         <p className="text-[var(--cx-text-muted)] font-medium mb-8 max-w-xl mx-auto">
           Discover what's happening around campus, RSVP to activities, and never miss out.
         </p>
@@ -84,12 +84,12 @@ const EventsDirectory = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search events, locations..." 
-              className="w-full bg-[var(--cx-bg-base)] border border-[var(--cx-text-muted)]/20 rounded-[16px] py-3.5 pl-12 pr-4 text-[15px] outline-none text-[var(--cx-text-main)] font-bold placeholder:text-[var(--cx-text-muted)]/60"
+              className="w-full bg-[var(--cx-bg-base)] border border-[var(--cx-text-muted)]/20 rounded-xl py-3.5 pl-12 pr-4 text-[15px] outline-none text-[var(--cx-text-main)] font-bold placeholder:text-[var(--cx-text-muted)]/60"
             />
           </div>
           <button 
             onClick={() => setIsModalOpen(true)}
-            className="w-full sm:w-auto px-6 py-3.5 rounded-[16px] font-bold flex items-center justify-center gap-2 text-[15px] bg-[var(--cx-primary)] text-white hover:bg-indigo-700 transition-all shrink-0"
+            className="w-full sm:w-auto px-6 py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 text-[15px] bg-[var(--cx-primary)] text-white hover:bg-indigo-700 transition-all shrink-0"
             style={{ backgroundColor: 'var(--cx-primary)', color: 'white' }}
           >
             <Plus className="w-5 h-5" /> Host Event
@@ -108,16 +108,16 @@ const EventsDirectory = () => {
             <Link 
               key={evt.id} 
               to={`/events/${evt.id}`}
-              className="bg-[var(--cx-bg-surface)] rounded-[24px] p-5 shadow-sm border border-[var(--cx-text-muted)]/10 hover:shadow-md hover:border-[var(--cx-primary)]/30 transition-all group flex h-full"
+              className="bg-[var(--cx-bg-surface)] rounded-2xl p-5 shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-black/[0.04] hover:shadow-md hover:border-[var(--cx-primary)]/30 transition-all group flex h-full"
             >
               {/* Date Block */}
-              <div className="w-16 h-16 bg-[var(--cx-bg-base)] rounded-[16px] flex flex-col items-center justify-center shrink-0 border border-[var(--cx-text-muted)]/10 mr-5 group-hover:bg-[var(--cx-primary)] transition-colors">
-                <span className="text-[11px] font-black text-[var(--cx-primary)] group-hover:text-white/80 transition-colors">{month}</span>
-                <span className="text-[20px] font-extrabold text-[var(--cx-text-main)] leading-none group-hover:text-white transition-colors">{day}</span>
+              <div className="w-16 h-16 bg-[var(--cx-bg-base)] rounded-xl flex flex-col items-center justify-center shrink-0 border border-black/[0.04] mr-5 group-hover:bg-[var(--cx-primary)] transition-colors">
+                <span className="text-[11px] font-bold text-[var(--cx-primary)] group-hover:text-white/80 transition-colors">{month}</span>
+                <span className="text-[20px] font-semibold text-[var(--cx-text-main)] leading-none group-hover:text-white transition-colors">{day}</span>
               </div>
               
               <div className="flex flex-col justify-center flex-1">
-                <h3 className="text-[18px] font-extrabold text-[var(--cx-text-main)] leading-tight mb-2 group-hover:text-[var(--cx-primary)] transition-colors">
+                <h3 className="text-[18px] font-semibold text-[var(--cx-text-main)] leading-tight mb-2 group-hover:text-[var(--cx-primary)] transition-colors">
                   {evt.title}
                 </h3>
                 
@@ -140,7 +140,7 @@ const EventsDirectory = () => {
           );
         })}
         {filteredEvents.length === 0 && (
-          <div className="col-span-full text-center py-12 text-[var(--cx-text-muted)] font-medium bg-[var(--cx-bg-surface)] rounded-[24px] border border-[var(--cx-text-muted)]/10">
+          <div className="col-span-full text-center py-12 text-[var(--cx-text-muted)] font-medium bg-[var(--cx-bg-surface)] rounded-2xl border border-black/[0.04]">
             No events found matching "{searchQuery}"
           </div>
         )}
@@ -150,7 +150,7 @@ const EventsDirectory = () => {
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
           <div className="bg-[var(--cx-bg-surface)] w-full max-w-lg rounded-[32px] p-8 shadow-2xl border border-white/10 animate-in fade-in zoom-in-95 duration-200">
-            <h2 className="text-2xl font-extrabold text-[var(--cx-text-main)] tracking-tight mb-2">Host an Event</h2>
+            <h2 className="text-2xl font-semibold text-[var(--cx-text-main)] tracking-tight mb-2">Host an Event</h2>
             <p className="text-[14px] text-[var(--cx-text-muted)] font-medium mb-6">Plan an activity and invite the campus.</p>
             
             <form onSubmit={handleCreateEvent} className="flex flex-col gap-4">
@@ -162,7 +162,7 @@ const EventsDirectory = () => {
                   value={newEventTitle}
                   onChange={e => setNewEventTitle(e.target.value)}
                   placeholder="e.g. Hackathon Kickoff"
-                  className="w-full bg-[var(--cx-bg-base)] border border-transparent rounded-[16px] px-4 py-3 text-[15px] outline-none transition-all focus:border-[var(--cx-primary)]/30 text-[var(--cx-text-main)] font-medium"
+                  className="w-full bg-[var(--cx-bg-base)] border border-transparent rounded-xl px-4 py-3 text-[15px] outline-none transition-all focus:border-[var(--cx-primary)]/30 text-[var(--cx-text-main)] font-medium"
                 />
               </div>
               
@@ -174,7 +174,7 @@ const EventsDirectory = () => {
                     required
                     value={newEventDate}
                     onChange={e => setNewEventDate(e.target.value)}
-                    className="w-full bg-[var(--cx-bg-base)] border border-transparent rounded-[16px] px-4 py-3 text-[15px] outline-none transition-all focus:border-[var(--cx-primary)]/30 text-[var(--cx-text-main)] font-medium"
+                    className="w-full bg-[var(--cx-bg-base)] border border-transparent rounded-xl px-4 py-3 text-[15px] outline-none transition-all focus:border-[var(--cx-primary)]/30 text-[var(--cx-text-main)] font-medium"
                   />
                 </div>
                 <div className="flex-1">
@@ -184,7 +184,7 @@ const EventsDirectory = () => {
                     value={newEventTime}
                     onChange={e => setNewEventTime(e.target.value)}
                     placeholder="e.g. 6:00 PM"
-                    className="w-full bg-[var(--cx-bg-base)] border border-transparent rounded-[16px] px-4 py-3 text-[15px] outline-none transition-all focus:border-[var(--cx-primary)]/30 text-[var(--cx-text-main)] font-medium"
+                    className="w-full bg-[var(--cx-bg-base)] border border-transparent rounded-xl px-4 py-3 text-[15px] outline-none transition-all focus:border-[var(--cx-primary)]/30 text-[var(--cx-text-main)] font-medium"
                   />
                 </div>
               </div>
@@ -197,7 +197,7 @@ const EventsDirectory = () => {
                   value={newEventLocation}
                   onChange={e => setNewEventLocation(e.target.value)}
                   placeholder="e.g. Main Library Room 2A"
-                  className="w-full bg-[var(--cx-bg-base)] border border-transparent rounded-[16px] px-4 py-3 text-[15px] outline-none transition-all focus:border-[var(--cx-primary)]/30 text-[var(--cx-text-main)] font-medium"
+                  className="w-full bg-[var(--cx-bg-base)] border border-transparent rounded-xl px-4 py-3 text-[15px] outline-none transition-all focus:border-[var(--cx-primary)]/30 text-[var(--cx-text-main)] font-medium"
                 />
               </div>
               
@@ -208,7 +208,7 @@ const EventsDirectory = () => {
                   value={newEventDesc}
                   onChange={e => setNewEventDesc(e.target.value)}
                   placeholder="What is this event about?"
-                  className="w-full bg-[var(--cx-bg-base)] border border-transparent rounded-[16px] px-4 py-3 text-[15px] outline-none resize-none min-h-[80px] transition-all focus:border-[var(--cx-primary)]/30 text-[var(--cx-text-main)] font-medium"
+                  className="w-full bg-[var(--cx-bg-base)] border border-transparent rounded-xl px-4 py-3 text-[15px] outline-none resize-none min-h-[80px] transition-all focus:border-[var(--cx-primary)]/30 text-[var(--cx-text-main)] font-medium"
                 />
               </div>
 
@@ -216,14 +216,14 @@ const EventsDirectory = () => {
                 <button 
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="flex-1 py-3.5 rounded-[16px] font-bold text-[14px] bg-[var(--cx-bg-base)] text-[var(--cx-text-main)] hover:bg-zinc-200 transition-colors"
+                  className="flex-1 py-3.5 rounded-xl font-bold text-[14px] bg-[var(--cx-bg-base)] text-[var(--cx-text-main)] hover:bg-black/[0.06] transition-colors"
                 >
                   Cancel
                 </button>
                 <button 
                   type="submit"
                   disabled={!newEventTitle.trim() || !newEventDate}
-                  className="flex-1 py-3.5 rounded-[16px] font-bold text-[14px] bg-[var(--cx-primary)] text-white hover:shadow-lg hover:shadow-indigo-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 py-3.5 rounded-xl font-bold text-[14px] bg-[var(--cx-primary)] text-white hover:shadow-lg hover:shadow-indigo-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Post Event
                 </button>
@@ -238,3 +238,5 @@ const EventsDirectory = () => {
 };
 
 export default EventsDirectory;
+
+

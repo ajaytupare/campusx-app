@@ -68,29 +68,29 @@ const CollegeProfile = () => {
       </Link>
 
       {/* Hero Profile */}
-      <div className="bg-[var(--cx-bg-surface)] rounded-[24px] p-8 shadow-sm border border-[var(--cx-text-muted)]/10 relative overflow-hidden">
+      <div className="bg-[var(--cx-bg-surface)] rounded-2xl p-8 shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-black/[0.04] relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-r from-[var(--cx-primary)]/20 to-purple-500/20 opacity-50"></div>
         <div className="relative z-10 flex flex-col sm:flex-row gap-6 items-start sm:items-end mt-12">
-          <div className="w-24 h-24 rounded-[20px] bg-white border-4 border-[var(--cx-bg-surface)] shadow-md flex items-center justify-center text-4xl font-black text-[var(--cx-primary)] shrink-0">
+          <div className="w-24 h-24 rounded-[20px] bg-white border-4 border-[var(--cx-bg-surface)] shadow-md flex items-center justify-center text-4xl font-bold text-[var(--cx-primary)] shrink-0">
             {college.name.charAt(0)}
           </div>
           <div className="flex-1">
-            <h1 className="text-3xl font-extrabold text-[var(--cx-text-main)] tracking-tight mb-2 leading-tight">
+            <h1 className="text-3xl font-semibold text-[var(--cx-text-main)] tracking-tight mb-2 leading-tight">
               {college.name}
             </h1>
             <div className="flex flex-wrap items-center gap-4 text-[var(--cx-text-muted)] text-[14px] font-semibold">
               <div className="flex items-center gap-1.5"><MapPin className="w-4 h-4" /> {college.location}</div>
               <div className="flex items-center gap-1.5"><Users className="w-4 h-4" /> {college.students.toLocaleString()} Students</div>
-              <div className="flex items-center gap-1 text-amber-500 font-black"><Star className="w-4 h-4 fill-amber-500" /> {college.rating.toFixed(1)} Avg</div>
+              <div className="flex items-center gap-1 text-amber-500 font-bold"><Star className="w-4 h-4 fill-amber-500" /> {college.rating.toFixed(1)} Avg</div>
             </div>
           </div>
         </div>
       </div>
 
       {/* Review Submission */}
-      <div className={`rounded-[24px] p-6 shadow-sm border transition-colors duration-300
-        ${isGhostMode ? 'bg-[var(--cx-ghost-start)]/5 border-[var(--cx-ghost-start)]/20' : 'bg-[var(--cx-bg-surface)] border-[var(--cx-text-muted)]/10'}`}>
-        <h3 className="font-extrabold text-[16px] text-[var(--cx-text-main)] mb-4">
+      <div className={`rounded-2xl p-6 shadow-[0_2px_8px_rgba(0,0,0,0.04)] border transition-colors duration-300
+        ${isGhostMode ? 'bg-[var(--cx-ghost-start)]/5 border-[var(--cx-ghost-start)]/20' : 'bg-[var(--cx-bg-surface)] border-black/[0.04]'}`}>
+        <h3 className="font-semibold text-[16px] text-[var(--cx-text-main)] mb-4">
           {isGhostMode ? 'Leave an Anonymous Review' : 'Rate this College'}
         </h3>
         <form onSubmit={handleSubmitReview} className="flex flex-col gap-4">
@@ -99,7 +99,7 @@ const CollegeProfile = () => {
             <select 
               value={newReviewRating} 
               onChange={e => setNewReviewRating(Number(e.target.value))}
-              className={`bg-[var(--cx-bg-base)] border border-transparent rounded-[12px] px-3 py-1.5 text-[14px] font-bold outline-none focus:ring-2 ${isGhostMode ? 'focus:ring-[var(--cx-ghost-start)]' : 'focus:ring-[var(--cx-primary)]'}`}
+              className={`bg-[var(--cx-bg-base)] border border-transparent rounded-xl px-3 py-1.5 text-[14px] font-bold outline-none focus:ring-2 ${isGhostMode ? 'focus:ring-[var(--cx-ghost-start)]' : 'focus:ring-[var(--cx-primary)]'}`}
             >
               {[5,4,3,2,1].map(num => <option key={num} value={num}>{num} Stars</option>)}
             </select>
@@ -109,7 +109,7 @@ const CollegeProfile = () => {
             placeholder={isGhostMode ? "What is this college really like? Your identity is completely hidden." : "Share your experience at this college..."}
             value={newReviewText}
             onChange={(e) => setNewReviewText(e.target.value)}
-            className={`w-full bg-[var(--cx-bg-base)] border border-transparent rounded-[16px] px-4 py-3 text-[15px] outline-none resize-none min-h-[100px] font-medium transition-all focus:ring-2
+            className={`w-full bg-[var(--cx-bg-base)] border border-transparent rounded-xl px-4 py-3 text-[15px] outline-none resize-none min-h-[100px] font-medium transition-all focus:ring-2
               ${isGhostMode ? 'text-[var(--cx-text-main)] placeholder:text-[var(--cx-ghost-start)]/50 focus:ring-[var(--cx-ghost-start)]' : 'text-[var(--cx-text-main)] placeholder:text-[var(--cx-text-muted)]/50 focus:ring-[var(--cx-primary)]'}`}
           />
           
@@ -129,18 +129,18 @@ const CollegeProfile = () => {
 
       {/* Reviews List */}
       <div className="space-y-4 mt-2">
-        <h3 className="font-extrabold text-[18px] text-[var(--cx-text-main)] mb-2 px-2">Student Reviews</h3>
+        <h3 className="font-semibold text-[18px] text-[var(--cx-text-main)] mb-2 px-2">Student Reviews</h3>
         
         {reviews.length === 0 ? (
-          <div className="text-center py-12 text-[var(--cx-text-muted)] font-medium bg-[var(--cx-bg-surface)] rounded-[24px] border border-[var(--cx-text-muted)]/10">
+          <div className="text-center py-12 text-[var(--cx-text-muted)] font-medium bg-[var(--cx-bg-surface)] rounded-2xl border border-black/[0.04]">
             No reviews yet. Be the first to review {college.name}!
           </div>
         ) : (
           reviews.map(review => (
-            <div key={review.id} className="bg-[var(--cx-bg-surface)] rounded-[24px] p-6 shadow-sm border border-[var(--cx-text-muted)]/10">
+            <div key={review.id} className="bg-[var(--cx-bg-surface)] rounded-2xl p-6 shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-black/[0.04]">
               <div className="flex justify-between items-start mb-3">
                 <div className="flex items-center gap-3">
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border border-[var(--cx-text-muted)]/10
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border border-black/[0.04]
                     ${review.isGhost ? 'bg-zinc-900 text-lg' : 'bg-[var(--cx-bg-base)]'}`}>
                     {review.isGhost ? '👻' : (
                       <span className="font-bold text-[var(--cx-primary)] text-sm">
@@ -181,3 +181,5 @@ const CollegeProfile = () => {
 };
 
 export default CollegeProfile;
+
+
