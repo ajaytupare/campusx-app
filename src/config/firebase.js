@@ -3,13 +3,13 @@ import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAk8LV17ILVaPQYehU6qgHfELcAOJSQNd0",
-  authDomain: "campusx-e1a20.firebaseapp.com",
-  projectId: "campusx-e1a20",
-  storageBucket: "campusx-e1a20.firebasestorage.app",
-  messagingSenderId: "469133797829",
-  appId: "1:469133797829:web:a7f197b783a081fb9fc3ac",
-  measurementId: "G-G1CSLPPF20"
+  apiKey: "AIzaSyAwUmwAaLwdVpynCr6Y45u1W4KKZc0fodU",
+  authDomain: "campusx-app-6b90b.firebaseapp.com",
+  projectId: "campusx-app-6b90b",
+  storageBucket: "campusx-app-6b90b.firebasestorage.app",
+  messagingSenderId: "422306826292",
+  appId: "1:422306826292:web:376d2c163d531a1c086261",
+  measurementId: "G-T0F87PK3PV"
 };
 
 // Initialize Firebase
@@ -18,3 +18,5 @@ const app = initializeApp(firebaseConfig);
 // Initialize Firebase Auth and Firestore
 export const auth = getAuth(app);
 export const db = getFirestore(app);
+
+export default app;
