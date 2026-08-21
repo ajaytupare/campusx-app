@@ -93,8 +93,8 @@ const CommunityProfile = () => {
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-2">
               <div className="flex items-center gap-1.5 bg-[var(--cx-bg-base)] px-2.5 py-1 rounded-lg border border-black/[0.04] w-fit">
-                {community.isPrivate ? <Lock className="w-3.5 h-3.5 text-[#86868B]" /> : <Globe className="w-3.5 h-3.5 text-[#86868B]" />}
-                <span className="text-[11px] font-bold text-[#86868B] tracking-wider uppercase">
+                {community.isPrivate ? <Lock className="w-3.5 h-3.5 text-[var(--cx-text-muted)]" /> : <Globe className="w-3.5 h-3.5 text-[var(--cx-text-muted)]" />}
+                <span className="text-[11px] font-bold text-[var(--cx-text-muted)] tracking-wider uppercase">
                   {community.isPrivate ? 'Private' : 'Public'}
                 </span>
               </div>
@@ -189,7 +189,7 @@ const CommunityProfile = () => {
                   <div className="flex justify-between items-start mb-3">
                     <div className="flex items-center gap-3">
                       <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 border border-black/[0.04]
-                        ${post.isGhost ? 'bg-[#1D1D1F] text-lg' : 'bg-[var(--cx-bg-base)]'}`}>
+                        ${post.isGhost ? 'bg-[var(--cx-text-main)] text-lg' : 'bg-[var(--cx-bg-base)]'}`}>
                         {post.isGhost ? '👻' : (
                           <span className="font-bold text-[var(--cx-primary)] text-sm">
                             {(post.authorName || 'S').charAt(0)}
@@ -257,6 +257,7 @@ const CommunityProfile = () => {
 };
 
 export default CommunityProfile;
+
 
 
 

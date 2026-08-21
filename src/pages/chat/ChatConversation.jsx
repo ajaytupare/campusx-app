@@ -119,7 +119,7 @@ const ChatConversation = () => {
           <ArrowLeft className="w-5 h-5" />
         </Link>
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-black/[0.06] flex items-center justify-center text-lg font-black text-[#86868B] shrink-0">
+          <div className="w-10 h-10 rounded-full bg-black/[0.06] flex items-center justify-center text-lg font-black text-[var(--cx-text-muted)] shrink-0">
             {otherUser.name.charAt(0)}
           </div>
           <div>
@@ -140,7 +140,7 @@ const ChatConversation = () => {
               {!isMe && (
                 <div className="w-8 h-8 shrink-0 mr-2 flex items-end">
                   {showAvatar && (
-                    <div className="w-8 h-8 rounded-full bg-[#D2D2D7] flex items-center justify-center text-[10px] font-black text-[#86868B]">
+                    <div className="w-8 h-8 rounded-full bg-[var(--cx-text-muted)] flex items-center justify-center text-[10px] font-black text-[var(--cx-text-muted)]">
                       {otherUser.name.charAt(0)}
                     </div>
                   )}
@@ -196,5 +196,6 @@ const ChatConversation = () => {
 };
 
 export default ChatConversation;
+
 
 

@@ -160,7 +160,7 @@ const TeacherProfile = () => {
               <div className="flex justify-between items-start mb-4">
                 <div className="flex items-center gap-3">
                   <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border border-black/[0.04]
-                    ${review.isGhost ? 'bg-[#1D1D1F] text-lg' : 'bg-[var(--cx-bg-base)]'}`}>
+                    ${review.isGhost ? 'bg-[var(--cx-text-main)] text-lg' : 'bg-[var(--cx-bg-base)]'}`}>
                     {review.isGhost ? '👻' : (
                       <span className="font-bold text-[var(--cx-primary)] text-sm">
                         {(review.authorName || 'S').charAt(0)}
@@ -188,7 +188,7 @@ const TeacherProfile = () => {
                   </span>
                   <div className="flex items-center gap-0.5">
                     {Array.from({length: 5}).map((_, i) => (
-                      <Star key={i} className={`w-3.5 h-3.5 ${i < review.rating ? 'fill-amber-500 text-amber-500' : 'fill-zinc-200 text-[#D2D2D7]'}`} />
+                      <Star key={i} className={`w-3.5 h-3.5 ${i < review.rating ? 'fill-amber-500 text-amber-500' : 'fill-zinc-200 text-[var(--cx-text-muted)]'}`} />
                     ))}
                   </div>
                 </div>
@@ -207,6 +207,7 @@ const TeacherProfile = () => {
 };
 
 export default TeacherProfile;
+
 
 
 

@@ -3,22 +3,19 @@ import Sidebar from './Sidebar';
 
 const DashboardLayout = () => {
   return (
-    <div className="flex w-full min-h-screen bg-[var(--cx-bg-base)] text-[var(--cx-text-main)] overflow-hidden font-sans antialiased">
+    <div className="flex w-full min-h-screen bg-[var(--cx-bg-base)] text-[var(--cx-text-main)] overflow-hidden">
       
-      {/* Desktop Sidebar (Left) */}
-      <aside className="hidden md:block shrink-0 z-20">
+      {/* Desktop Sidebar (Left) - no card wrapper, sits directly on bg */}
+      <div className="hidden md:block shrink-0">
         <Sidebar />
-      </aside>
+      </div>
 
-      {/* Main Content Area (Center + Right) */}
-      <main className="flex-1 h-screen overflow-y-auto scroll-smooth focus:outline-none">
-        {/* We use max-w-7xl to contain the center feed + right sidebar on very large screens with Apple HIG generous spacing */}
-        <div className="w-full max-w-7xl mx-auto min-h-full p-6 md:p-8 lg:p-10">
+      {/* Main Content Area */}
+      <div className="flex-1 h-screen overflow-y-auto scroll-smooth">
+        <div className="w-full max-w-7xl mx-auto h-full p-4 md:p-6 lg:p-8">
           <Outlet />
         </div>
-      </main>
-
-      {/* Mobile Bottom Navigation would go here in later phases */}
+      </div>
     </div>
   );
 };

@@ -1,10 +1,8 @@
 @import "tailwindcss";
 
 @theme {
-  /* Apple System Fonts */
-  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", "Segoe UI", Arial, sans-serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", "Segoe UI", Arial, sans-serif;
 
-  /* Colors */
   --color-primary: var(--cx-primary);
   --color-accent: var(--cx-accent);
   --color-ghost-start: var(--cx-ghost-start);
@@ -19,20 +17,18 @@
 
 @layer base {
   :root {
-    /* Apple Human Interface Guidelines Palette */
-    --cx-primary: #0071E3;
-    --cx-accent: #0077ED;
+    /* Warm Parchment / Campus Theme */
+    --cx-primary: #1A1A1A;
+    --cx-accent: #2D2D2D;
     
-    /* Ghost mode (Siri-esque purples) */
-    --cx-ghost-start: #5E5CE6;
-    --cx-ghost-end: #AF52DE;
+    --cx-ghost-start: #1A1A1A;
+    --cx-ghost-end: #3D3D3D;
     
-    /* Light Theme */
-    --cx-bg-base: #F5F5F7;
+    --cx-bg-base: #E8E0CC;
     --cx-bg-surface: #FFFFFF;
     
-    --cx-text-main: #1D1D1F;
-    --cx-text-muted: #86868B;
+    --cx-text-main: #1A1A1A;
+    --cx-text-muted: #8A8070;
   }
 }
 
@@ -48,10 +44,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Apple-style invisible scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -60,11 +54,8 @@ body {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.15);
+  background: rgba(0, 0, 0, 0.12);
   border-radius: 10px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.25);
 }
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
@@ -74,19 +65,17 @@ body {
   scrollbar-width: none;
 }
 
-/* Apple-style selection */
 ::selection {
-  background: rgba(0, 113, 227, 0.2);
-  color: #1D1D1F;
+  background: rgba(26, 26, 26, 0.15);
 }
 
 .dark-theme {
-  --cx-bg-base: #000000;
-  --cx-bg-surface: #1C1C1E;
-  --cx-text-main: #F5F5F7;
-  --cx-text-muted: #98989D;
-  --cx-primary: #0A84FF;
-  --cx-accent: #0A84FF;
-  --cx-ghost-start: #5E5CE6;
-  --cx-ghost-end: #BF5AF2;
+  --cx-bg-base: #1A1410;
+  --cx-bg-surface: #2A2218;
+  --cx-text-main: #E8E0CC;
+  --cx-text-muted: #9A9080;
+  --cx-primary: #E8E0CC;
+  --cx-accent: #D0C8B4;
+  --cx-ghost-start: #E8E0CC;
+  --cx-ghost-end: #D0C8B4;
 }

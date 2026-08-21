@@ -91,7 +91,7 @@ const ChatList = () => {
               className="flex items-center gap-4 p-4 border-b border-black/[0.03] hover:bg-[var(--cx-bg-base)] transition-colors group"
             >
               <div className="relative">
-                <div className="w-12 h-12 rounded-full bg-black/[0.06] flex items-center justify-center text-xl font-black text-[#86868B] shrink-0">
+                <div className="w-12 h-12 rounded-full bg-black/[0.06] flex items-center justify-center text-xl font-black text-[var(--cx-text-muted)] shrink-0">
                   {conv.otherUserName.charAt(0)}
                 </div>
                 {/* Mock Online Status */}
@@ -126,5 +126,6 @@ const ChatList = () => {
 };
 
 export default ChatList;
+
 
 

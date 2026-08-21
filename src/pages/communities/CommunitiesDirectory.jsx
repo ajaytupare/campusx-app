@@ -105,8 +105,8 @@ const CommunitiesDirectory = () => {
                 <Hash className="w-6 h-6 text-[var(--cx-primary)]/50" />
               </div>
               <div className="flex items-center gap-1.5 bg-[var(--cx-bg-base)] px-2.5 py-1 rounded-lg border border-black/[0.04]">
-                {comm.isPrivate ? <Lock className="w-3.5 h-3.5 text-[#86868B]" /> : <Globe className="w-3.5 h-3.5 text-[#86868B]" />}
-                <span className="text-[11px] font-bold text-[#86868B] tracking-wider uppercase">
+                {comm.isPrivate ? <Lock className="w-3.5 h-3.5 text-[var(--cx-text-muted)]" /> : <Globe className="w-3.5 h-3.5 text-[var(--cx-text-muted)]" />}
+                <span className="text-[11px] font-bold text-[var(--cx-text-muted)] tracking-wider uppercase">
                   {comm.isPrivate ? 'Private' : 'Public'}
                 </span>
               </div>
@@ -206,5 +206,6 @@ const CommunitiesDirectory = () => {
 };
 
 export default CommunitiesDirectory;
+
 
 

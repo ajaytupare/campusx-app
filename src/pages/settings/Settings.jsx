@@ -155,8 +155,8 @@ const Settings = () => {
     <div className="flex flex-col lg:flex-row w-full min-h-[80vh] max-w-[1100px] mx-auto bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-black/5 overflow-hidden mb-12">
       
       {/* Sidebar Navigation */}
-      <div className="w-full lg:w-[280px] shrink-0 bg-[#F5F5F7]/50 flex flex-col p-6 border-b lg:border-b-0 lg:border-r border-black/5 gap-2">
-        <h1 className="text-[28px] font-bold text-[#1D1D1F] mb-6 tracking-tight px-2">Settings</h1>
+      <div className="w-full lg:w-[280px] shrink-0 bg-[var(--cx-bg-base)]/50 flex flex-col p-6 border-b lg:border-b-0 lg:border-r border-black/5 gap-2">
+        <h1 className="text-[28px] font-bold text-[var(--cx-text-main)] mb-6 tracking-tight px-2">Settings</h1>
         
         <div className="flex lg:flex-col gap-2 overflow-x-auto hide-scrollbar pb-2 lg:pb-0">
           {tabs.map(tab => (
@@ -165,10 +165,10 @@ const Settings = () => {
               onClick={() => setActiveTab(tab.id)}
               className={`flex items-center gap-3 px-4 py-3.5 rounded-xl font-bold text-[14px] transition-all whitespace-nowrap lg:w-full text-left
                 ${activeTab === tab.id 
-                  ? 'bg-white text-[#0071E3] shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-black/5/60' 
-                  : 'text-[#86868B] hover:bg-[#F5F5F7] hover:text-[#1D1D1F] border border-transparent'}`}
+                  ? 'bg-white text-[var(--cx-primary)] shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-black/5/60' 
+                  : 'text-[var(--cx-text-muted)] hover:bg-[var(--cx-bg-base)] hover:text-[var(--cx-text-main)] border border-transparent'}`}
             >
-              <tab.icon className={`w-5 h-5 ${activeTab === tab.id ? 'text-[#0071E3]' : 'text-[#D2D2D7]'}`} />
+              <tab.icon className={`w-5 h-5 ${activeTab === tab.id ? 'text-[var(--cx-primary)]' : 'text-[var(--cx-text-muted)]'}`} />
               {tab.label}
             </button>
           ))}
@@ -191,8 +191,8 @@ const Settings = () => {
         {activeTab === 'account' && (
           <div className="animate-in fade-in duration-300 flex flex-col h-full">
             <div className="px-8 py-8 border-b border-zinc-100">
-              <h2 className="text-2xl font-semibold text-[#1D1D1F]">Account Settings</h2>
-              <p className="text-[14px] font-medium text-[#86868B] mt-1">Manage your public profile and personal details.</p>
+              <h2 className="text-2xl font-semibold text-[var(--cx-text-main)]">Account Settings</h2>
+              <p className="text-[14px] font-medium text-[var(--cx-text-muted)] mt-1">Manage your public profile and personal details.</p>
             </div>
             
             <div className="p-8 space-y-10 overflow-y-auto">
@@ -202,48 +202,48 @@ const Settings = () => {
                 
                 {/* Avatar */}
                 <div className="flex flex-col gap-4">
-                  <h4 className="font-semibold text-[15px] text-[#1D1D1F]">Profile Picture</h4>
+                  <h4 className="font-semibold text-[15px] text-[var(--cx-text-main)]">Profile Picture</h4>
                   <div className="flex items-center gap-6">
-                    <div className="w-24 h-24 rounded-full border-4 border-zinc-50 overflow-hidden bg-[#F5F5F7] shadow-[0_2px_8px_rgba(0,0,0,0.04)] shrink-0">
+                    <div className="w-24 h-24 rounded-full border-4 border-zinc-50 overflow-hidden bg-[var(--cx-bg-base)] shadow-[0_2px_8px_rgba(0,0,0,0.04)] shrink-0">
                       {editAvatar ? (
                         <img src={editAvatar} alt="Avatar" className="w-full h-full object-cover" />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center text-[#D2D2D7]">
+                        <div className="w-full h-full flex items-center justify-center text-[var(--cx-text-muted)]">
                           <User className="w-8 h-8 opacity-50" />
                         </div>
                       )}
                     </div>
                     <div className="flex flex-col gap-2">
                       <div className="flex gap-2">
-                        <label className="cursor-pointer bg-[#1D1D1F] hover:bg-[#1D1D1F]/90 transition-colors text-white px-4 py-2 rounded-lg font-bold text-[13px] flex items-center justify-center gap-2 shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
+                        <label className="cursor-pointer bg-[var(--cx-text-main)] hover:bg-[var(--cx-text-main)]/90 transition-colors text-white px-4 py-2 rounded-lg font-bold text-[13px] flex items-center justify-center gap-2 shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
                           <Upload className="w-4 h-4" /> Upload
                           <input type="file" className="hidden" accept="image/*" onChange={(e) => handleFileUpload(e, setEditAvatar)} />
                         </label>
                         <button 
                           onClick={() => setEditAvatar(null)}
-                          className="px-4 py-2 bg-white border border-black/5 rounded-lg font-bold text-[13px] text-[#86868B] hover:bg-[#F5F5F7] hover:text-[#1D1D1F] transition-colors shadow-[0_2px_8px_rgba(0,0,0,0.04)]"
+                          className="px-4 py-2 bg-white border border-black/5 rounded-lg font-bold text-[13px] text-[var(--cx-text-muted)] hover:bg-[var(--cx-bg-base)] hover:text-[var(--cx-text-main)] transition-colors shadow-[0_2px_8px_rgba(0,0,0,0.04)]"
                         >
                           Remove
                         </button>
                       </div>
-                      <p className="text-[12px] font-medium text-[#D2D2D7]">JPG, GIF or PNG. Max 5MB.</p>
+                      <p className="text-[12px] font-medium text-[var(--cx-text-muted)]">JPG, GIF or PNG. Max 5MB.</p>
                     </div>
                   </div>
                 </div>
 
                 {/* Cover Photo */}
                 <div className="flex flex-col gap-4">
-                  <h4 className="font-semibold text-[15px] text-[#1D1D1F]">Cover Photo</h4>
-                  <div className="w-full h-32 rounded-xl border-2 border-zinc-100 overflow-hidden bg-[#F5F5F7] shrink-0 relative group">
+                  <h4 className="font-semibold text-[15px] text-[var(--cx-text-main)]">Cover Photo</h4>
+                  <div className="w-full h-32 rounded-xl border-2 border-zinc-100 overflow-hidden bg-[var(--cx-bg-base)] shrink-0 relative group">
                     {editCover ? (
                       <img src={editCover} alt="Cover" className="w-full h-full object-cover" />
                     ) : (
-                      <div className="w-full h-full flex flex-col items-center justify-center text-[#D2D2D7] gap-2">
+                      <div className="w-full h-full flex flex-col items-center justify-center text-[var(--cx-text-muted)] gap-2">
                         <Palette className="w-6 h-6 opacity-30" />
                       </div>
                     )}
                     <label className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer flex items-center justify-center">
-                      <span className="bg-white text-[#1D1D1F] px-4 py-2 rounded-lg font-bold text-[13px] flex items-center gap-2 shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
+                      <span className="bg-white text-[var(--cx-text-main)] px-4 py-2 rounded-lg font-bold text-[13px] flex items-center gap-2 shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
                         <Upload className="w-4 h-4" /> Change Cover
                       </span>
                       <input type="file" className="hidden" accept="image/*" onChange={(e) => handleFileUpload(e, setEditCover)} />
@@ -258,78 +258,78 @@ const Settings = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
                 
                 <div className="flex flex-col gap-2">
-                  <label className="text-[13px] font-semibold text-[#1D1D1F]/80">Full Name</label>
+                  <label className="text-[13px] font-semibold text-[var(--cx-text-main)]/80">Full Name</label>
                   <input 
                     type="text" 
                     value={editName}
                     onChange={e => setEditName(e.target.value)}
                     placeholder="Enter your name"
-                    className="w-full bg-[#F5F5F7] border border-black/5 rounded-xl px-4 py-3 text-[14px] font-medium text-[#1D1D1F] outline-none focus:bg-white focus:border-[#0071E3] focus:ring-4 focus:ring-[#0071E3]/10 transition-all"
+                    className="w-full bg-[var(--cx-bg-base)] border border-black/5 rounded-xl px-4 py-3 text-[14px] font-medium text-[var(--cx-text-main)] outline-none focus:bg-white focus:border-[var(--cx-primary)] focus:ring-4 focus:ring-[var(--cx-primary)]/10 transition-all"
                   />
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <label className="text-[13px] font-semibold text-[#1D1D1F]/80">Email Address</label>
+                  <label className="text-[13px] font-semibold text-[var(--cx-text-main)]/80">Email Address</label>
                   <input 
                     type="email" 
                     disabled
                     value={currentUser?.email || ''}
-                    className="w-full bg-[#F5F5F7] border border-black/5 rounded-xl px-4 py-3 text-[14px] font-medium text-[#86868B] outline-none cursor-not-allowed opacity-70"
+                    className="w-full bg-[var(--cx-bg-base)] border border-black/5 rounded-xl px-4 py-3 text-[14px] font-medium text-[var(--cx-text-muted)] outline-none cursor-not-allowed opacity-70"
                   />
-                  <p className="text-[12px] font-medium text-[#D2D2D7]">Your email cannot be changed here.</p>
+                  <p className="text-[12px] font-medium text-[var(--cx-text-muted)]">Your email cannot be changed here.</p>
                 </div>
 
                 <div className="flex flex-col gap-2 md:col-span-2">
-                  <label className="text-[13px] font-semibold text-[#1D1D1F]/80">Bio</label>
+                  <label className="text-[13px] font-semibold text-[var(--cx-text-main)]/80">Bio</label>
                   <textarea 
                     value={editBio}
                     onChange={e => setEditBio(e.target.value)}
                     placeholder="Write a short intro about yourself..."
-                    className="w-full bg-[#F5F5F7] border border-black/5 rounded-xl px-4 py-3 text-[14px] font-medium text-[#1D1D1F] outline-none focus:bg-white focus:border-[#0071E3] focus:ring-4 focus:ring-[#0071E3]/10 transition-all min-h-[100px] resize-y"
+                    className="w-full bg-[var(--cx-bg-base)] border border-black/5 rounded-xl px-4 py-3 text-[14px] font-medium text-[var(--cx-text-main)] outline-none focus:bg-white focus:border-[var(--cx-primary)] focus:ring-4 focus:ring-[var(--cx-primary)]/10 transition-all min-h-[100px] resize-y"
                   />
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <label className="text-[13px] font-semibold text-[#1D1D1F]/80">College / University</label>
+                  <label className="text-[13px] font-semibold text-[var(--cx-text-main)]/80">College / University</label>
                   <input 
                     type="text" 
                     value={editCollege}
                     onChange={e => setEditCollege(e.target.value)}
                     placeholder="e.g. Stanford University"
-                    className="w-full bg-[#F5F5F7] border border-black/5 rounded-xl px-4 py-3 text-[14px] font-medium text-[#1D1D1F] outline-none focus:bg-white focus:border-[#0071E3] focus:ring-4 focus:ring-[#0071E3]/10 transition-all"
+                    className="w-full bg-[var(--cx-bg-base)] border border-black/5 rounded-xl px-4 py-3 text-[14px] font-medium text-[var(--cx-text-main)] outline-none focus:bg-white focus:border-[var(--cx-primary)] focus:ring-4 focus:ring-[var(--cx-primary)]/10 transition-all"
                   />
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <label className="text-[13px] font-semibold text-[#1D1D1F]/80">Department / Major</label>
+                  <label className="text-[13px] font-semibold text-[var(--cx-text-main)]/80">Department / Major</label>
                   <input 
                     type="text" 
                     value={editDepartment}
                     onChange={e => setEditDepartment(e.target.value)}
                     placeholder="e.g. Computer Science"
-                    className="w-full bg-[#F5F5F7] border border-black/5 rounded-xl px-4 py-3 text-[14px] font-medium text-[#1D1D1F] outline-none focus:bg-white focus:border-[#0071E3] focus:ring-4 focus:ring-[#0071E3]/10 transition-all"
+                    className="w-full bg-[var(--cx-bg-base)] border border-black/5 rounded-xl px-4 py-3 text-[14px] font-medium text-[var(--cx-text-main)] outline-none focus:bg-white focus:border-[var(--cx-primary)] focus:ring-4 focus:ring-[var(--cx-primary)]/10 transition-all"
                   />
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <label className="text-[13px] font-semibold text-[#1D1D1F]/80">Year / Batch</label>
+                  <label className="text-[13px] font-semibold text-[var(--cx-text-main)]/80">Year / Batch</label>
                   <input 
                     type="text" 
                     value={editYear}
                     onChange={e => setEditYear(e.target.value)}
                     placeholder="e.g. Junior, Class of 2026"
-                    className="w-full bg-[#F5F5F7] border border-black/5 rounded-xl px-4 py-3 text-[14px] font-medium text-[#1D1D1F] outline-none focus:bg-white focus:border-[#0071E3] focus:ring-4 focus:ring-[#0071E3]/10 transition-all"
+                    className="w-full bg-[var(--cx-bg-base)] border border-black/5 rounded-xl px-4 py-3 text-[14px] font-medium text-[var(--cx-text-main)] outline-none focus:bg-white focus:border-[var(--cx-primary)] focus:ring-4 focus:ring-[var(--cx-primary)]/10 transition-all"
                   />
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <label className="text-[13px] font-semibold text-[#1D1D1F]/80">Location</label>
+                  <label className="text-[13px] font-semibold text-[var(--cx-text-main)]/80">Location</label>
                   <input 
                     type="text" 
                     value={editLocation}
                     onChange={e => setEditLocation(e.target.value)}
                     placeholder="e.g. San Francisco, CA"
-                    className="w-full bg-[#F5F5F7] border border-black/5 rounded-xl px-4 py-3 text-[14px] font-medium text-[#1D1D1F] outline-none focus:bg-white focus:border-[#0071E3] focus:ring-4 focus:ring-[#0071E3]/10 transition-all"
+                    className="w-full bg-[var(--cx-bg-base)] border border-black/5 rounded-xl px-4 py-3 text-[14px] font-medium text-[var(--cx-text-main)] outline-none focus:bg-white focus:border-[var(--cx-primary)] focus:ring-4 focus:ring-[var(--cx-primary)]/10 transition-all"
                   />
                 </div>
               </div>
@@ -337,12 +337,12 @@ const Settings = () => {
             </div>
 
             {/* Save Button Footer */}
-            <div className="mt-auto p-6 bg-[#F5F5F7] border-t border-black/5 flex justify-end">
+            <div className="mt-auto p-6 bg-[var(--cx-bg-base)] border-t border-black/5 flex justify-end">
               <button 
                 onClick={handleSaveProfile}
                 disabled={isSaving}
                 className={`px-8 py-3 rounded-xl font-bold text-[14px] text-white transition-all shadow-[0_2px_8px_rgba(0,0,0,0.04)]
-                  ${isSaving ? 'bg-[#0071E3]/60 cursor-not-allowed' : 'bg-[#0071E3] hover:bg-[#0077ED] hover:shadow-[#0071E3]/20'}`}
+                  ${isSaving ? 'bg-[var(--cx-primary)]/60 cursor-not-allowed' : 'bg-[var(--cx-primary)] hover:bg-[var(--cx-accent)] hover:shadow-[var(--cx-primary)]/20'}`}
               >
                 {isSaving ? 'Saving Changes...' : 'Save Changes'}
               </button>
@@ -353,44 +353,44 @@ const Settings = () => {
         {activeTab === 'privacy' && (
           <div className="animate-in fade-in duration-300">
             <div className="px-8 py-8 border-b border-zinc-100">
-              <h2 className="text-2xl font-semibold text-[#1D1D1F]">Privacy & Safety</h2>
-              <p className="text-[14px] font-medium text-[#86868B] mt-1">Control who can see your profile and contact you.</p>
+              <h2 className="text-2xl font-semibold text-[var(--cx-text-main)]">Privacy & Safety</h2>
+              <p className="text-[14px] font-medium text-[var(--cx-text-muted)] mt-1">Control who can see your profile and contact you.</p>
             </div>
             
             <div className="p-8 space-y-6">
-              <div className="flex items-center justify-between p-6 bg-[#F5F5F7] rounded-xl border border-black/5/60">
+              <div className="flex items-center justify-between p-6 bg-[var(--cx-bg-base)] rounded-xl border border-black/5/60">
                 <div>
-                  <h4 className="font-semibold text-[15px] text-[#1D1D1F]">Private Profile</h4>
-                  <p className="text-[13px] font-medium text-[#86868B] max-w-md mt-1 leading-relaxed">When your profile is private, only approved friends can see your posts and details. Your name and avatar remain visible.</p>
+                  <h4 className="font-semibold text-[15px] text-[var(--cx-text-main)]">Private Profile</h4>
+                  <p className="text-[13px] font-medium text-[var(--cx-text-muted)] max-w-md mt-1 leading-relaxed">When your profile is private, only approved friends can see your posts and details. Your name and avatar remain visible.</p>
                 </div>
                 <button 
                   onClick={() => handleToggle('privateProfile')}
-                  className={`w-12 h-6 rounded-full transition-colors relative flex items-center shrink-0 ${settings.privateProfile ? 'bg-[#0071E3]' : 'bg-[#D2D2D7]'}`}
+                  className={`w-12 h-6 rounded-full transition-colors relative flex items-center shrink-0 ${settings.privateProfile ? 'bg-[var(--cx-primary)]' : 'bg-[var(--cx-text-muted)]'}`}
                 >
                   <div className={`w-4 h-4 bg-white rounded-full mx-1 transition-transform shadow-[0_2px_8px_rgba(0,0,0,0.04)] ${settings.privateProfile ? 'translate-x-6' : 'translate-x-0'}`}></div>
                 </button>
               </div>
 
-              <div className="p-6 bg-[#F5F5F7] rounded-xl border border-black/5/60">
-                <h4 className="font-semibold text-[15px] text-[#1D1D1F] mb-1">Direct Messages</h4>
-                <p className="text-[13px] font-medium text-[#86868B] mb-4">Who is allowed to send you direct messages?</p>
+              <div className="p-6 bg-[var(--cx-bg-base)] rounded-xl border border-black/5/60">
+                <h4 className="font-semibold text-[15px] text-[var(--cx-text-main)] mb-1">Direct Messages</h4>
+                <p className="text-[13px] font-medium text-[var(--cx-text-muted)] mb-4">Who is allowed to send you direct messages?</p>
                 
                 <div className="flex flex-col sm:flex-row gap-3">
                   <button 
                     onClick={() => handleSelect('allowMessagesFrom', 'everyone')}
-                    className={`flex-1 py-3 rounded-xl font-bold text-[13px] transition-all border ${settings.allowMessagesFrom === 'everyone' ? 'bg-white border-[#0071E3] text-[#0071E3] shadow-[0_2px_8px_rgba(0,0,0,0.04)]' : 'bg-white border-black/5 hover:border-black/[0.06] text-[#86868B]'}`}
+                    className={`flex-1 py-3 rounded-xl font-bold text-[13px] transition-all border ${settings.allowMessagesFrom === 'everyone' ? 'bg-white border-[var(--cx-primary)] text-[var(--cx-primary)] shadow-[0_2px_8px_rgba(0,0,0,0.04)]' : 'bg-white border-black/5 hover:border-black/[0.06] text-[var(--cx-text-muted)]'}`}
                   >
                     Everyone
                   </button>
                   <button 
                     onClick={() => handleSelect('allowMessagesFrom', 'friends')}
-                    className={`flex-1 py-3 rounded-xl font-bold text-[13px] transition-all border ${settings.allowMessagesFrom === 'friends' ? 'bg-white border-[#0071E3] text-[#0071E3] shadow-[0_2px_8px_rgba(0,0,0,0.04)]' : 'bg-white border-black/5 hover:border-black/[0.06] text-[#86868B]'}`}
+                    className={`flex-1 py-3 rounded-xl font-bold text-[13px] transition-all border ${settings.allowMessagesFrom === 'friends' ? 'bg-white border-[var(--cx-primary)] text-[var(--cx-primary)] shadow-[0_2px_8px_rgba(0,0,0,0.04)]' : 'bg-white border-black/5 hover:border-black/[0.06] text-[var(--cx-text-muted)]'}`}
                   >
                     Friends Only
                   </button>
                   <button 
                     onClick={() => handleSelect('allowMessagesFrom', 'nobody')}
-                    className={`flex-1 py-3 rounded-xl font-bold text-[13px] transition-all border ${settings.allowMessagesFrom === 'nobody' ? 'bg-white border-[#0071E3] text-[#0071E3] shadow-[0_2px_8px_rgba(0,0,0,0.04)]' : 'bg-white border-black/5 hover:border-black/[0.06] text-[#86868B]'}`}
+                    className={`flex-1 py-3 rounded-xl font-bold text-[13px] transition-all border ${settings.allowMessagesFrom === 'nobody' ? 'bg-white border-[var(--cx-primary)] text-[var(--cx-primary)] shadow-[0_2px_8px_rgba(0,0,0,0.04)]' : 'bg-white border-black/5 hover:border-black/[0.06] text-[var(--cx-text-muted)]'}`}
                   >
                     Nobody
                   </button>
@@ -403,45 +403,45 @@ const Settings = () => {
         {activeTab === 'notifications' && (
           <div className="animate-in fade-in duration-300">
             <div className="px-8 py-8 border-b border-zinc-100">
-              <h2 className="text-2xl font-semibold text-[#1D1D1F]">Notifications</h2>
-              <p className="text-[14px] font-medium text-[#86868B] mt-1">Manage how and when CampusX contacts you.</p>
+              <h2 className="text-2xl font-semibold text-[var(--cx-text-main)]">Notifications</h2>
+              <p className="text-[14px] font-medium text-[var(--cx-text-muted)] mt-1">Manage how and when CampusX contacts you.</p>
             </div>
             
             <div className="p-8 space-y-4">
-              <div className="flex items-center justify-between p-6 bg-[#F5F5F7] rounded-xl border border-black/5/60">
+              <div className="flex items-center justify-between p-6 bg-[var(--cx-bg-base)] rounded-xl border border-black/5/60">
                 <div>
-                  <h4 className="font-semibold text-[15px] text-[#1D1D1F]">Email Notifications</h4>
-                  <p className="text-[13px] font-medium text-[#86868B] mt-1">Receive daily digests and major announcements.</p>
+                  <h4 className="font-semibold text-[15px] text-[var(--cx-text-main)]">Email Notifications</h4>
+                  <p className="text-[13px] font-medium text-[var(--cx-text-muted)] mt-1">Receive daily digests and major announcements.</p>
                 </div>
                 <button 
                   onClick={() => handleToggle('emailNotifs')}
-                  className={`w-12 h-6 rounded-full transition-colors relative flex items-center shrink-0 ${settings.emailNotifs ? 'bg-[#0071E3]' : 'bg-[#D2D2D7]'}`}
+                  className={`w-12 h-6 rounded-full transition-colors relative flex items-center shrink-0 ${settings.emailNotifs ? 'bg-[var(--cx-primary)]' : 'bg-[var(--cx-text-muted)]'}`}
                 >
                   <div className={`w-4 h-4 bg-white rounded-full mx-1 transition-transform shadow-[0_2px_8px_rgba(0,0,0,0.04)] ${settings.emailNotifs ? 'translate-x-6' : 'translate-x-0'}`}></div>
                 </button>
               </div>
 
-              <div className="flex items-center justify-between p-6 bg-[#F5F5F7] rounded-xl border border-black/5/60">
+              <div className="flex items-center justify-between p-6 bg-[var(--cx-bg-base)] rounded-xl border border-black/5/60">
                 <div>
-                  <h4 className="font-semibold text-[15px] text-[#1D1D1F]">Push Notifications</h4>
-                  <p className="text-[13px] font-medium text-[#86868B] mt-1">Get instantly alerted for direct messages and event reminders.</p>
+                  <h4 className="font-semibold text-[15px] text-[var(--cx-text-main)]">Push Notifications</h4>
+                  <p className="text-[13px] font-medium text-[var(--cx-text-muted)] mt-1">Get instantly alerted for direct messages and event reminders.</p>
                 </div>
                 <button 
                   onClick={() => handleToggle('pushNotifs')}
-                  className={`w-12 h-6 rounded-full transition-colors relative flex items-center shrink-0 ${settings.pushNotifs ? 'bg-[#0071E3]' : 'bg-[#D2D2D7]'}`}
+                  className={`w-12 h-6 rounded-full transition-colors relative flex items-center shrink-0 ${settings.pushNotifs ? 'bg-[var(--cx-primary)]' : 'bg-[var(--cx-text-muted)]'}`}
                 >
                   <div className={`w-4 h-4 bg-white rounded-full mx-1 transition-transform shadow-[0_2px_8px_rgba(0,0,0,0.04)] ${settings.pushNotifs ? 'translate-x-6' : 'translate-x-0'}`}></div>
                 </button>
               </div>
 
-              <div className="flex items-center justify-between p-6 bg-[#0071E3]/[0.06]/50 rounded-xl border border-[#0071E3]/10">
+              <div className="flex items-center justify-between p-6 bg-[var(--cx-primary)]/[0.06]/50 rounded-xl border border-[var(--cx-primary)]/10">
                 <div>
-                  <h4 className="font-semibold text-[15px] text-[#1D1D1F]">Ghost Mode Mentions</h4>
-                  <p className="text-[13px] font-medium text-[#86868B] mt-1 max-w-sm">Allow push notifications if someone replies to your anonymous Ghost post.</p>
+                  <h4 className="font-semibold text-[15px] text-[var(--cx-text-main)]">Ghost Mode Mentions</h4>
+                  <p className="text-[13px] font-medium text-[var(--cx-text-muted)] mt-1 max-w-sm">Allow push notifications if someone replies to your anonymous Ghost post.</p>
                 </div>
                 <button 
                   onClick={() => handleToggle('ghostMentions')}
-                  className={`w-12 h-6 rounded-full transition-colors relative flex items-center shrink-0 ${settings.ghostMentions ? 'bg-[#0071E3]' : 'bg-[#0071E3]/40'}`}
+                  className={`w-12 h-6 rounded-full transition-colors relative flex items-center shrink-0 ${settings.ghostMentions ? 'bg-[var(--cx-primary)]' : 'bg-[var(--cx-primary)]/40'}`}
                 >
                   <div className={`w-4 h-4 bg-white rounded-full mx-1 transition-transform shadow-[0_2px_8px_rgba(0,0,0,0.04)] ${settings.ghostMentions ? 'translate-x-6' : 'translate-x-0'}`}></div>
                 </button>
@@ -453,19 +453,19 @@ const Settings = () => {
         {activeTab === 'appearance' && (
           <div className="animate-in fade-in duration-300">
             <div className="px-8 py-8 border-b border-zinc-100">
-              <h2 className="text-2xl font-semibold text-[#1D1D1F]">Appearance</h2>
-              <p className="text-[14px] font-medium text-[#86868B] mt-1">Customize how CampusX looks on this device.</p>
+              <h2 className="text-2xl font-semibold text-[var(--cx-text-main)]">Appearance</h2>
+              <p className="text-[14px] font-medium text-[var(--cx-text-muted)] mt-1">Customize how CampusX looks on this device.</p>
             </div>
             
             <div className="p-8 space-y-6">
-              <div className="flex items-center justify-between p-6 bg-[#F5F5F7] rounded-xl border border-black/5/60">
+              <div className="flex items-center justify-between p-6 bg-[var(--cx-bg-base)] rounded-xl border border-black/5/60">
                 <div>
-                  <h4 className="font-semibold text-[15px] text-[#1D1D1F]">Dark Mode</h4>
-                  <p className="text-[13px] font-medium text-[#86868B] mt-1">Easier on the eyes in low light.</p>
+                  <h4 className="font-semibold text-[15px] text-[var(--cx-text-main)]">Dark Mode</h4>
+                  <p className="text-[13px] font-medium text-[var(--cx-text-muted)] mt-1">Easier on the eyes in low light.</p>
                 </div>
                 <button 
                   onClick={() => handleToggle('darkMode')}
-                  className={`w-12 h-6 rounded-full transition-colors relative flex items-center shrink-0 ${settings.darkMode ? 'bg-[#1D1D1F]/90' : 'bg-[#D2D2D7]'}`}
+                  className={`w-12 h-6 rounded-full transition-colors relative flex items-center shrink-0 ${settings.darkMode ? 'bg-[var(--cx-text-main)]/90' : 'bg-[var(--cx-text-muted)]'}`}
                 >
                   <div className={`w-4 h-4 bg-white rounded-full mx-1 transition-transform shadow-[0_2px_8px_rgba(0,0,0,0.04)] ${settings.darkMode ? 'translate-x-6' : 'translate-x-0'}`}></div>
                 </button>
@@ -481,6 +481,7 @@ const Settings = () => {
 };
 
 export default Settings;
+
 
 
 

@@ -92,7 +92,7 @@ const Login = () => {
             type="submit" 
             disabled={loading}
             className={`w-full py-4 rounded-xl font-bold text-[15px] transition-all shadow-md flex items-center justify-center gap-2 mt-2
-              ${loading ? 'bg-[#D2D2D7] text-[#86868B] cursor-not-allowed' : 'bg-[var(--cx-primary)] text-white hover:brightness-110 hover:-translate-y-0.5 shadow-indigo-500/20'}`}
+              ${loading ? 'bg-[var(--cx-text-muted)] text-[var(--cx-text-muted)] cursor-not-allowed' : 'bg-[var(--cx-primary)] text-white hover:brightness-110 hover:-translate-y-0.5 shadow-indigo-500/20'}`}
           >
             {loading ? 'Signing in...' : (
               <>Sign In <ArrowRight className="w-4 h-4" /></>
@@ -114,5 +114,6 @@ const Login = () => {
 };
 
 export default Login;
+
 
 
