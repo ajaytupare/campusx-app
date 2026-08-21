@@ -60,7 +60,7 @@ const ChatList = () => {
             </div>
             <h1 className="text-2xl font-semibold text-[var(--cx-text-main)] tracking-tight">Messages</h1>
           </div>
-          <button className="w-10 h-10 rounded-xl bg-[var(--cx-bg-base)] flex items-center justify-center text-[var(--cx-text-main)] hover:bg-zinc-200 transition-colors">
+          <button className="w-10 h-10 rounded-xl bg-[var(--cx-bg-base)] flex items-center justify-center text-[var(--cx-text-main)] hover:bg-black/[0.06] transition-colors">
             <Edit className="w-5 h-5" />
           </button>
         </div>
@@ -91,7 +91,7 @@ const ChatList = () => {
               className="flex items-center gap-4 p-4 border-b border-black/[0.03] hover:bg-[var(--cx-bg-base)] transition-colors group"
             >
               <div className="relative">
-                <div className="w-12 h-12 rounded-full bg-zinc-200 flex items-center justify-center text-xl font-black text-zinc-500 shrink-0">
+                <div className="w-12 h-12 rounded-full bg-black/[0.06] flex items-center justify-center text-xl font-black text-[#86868B] shrink-0">
                   {conv.otherUserName.charAt(0)}
                 </div>
                 {/* Mock Online Status */}
@@ -126,3 +126,5 @@ const ChatList = () => {
 };
 
 export default ChatList;
+
+

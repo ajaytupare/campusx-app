@@ -69,7 +69,7 @@ const Landing = () => {
           </div>
 
           <div className="bg-[var(--cx-text-main)] p-8 rounded-2xl shadow-lg transform md:-translate-y-4">
-            <div className="w-12 h-12 bg-zinc-800 rounded-[14px] flex items-center justify-center mb-6">
+            <div className="w-12 h-12 bg-[#1D1D1F]/90 rounded-[14px] flex items-center justify-center mb-6">
               <Ghost className="w-6 h-6 text-[var(--cx-ghost-start)]" />
             </div>
             <h3 className="text-[18px] font-bold text-white mb-2">Ghost Mode</h3>
@@ -96,5 +96,6 @@ const Landing = () => {
 };
 
 export default Landing;
+
 
 

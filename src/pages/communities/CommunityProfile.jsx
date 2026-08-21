@@ -189,7 +189,7 @@ const CommunityProfile = () => {
                   <div className="flex justify-between items-start mb-3">
                     <div className="flex items-center gap-3">
                       <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 border border-black/[0.04]
-                        ${post.isGhost ? 'bg-zinc-900 text-lg' : 'bg-[var(--cx-bg-base)]'}`}>
+                        ${post.isGhost ? 'bg-[#1D1D1F] text-lg' : 'bg-[var(--cx-bg-base)]'}`}>
                         {post.isGhost ? '👻' : (
                           <span className="font-bold text-[var(--cx-primary)] text-sm">
                             {(post.authorName || 'S').charAt(0)}
@@ -257,5 +257,6 @@ const CommunityProfile = () => {
 };
 
 export default CommunityProfile;
+
 
 

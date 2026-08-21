@@ -141,7 +141,7 @@ const CollegeProfile = () => {
               <div className="flex justify-between items-start mb-3">
                 <div className="flex items-center gap-3">
                   <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border border-black/[0.04]
-                    ${review.isGhost ? 'bg-zinc-900 text-lg' : 'bg-[var(--cx-bg-base)]'}`}>
+                    ${review.isGhost ? 'bg-[#1D1D1F] text-lg' : 'bg-[var(--cx-bg-base)]'}`}>
                     {review.isGhost ? '👻' : (
                       <span className="font-bold text-[var(--cx-primary)] text-sm">
                         {(review.authorName || 'S').charAt(0)}
@@ -159,7 +159,7 @@ const CollegeProfile = () => {
                     </h4>
                     <div className="flex items-center gap-1 mt-0.5">
                       {Array.from({length: 5}).map((_, i) => (
-                        <Star key={i} className={`w-3 h-3 ${i < review.rating ? 'fill-amber-500 text-amber-500' : 'fill-zinc-200 text-zinc-200'}`} />
+                        <Star key={i} className={`w-3 h-3 ${i < review.rating ? 'fill-amber-500 text-amber-500' : 'fill-zinc-200 text-[#D2D2D7]'}`} />
                       ))}
                     </div>
                   </div>
@@ -181,5 +181,7 @@ const CollegeProfile = () => {
 };
 
 export default CollegeProfile;
+
+
 
 

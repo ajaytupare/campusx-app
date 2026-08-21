@@ -215,7 +215,7 @@ const Settings = () => {
                     </div>
                     <div className="flex flex-col gap-2">
                       <div className="flex gap-2">
-                        <label className="cursor-pointer bg-zinc-900 hover:bg-zinc-800 transition-colors text-white px-4 py-2 rounded-lg font-bold text-[13px] flex items-center justify-center gap-2 shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
+                        <label className="cursor-pointer bg-[#1D1D1F] hover:bg-[#1D1D1F]/90 transition-colors text-white px-4 py-2 rounded-lg font-bold text-[13px] flex items-center justify-center gap-2 shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
                           <Upload className="w-4 h-4" /> Upload
                           <input type="file" className="hidden" accept="image/*" onChange={(e) => handleFileUpload(e, setEditAvatar)} />
                         </label>
@@ -258,7 +258,7 @@ const Settings = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
                 
                 <div className="flex flex-col gap-2">
-                  <label className="text-[13px] font-semibold text-zinc-700">Full Name</label>
+                  <label className="text-[13px] font-semibold text-[#1D1D1F]/80">Full Name</label>
                   <input 
                     type="text" 
                     value={editName}
@@ -269,7 +269,7 @@ const Settings = () => {
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <label className="text-[13px] font-semibold text-zinc-700">Email Address</label>
+                  <label className="text-[13px] font-semibold text-[#1D1D1F]/80">Email Address</label>
                   <input 
                     type="email" 
                     disabled
@@ -280,7 +280,7 @@ const Settings = () => {
                 </div>
 
                 <div className="flex flex-col gap-2 md:col-span-2">
-                  <label className="text-[13px] font-semibold text-zinc-700">Bio</label>
+                  <label className="text-[13px] font-semibold text-[#1D1D1F]/80">Bio</label>
                   <textarea 
                     value={editBio}
                     onChange={e => setEditBio(e.target.value)}
@@ -290,7 +290,7 @@ const Settings = () => {
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <label className="text-[13px] font-semibold text-zinc-700">College / University</label>
+                  <label className="text-[13px] font-semibold text-[#1D1D1F]/80">College / University</label>
                   <input 
                     type="text" 
                     value={editCollege}
@@ -301,7 +301,7 @@ const Settings = () => {
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <label className="text-[13px] font-semibold text-zinc-700">Department / Major</label>
+                  <label className="text-[13px] font-semibold text-[#1D1D1F]/80">Department / Major</label>
                   <input 
                     type="text" 
                     value={editDepartment}
@@ -312,7 +312,7 @@ const Settings = () => {
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <label className="text-[13px] font-semibold text-zinc-700">Year / Batch</label>
+                  <label className="text-[13px] font-semibold text-[#1D1D1F]/80">Year / Batch</label>
                   <input 
                     type="text" 
                     value={editYear}
@@ -323,7 +323,7 @@ const Settings = () => {
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <label className="text-[13px] font-semibold text-zinc-700">Location</label>
+                  <label className="text-[13px] font-semibold text-[#1D1D1F]/80">Location</label>
                   <input 
                     type="text" 
                     value={editLocation}
@@ -465,7 +465,7 @@ const Settings = () => {
                 </div>
                 <button 
                   onClick={() => handleToggle('darkMode')}
-                  className={`w-12 h-6 rounded-full transition-colors relative flex items-center shrink-0 ${settings.darkMode ? 'bg-zinc-800' : 'bg-[#D2D2D7]'}`}
+                  className={`w-12 h-6 rounded-full transition-colors relative flex items-center shrink-0 ${settings.darkMode ? 'bg-[#1D1D1F]/90' : 'bg-[#D2D2D7]'}`}
                 >
                   <div className={`w-4 h-4 bg-white rounded-full mx-1 transition-transform shadow-[0_2px_8px_rgba(0,0,0,0.04)] ${settings.darkMode ? 'translate-x-6' : 'translate-x-0'}`}></div>
                 </button>
@@ -481,3 +481,6 @@ const Settings = () => {
 };
 
 export default Settings;
+
+
+
