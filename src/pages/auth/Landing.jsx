@@ -97,6 +97,13 @@ const Landing = () => {
             >
               Sign In
             </button>
+            
+            <Link 
+              to="/home"
+              className="w-full flex items-center justify-center bg-gray-100 text-black rounded-xl py-3.5 font-bold text-sm hover:bg-gray-200 transition-all active:scale-95 mt-3"
+            >
+              (Test) Go to Feed &rarr;
+            </Link>
           </form>
 
           {/* Sign Up Link */}
