@@ -4,8 +4,8 @@ import { Heart, MessageCircle, UserPlus, Ghost, Check, MoreHorizontal } from 'lu
 const Notifications = () => {
   const [activeTab, setActiveTab] = useState('All');
 
-  // Dummy Data
-  const notifications = [
+  // Move notifications into state so they can be interacted with
+  const [notifications, setNotifications] = useState([
     {
       id: 1,
       type: 'like',
@@ -51,7 +51,7 @@ const Notifications = () => {
       time: '1d',
       isUnread: false,
     }
-  ];
+  ]);
 
   const getIcon = (type) => {
     switch (type) {
@@ -63,13 +63,29 @@ const Notifications = () => {
     }
   };
 
+  // Action: Mark single notification as read
+  const handleNotificationClick = (id) => {
+    setNotifications(prev => prev.map(notif => 
+      notif.id === id ? { ...notif, isUnread: false } : notif
+    ));
+    // Note: When the backend is hooked up, this would also navigate the user to the specific post.
+  };
+
+  // Action: Mark all notifications as read
+  const markAllAsRead = () => {
+    setNotifications(prev => prev.map(notif => ({ ...notif, isUnread: false })));
+  };
+
   return (
     <div className="w-full flex flex-col min-h-screen pb-12">
       
       {/* Header */}
       <div className="flex items-center justify-between gap-6 mb-6 pt-2">
         <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Notifications</h1>
-        <button className="flex items-center gap-2 bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-xl font-bold text-sm shadow-sm transition-all active:scale-95 shrink-0">
+        <button 
+          onClick={markAllAsRead}
+          className="flex items-center gap-2 bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-xl font-bold text-sm shadow-sm transition-all active:scale-95 shrink-0"
+        >
           <Check className="w-4 h-4" /> Mark all read
         </button>
       </div>
@@ -99,17 +115,18 @@ const Notifications = () => {
 
         {/* Notification List */}
         <div className="flex flex-col">
-          {notifications.map((notif, idx) => (
+          {notifications.map((notif) => (
             <div 
               key={notif.id} 
-              className={`flex items-start gap-4 p-5 border-b border-gray-100 transition-colors cursor-pointer relative group ${
-                notif.isUnread ? 'bg-blue-50/30 hover:bg-blue-50/60' : 'hover:bg-gray-50'
+              onClick={() => handleNotificationClick(notif.id)}
+              className={`flex items-start gap-4 p-5 border-b border-gray-100 transition-all duration-300 cursor-pointer relative group ${
+                notif.isUnread ? 'bg-blue-50/30 hover:bg-blue-50/60' : 'bg-white hover:bg-gray-50'
               }`}
             >
               
               {/* Unread Indicator */}
               {notif.isUnread && (
-                <div className="absolute left-0 top-0 bottom-0 w-1 bg-blue-500 rounded-r-full"></div>
+                <div className="absolute left-0 top-0 bottom-0 w-1 bg-blue-500 rounded-r-full transition-all"></div>
               )}
 
               {/* Icon Column */}
