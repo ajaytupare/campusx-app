@@ -47,7 +47,7 @@ const Sidebar = () => {
       </nav>
 
       {/* Primary Action Button */}
-      <button className="w-full bg-[var(--accent-black)] text-white flex items-center justify-center gap-2 py-3.5 rounded-full font-bold text-[15px] hover:bg-black/80 transition-all shadow-md hover:shadow-lg active:scale-95 mb-8">
+      <button className="w-full bg-[var(--accent-primary)] text-white flex items-center justify-center gap-2 py-3.5 rounded-full font-bold text-[15px] hover:bg-[var(--accent-hover)] transition-all shadow-sm active:scale-95 mb-8">
         <Plus className="w-5 h-5" /> Post
       </button>
 

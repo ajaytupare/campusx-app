@@ -16,14 +16,14 @@ const Dashboard = () => {
             />
             <div className="flex items-center justify-between pt-3 border-t border-[var(--border-light)]">
               <div className="flex gap-2">
-                <button className="p-2 text-[var(--text-muted)] hover:bg-black/5 rounded-full transition-colors">
+                <button className="p-2 text-[var(--accent-primary)] hover:bg-[var(--accent-primary)]/10 rounded-full transition-colors">
                   <ImageIcon className="w-5 h-5" />
                 </button>
-                <button className="p-2 text-[var(--text-muted)] hover:bg-black/5 rounded-full transition-colors">
+                <button className="p-2 text-[var(--accent-primary)] hover:bg-[var(--accent-primary)]/10 rounded-full transition-colors">
                   <Smile className="w-5 h-5" />
                 </button>
               </div>
-              <button className="bg-[var(--accent-black)] text-white px-6 py-2 rounded-full font-bold text-[14px] hover:bg-black/80 transition-all">
+              <button className="bg-[var(--accent-primary)] text-white px-6 py-2 rounded-full font-bold text-[14px] hover:bg-[var(--accent-hover)] transition-all">
                 Post
               </button>
             </div>

@@ -6,15 +6,17 @@
 
 @layer base {
   :root {
-    /* The New Warm Parchment Design System */
-    --bg-base: #EBE6D9;      /* The warm beige background */
-    --bg-surface: #FFFFFF;   /* Pure white for cards */
+    /* Classic Clean Design System (Apple/Twitter Vibe) */
+    --bg-base: #F5F8FA;      /* Cool, crisp light gray background */
+    --bg-surface: #FFFFFF;   /* Pure white cards */
     
-    --text-main: #171717;    /* Ink black for headings/primary text */
-    --text-muted: #878072;   /* Warm grey for secondary text/icons */
+    --text-main: #0F1419;    /* Deep slate/black for primary text */
+    --text-muted: #536471;   /* Cool gray for secondary text/icons */
     
-    --border-light: rgba(0, 0, 0, 0.05); /* Very subtle borders */
-    --accent-black: #171717; /* Solid black for buttons */
+    --border-light: #EFF3F4; /* Very subtle cool gray borders */
+    
+    --accent-primary: #1D9BF0; /* Vibrant modern blue */
+    --accent-hover: #1A8CD8;   /* Slightly darker blue for hover states */
   }
 
   body {
