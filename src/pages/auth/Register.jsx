@@ -1,15 +1,33 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import { Loader2 } from 'lucide-react';
 
 const Register = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const { signup } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Registration logic will go here
-    console.log('Registration attempt:', { name, email });
+    setError('');
+    setLoading(true);
+
+    try {
+      // Pass 'Student' as the default role
+      await signup(email, password, name, 'Student');
+      navigate('/home', { replace: true });
+    } catch (err) {
+      setError(err.message || 'Failed to create an account.');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -50,6 +68,13 @@ const Register = () => {
             <h2 className="text-2xl font-bold mb-2">Create an account</h2>
             <p className="text-gray-500 font-medium text-sm">Enter your details to get started.</p>
           </div>
+
+          {/* Error Message */}
+          {error && (
+            <div className="mb-4 bg-red-50 border border-red-100 text-red-600 px-4 py-3 rounded-xl text-sm font-semibold">
+              {error}
+            </div>
+          )}
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -92,16 +117,18 @@ const Register = () => {
                 placeholder="Create a strong password"
                 className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition-all text-sm font-medium"
                 required
-                minLength={8}
+                minLength={6}
               />
-              <p className="text-xs font-medium text-gray-400 mt-2">Must be at least 8 characters.</p>
+              <p className="text-xs font-medium text-gray-400 mt-2">Must be at least 6 characters.</p>
             </div>
 
             <button 
               type="submit"
-              className="w-full bg-black text-white rounded-xl py-3.5 font-bold text-sm hover:bg-gray-800 transition-all active:scale-95 shadow-lg shadow-black/10 mt-6"
+              disabled={loading}
+              className="w-full flex items-center justify-center gap-2 bg-black text-white rounded-xl py-3.5 font-bold text-sm hover:bg-gray-800 transition-all active:scale-95 shadow-lg shadow-black/10 mt-6 disabled:opacity-70 disabled:cursor-not-allowed"
             >
-              Create Account
+              {loading && <Loader2 className="w-4 h-4 animate-spin" />}
+              {loading ? 'Creating Account...' : 'Create Account'}
             </button>
           </form>
 

@@ -1,93 +1,75 @@
-import { createContext, useContext, useState, useEffect } from 'react';
-import { auth, db } from '../config/firebase';
+import { createContext, useContext, useEffect, useState } from 'react';
 import { 
-  onAuthStateChanged, 
-  signInWithEmailAndPassword, 
   createUserWithEmailAndPassword, 
-  signOut 
+  signInWithEmailAndPassword, 
+  signOut, 
+  onAuthStateChanged,
+  updateProfile
 } from 'firebase/auth';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { auth, db } from '../config/firebase';
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 
 const AuthContext = createContext();
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => {
+  return useContext(AuthContext);
+};
 
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
-  const [userProfile, setUserProfile] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        setCurrentUser(user);
-        // Fetch user profile from Firestore
-        try {
-          const docRef = doc(db, 'users', user.uid);
-          const docSnap = await getDoc(docRef);
-          if (docSnap.exists()) {
-            const data = docSnap.data();
-            setUserProfile(data);
-            localStorage.setItem('cx_current_user_profile', JSON.stringify(data));
-          }
-        } catch (error) {
-          console.error("Error fetching user profile:", error);
-        }
-      } else {
-        setCurrentUser(null);
-        setUserProfile(null);
-        localStorage.removeItem('cx_current_user_profile');
-      }
-      setLoading(false);
-    });
-
-    return unsubscribe;
-  }, []);
-
-  const login = async (email, password) => {
-    const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    const user = userCredential.user;
-    
-    // Fetch profile
-    const docRef = doc(db, 'users', user.uid);
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      const data = docSnap.data();
-      setUserProfile(data);
-      localStorage.setItem('cx_current_user_profile', JSON.stringify(data));
-    }
-    
-    return userCredential;
-  };
-
-  const register = async (email, password, profileData) => {
+  // Sign Up
+  const signup = async (email, password, displayName, role) => {
+    // 1. Create the user in Firebase Auth
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
 
-    // Create user profile document in Firestore
-    const newProfile = {
-      id: user.uid,
-      ...profileData,
-      createdAt: new Date().toISOString()
-    };
-    
-    await setDoc(doc(db, 'users', user.uid), newProfile);
-    setUserProfile(newProfile);
-    localStorage.setItem('cx_current_user_profile', JSON.stringify(newProfile));
-    
-    return userCredential;
+    // 2. Update their display name in Firebase Auth
+    await updateProfile(user, {
+      displayName: displayName
+    });
+
+    // 3. Create a corresponding user document in Firestore to store extra data (like role)
+    await setDoc(doc(db, 'users', user.uid), {
+      uid: user.uid,
+      displayName: displayName,
+      email: email,
+      role: role || 'Student', // Student, Teacher, Club, etc.
+      createdAt: serverTimestamp(),
+      avatar: null, // Can be updated later
+      bio: '',
+      isPrivate: false
+    });
+
+    return user;
   };
 
-  const logout = async () => {
-    await signOut(auth);
-    localStorage.removeItem('cx_current_user_profile');
+  // Log In
+  const login = (email, password) => {
+    return signInWithEmailAndPassword(auth, email, password);
   };
+
+  // Log Out
+  const logout = () => {
+    return signOut(auth);
+  };
+
+  // Listen to Auth State Changes
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setCurrentUser(user);
+      setLoading(false); // Done loading once we know if they are logged in or not
+    });
+
+    // Cleanup subscription on unmount
+    return unsubscribe;
+  }, []);
 
   const value = {
     currentUser,
-    userProfile,
+    signup,
     login,
-    register,
     logout
   };
 

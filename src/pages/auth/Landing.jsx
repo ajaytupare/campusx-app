@@ -1,14 +1,31 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import { Loader2 } from 'lucide-react';
 
 const Landing = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Authentication logic will go here later
-    console.log('Login attempt:', email);
+    setError('');
+    setLoading(true);
+    
+    try {
+      await login(email, password);
+      navigate('/home', { replace: true });
+    } catch (err) {
+      setError('Failed to sign in. Please check your email and password.');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -50,6 +67,13 @@ const Landing = () => {
             <h2 className="text-2xl font-bold mb-2">Welcome back</h2>
             <p className="text-gray-500 font-medium text-sm">Please enter your details to sign in.</p>
           </div>
+          
+          {/* Error Message */}
+          {error && (
+            <div className="mb-4 bg-red-50 border border-red-100 text-red-600 px-4 py-3 rounded-xl text-sm font-semibold">
+              {error}
+            </div>
+          )}
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-5">
@@ -93,17 +117,12 @@ const Landing = () => {
 
             <button 
               type="submit"
-              className="w-full bg-black text-white rounded-xl py-3.5 font-bold text-sm hover:bg-gray-800 transition-all active:scale-95 shadow-lg shadow-black/10 mt-4"
+              disabled={loading}
+              className="w-full flex items-center justify-center gap-2 bg-black text-white rounded-xl py-3.5 font-bold text-sm hover:bg-gray-800 transition-all active:scale-95 shadow-lg shadow-black/10 mt-4 disabled:opacity-70 disabled:cursor-not-allowed"
             >
-              Sign In
+              {loading && <Loader2 className="w-4 h-4 animate-spin" />}
+              {loading ? 'Signing In...' : 'Sign In'}
             </button>
-            
-            <Link 
-              to="/home"
-              className="w-full flex items-center justify-center bg-gray-100 text-black rounded-xl py-3.5 font-bold text-sm hover:bg-gray-200 transition-all active:scale-95 mt-3"
-            >
-              (Test) Go to Feed &rarr;
-            </Link>
           </form>
 
           {/* Sign Up Link */}

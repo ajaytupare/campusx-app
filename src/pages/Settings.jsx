@@ -1,14 +1,28 @@
 import { useState } from 'react';
 import { User, Shield, Bell, LogOut, ChevronRight } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const Settings = () => {
   const [activeTab, setActiveTab] = useState('Account');
+  
+  const { logout, currentUser } = useAuth();
+  const navigate = useNavigate();
 
   const tabs = [
     { name: 'Account', icon: User },
     { name: 'Privacy & Safety', icon: Shield },
     { name: 'Notifications', icon: Bell },
   ];
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate('/', { replace: true });
+    } catch (error) {
+      console.error('Failed to log out', error);
+    }
+  };
 
   return (
     <div className="w-full flex flex-col min-h-screen pb-12">
@@ -55,7 +69,7 @@ const Settings = () => {
                   <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-2">Username</label>
                   <input 
                     type="text" 
-                    defaultValue="alexchen"
+                    defaultValue={currentUser?.displayName || "Student"}
                     className="w-full max-w-md bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 font-medium transition-all text-gray-900"
                   />
                 </div>
@@ -64,7 +78,7 @@ const Settings = () => {
                   <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-2">Email Address</label>
                   <input 
                     type="email" 
-                    defaultValue="alex.chen@university.edu"
+                    defaultValue={currentUser?.email || ""}
                     disabled
                     className="w-full max-w-md bg-gray-100 border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium text-gray-500 cursor-not-allowed"
                   />
@@ -83,7 +97,10 @@ const Settings = () => {
               <div className="mt-auto pt-10 border-t border-gray-100">
                 <h3 className="text-sm font-bold text-red-600 mb-4 uppercase tracking-wider">Danger Zone</h3>
                 <div className="flex flex-col sm:flex-row gap-4">
-                  <button className="flex items-center justify-center gap-2 bg-red-50 hover:bg-red-100 text-red-600 border border-red-100 rounded-xl px-6 py-3 font-bold text-sm transition-all">
+                  <button 
+                    onClick={handleLogout}
+                    className="flex items-center justify-center gap-2 bg-red-50 hover:bg-red-100 text-red-600 border border-red-100 rounded-xl px-6 py-3 font-bold text-sm transition-all"
+                  >
                     <LogOut className="w-4 h-4" /> Log Out
                   </button>
                   <button className="flex items-center justify-center gap-2 bg-white hover:bg-red-50 text-red-500 border border-gray-200 hover:border-red-200 rounded-xl px-6 py-3 font-bold text-sm transition-all">
