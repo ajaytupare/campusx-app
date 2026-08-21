@@ -1,8 +1,10 @@
 import { Link, useLocation } from 'react-router-dom';
 import { Home, Compass, MessageSquare, Bell, User, Settings, Ghost, Plus } from 'lucide-react';
+import { useGhost } from '../../context/GhostContext';
 
 const Sidebar = () => {
   const location = useLocation();
+  const { isGhostMode, toggleGhostMode } = useGhost();
 
   const mainLinks = [
     { name: 'Home', path: '/home', icon: Home },
@@ -27,16 +29,32 @@ const Sidebar = () => {
 
       {/* Top Ghost Mode Toggle */}
       <div className="px-4 mb-6">
-        <button className="w-full flex items-center justify-between bg-gray-50 hover:bg-gray-100 border border-gray-100 px-4 py-3 rounded-xl transition-all group">
+        <button 
+          onClick={toggleGhostMode}
+          className={`w-full flex items-center justify-between border px-4 py-3 rounded-xl transition-all group ${
+            isGhostMode 
+              ? 'bg-purple-50 border-purple-100 hover:bg-purple-100' 
+              : 'bg-gray-50 border-gray-100 hover:bg-gray-100'
+          }`}
+        >
           <div className="flex items-center gap-3">
-            <div className="bg-white p-1.5 rounded-lg shadow-[0_2px_8px_rgba(0,0,0,0.04)] group-hover:scale-110 transition-transform">
-              <Ghost className="w-4 h-4 text-gray-700" />
+            <div className={`p-1.5 rounded-lg shadow-sm transition-all group-hover:scale-110 ${
+              isGhostMode ? 'bg-purple-600 text-white' : 'bg-white text-gray-700'
+            }`}>
+              <Ghost className="w-4 h-4" />
             </div>
-            <span className="text-[14px] font-bold text-gray-900">Ghost Mode</span>
+            <span className={`text-[14px] font-bold ${isGhostMode ? 'text-purple-900' : 'text-gray-900'}`}>
+              Ghost Mode
+            </span>
           </div>
-          {/* Static UI Toggle Switch */}
-          <div className="w-9 h-5 bg-gray-200 rounded-full relative">
-            <div className="w-4 h-4 bg-white rounded-full absolute left-0.5 top-0.5 shadow-sm"></div>
+          
+          {/* Animated Toggle Switch */}
+          <div className={`w-10 h-6 rounded-full relative transition-colors duration-300 ease-in-out ${
+            isGhostMode ? 'bg-purple-600' : 'bg-gray-300'
+          }`}>
+            <div className={`w-5 h-5 bg-white rounded-full absolute top-0.5 shadow-sm transition-transform duration-300 ease-in-out ${
+              isGhostMode ? 'left-[18px]' : 'left-[2px]'
+            }`}></div>
           </div>
         </button>
       </div>
