@@ -1,81 +1,36 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", "Segoe UI", Arial, sans-serif;
-
-  --color-primary: var(--cx-primary);
-  --color-accent: var(--cx-accent);
-  --color-ghost-start: var(--cx-ghost-start);
-  --color-ghost-end: var(--cx-ghost-end);
-  
-  --color-bg-base: var(--cx-bg-base);
-  --color-bg-surface: var(--cx-bg-surface);
-  
-  --color-text-main: var(--cx-text-main);
-  --color-text-muted: var(--cx-text-muted);
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
 @layer base {
   :root {
-    /* Warm Parchment / Campus Theme */
-    --cx-primary: #1A1A1A;
-    --cx-accent: #2D2D2D;
+    /* The New Warm Parchment Design System */
+    --bg-base: #EBE6D9;      /* The warm beige background */
+    --bg-surface: #FFFFFF;   /* Pure white for cards */
     
-    --cx-ghost-start: #1A1A1A;
-    --cx-ghost-end: #3D3D3D;
+    --text-main: #171717;    /* Ink black for headings/primary text */
+    --text-muted: #878072;   /* Warm grey for secondary text/icons */
     
-    --cx-bg-base: #E8E0CC;
-    --cx-bg-surface: #FFFFFF;
-    
-    --cx-text-main: #1A1A1A;
-    --cx-text-muted: #8A8070;
+    --border-light: rgba(0, 0, 0, 0.05); /* Very subtle borders */
+    --accent-black: #171717; /* Solid black for buttons */
+  }
+
+  body {
+    background-color: var(--bg-base);
+    color: var(--text-main);
+    font-family: var(--font-sans);
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
   }
 }
 
-* {
-  -webkit-tap-highlight-color: transparent;
-}
-
-body {
-  margin: 0;
-  font-family: var(--font-sans);
-  background-color: var(--cx-bg-base);
-  color: var(--cx-text-main);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-}
-
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.12);
-  border-radius: 10px;
-}
+/* Utilities */
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
 .hide-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
-}
-
-::selection {
-  background: rgba(26, 26, 26, 0.15);
-}
-
-.dark-theme {
-  --cx-bg-base: #1A1410;
-  --cx-bg-surface: #2A2218;
-  --cx-text-main: #E8E0CC;
-  --cx-text-muted: #9A9080;
-  --cx-primary: #E8E0CC;
-  --cx-accent: #D0C8B4;
-  --cx-ghost-start: #E8E0CC;
-  --cx-ghost-end: #D0C8B4;
 }
