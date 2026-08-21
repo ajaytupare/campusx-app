@@ -1,6 +1,12 @@
 import { MapPin, Calendar, Link as LinkIcon, BookOpen, Users, Heart, MessageCircle, Share2, Bookmark } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
 
 const UserProfile = () => {
+  const { currentUser } = useAuth();
+  
+  // Create a default handle from the email (e.g., alex.chen@university.edu -> @alex.chen)
+  const defaultHandle = currentUser?.email ? currentUser.email.split('@')[0] : 'student';
+
   return (
     <div className="flex flex-col gap-6 pb-12">
       
@@ -21,12 +27,17 @@ const UserProfile = () => {
           
           {/* Avatar & Edit Button Row */}
           <div className="flex justify-between items-end -mt-12 sm:-mt-16 mb-4 relative z-10">
-            <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-4 border-white bg-gray-200 overflow-hidden shadow-sm">
-              <img 
-                src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=300&q=80" 
-                alt="Profile" 
-                className="w-full h-full object-cover"
-              />
+            <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-4 border-white bg-gray-200 overflow-hidden shadow-sm flex items-center justify-center text-3xl font-bold text-gray-500">
+              {currentUser?.photoURL ? (
+                <img 
+                  src={currentUser.photoURL} 
+                  alt="Profile" 
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                // Fallback avatar if no photo
+                currentUser?.displayName ? currentUser.displayName.charAt(0).toUpperCase() : 'U'
+              )}
             </div>
             <button className="bg-white border border-gray-300 text-gray-900 px-5 py-2 rounded-full font-bold text-sm hover:bg-gray-50 transition-colors shadow-sm mb-2 sm:mb-4">
               Edit Profile
@@ -35,11 +46,13 @@ const UserProfile = () => {
 
           {/* Bio & Details */}
           <div className="mb-6">
-            <h1 className="text-2xl font-extrabold text-gray-900 leading-tight">Alex Chen</h1>
-            <p className="text-gray-500 font-medium text-sm mb-3">@alexchen &bull; Computer Science '25</p>
+            <h1 className="text-2xl font-extrabold text-gray-900 leading-tight">
+              {currentUser?.displayName || 'Campus Student'}
+            </h1>
+            <p className="text-gray-500 font-medium text-sm mb-3">@{defaultHandle} &bull; Member</p>
             
             <p className="text-gray-800 text-sm leading-relaxed mb-4">
-              Building the future of campus social. Coffee addict, hackathon regular, and TA for Intro to Algorithms. Let's collaborate! ☕️💻
+              Welcome to my CampusX profile! (Bio and classes sync coming soon to the backend). ☕️💻
             </p>
 
             <div className="flex flex-wrap items-center gap-4 text-xs font-medium text-gray-500">
