@@ -5,6 +5,7 @@ import DashboardLayout from './components/layout/DashboardLayout';
 import Dashboard from './pages/Dashboard';
 import Discover from './pages/Discover';
 import Chat from './pages/chat/Chat';
+import UserProfile from './pages/profile/UserProfile';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/home" element={<Dashboard />} />
           <Route path="/discover" element={<Discover />} />
           <Route path="/chat" element={<Chat />} />
+          <Route path="/profile" element={<UserProfile />} />
         </Route>
       </Routes>
     </BrowserRouter>
