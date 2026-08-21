@@ -4,6 +4,8 @@ import Sidebar from './Sidebar';
 const DashboardLayout = () => {
   const location = useLocation();
   const isDiscover = location.pathname.startsWith('/discover');
+  const isChat = location.pathname.startsWith('/chat');
+  const hideRightSidebar = isDiscover || isChat;
 
   return (
     /* Full-width, Edge-to-Edge Layout */
@@ -15,14 +17,14 @@ const DashboardLayout = () => {
       </div>
 
       {/* Center Feed/Content - Flexible width */}
-      <main className="flex-1 min-h-screen flex justify-center py-8">
-        <div className={`w-full px-4 lg:px-8 transition-all ${isDiscover ? 'max-w-[1200px]' : 'max-w-[680px]'}`}>
+      <main className={`flex-1 min-h-screen flex ${isChat ? '' : 'justify-center py-8'}`}>
+        <div className={`w-full transition-all ${isChat ? 'max-w-full h-screen' : isDiscover ? 'max-w-[1200px] px-4 lg:px-8' : 'max-w-[680px] px-4 lg:px-8'}`}>
           <Outlet />
         </div>
       </main>
 
-      {/* Right Panel - Solid white, anchored to the right edge (Hidden on Discover route) */}
-      {!isDiscover && (
+      {/* Right Panel - Solid white, anchored to the right edge (Hidden on Discover and Chat routes) */}
+      {!hideRightSidebar && (
         <aside className="hidden lg:block w-[320px] xl:w-[350px] shrink-0 bg-white border-l border-gray-200 h-screen sticky top-0 py-6 px-6 overflow-y-auto z-10">
           {/* Placeholder for Widgets (Trending, Events, Search) */}
           <div className="flex flex-col gap-8">
