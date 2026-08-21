@@ -13,18 +13,33 @@ const Sidebar = () => {
 
   const secondaryLinks = [
     { name: 'Profile', path: '/profile', icon: User },
-    { name: 'Ghost Mode', path: '/ghost', icon: Ghost },
     { name: 'Settings', path: '/settings', icon: Settings },
   ];
 
   return (
     <aside className="h-full flex flex-col py-6">
       {/* Brand */}
-      <Link to="/home" className="px-8 mb-8 block hover:opacity-80 transition-opacity">
+      <Link to="/home" className="px-8 mb-6 block hover:opacity-80 transition-opacity">
         <h1 className="text-2xl font-extrabold tracking-tight text-gray-900">
           CampusX
         </h1>
       </Link>
+
+      {/* Top Ghost Mode Toggle */}
+      <div className="px-4 mb-6">
+        <button className="w-full flex items-center justify-between bg-gray-50 hover:bg-gray-100 border border-gray-100 px-4 py-3 rounded-xl transition-all group">
+          <div className="flex items-center gap-3">
+            <div className="bg-white p-1.5 rounded-lg shadow-[0_2px_8px_rgba(0,0,0,0.04)] group-hover:scale-110 transition-transform">
+              <Ghost className="w-4 h-4 text-gray-700" />
+            </div>
+            <span className="text-[14px] font-bold text-gray-900">Ghost Mode</span>
+          </div>
+          {/* Static UI Toggle Switch */}
+          <div className="w-9 h-5 bg-gray-200 rounded-full relative">
+            <div className="w-4 h-4 bg-white rounded-full absolute left-0.5 top-0.5 shadow-sm"></div>
+          </div>
+        </button>
+      </div>
 
       {/* Main Navigation */}
       <nav className="flex flex-col gap-1 mb-8 px-4">
