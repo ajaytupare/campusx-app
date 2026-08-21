@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { Search, Plus, Users, ChevronDown } from 'lucide-react';
+import { Search, Plus, Users, ChevronDown, X, ImagePlus, Check } from 'lucide-react';
 
 const Clubs = () => {
   const [activeCategory, setActiveCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   // Dummy Data
   const clubs = [
@@ -74,7 +75,7 @@ const Clubs = () => {
   });
 
   return (
-    <div className="w-full flex flex-col min-h-screen pb-12">
+    <div className="w-full flex flex-col min-h-screen pb-12 relative">
       
       {/* Header & Create Button */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8 pt-2">
@@ -83,7 +84,10 @@ const Clubs = () => {
           <p className="text-gray-500 font-medium">Discover communities, join orgs, and find your people.</p>
         </div>
 
-        <button className="flex items-center justify-center gap-2 bg-[#1D9BF0] hover:bg-blue-600 text-white px-6 py-3.5 rounded-xl font-bold text-sm shadow-sm transition-all active:scale-95 shrink-0">
+        <button 
+          onClick={() => setIsCreateModalOpen(true)}
+          className="flex items-center justify-center gap-2 bg-[#1D9BF0] hover:bg-blue-600 text-white px-6 py-3.5 rounded-xl font-bold text-sm shadow-sm transition-all active:scale-95 shrink-0"
+        >
           <Plus className="w-5 h-5" /> Create Club
         </button>
       </div>
@@ -173,6 +177,98 @@ const Clubs = () => {
       ) : (
         <div className="text-center py-20 bg-white rounded-2xl border border-gray-200 border-dashed">
           <p className="text-gray-500 font-medium">No clubs found matching your search.</p>
+        </div>
+      )}
+
+      {/* Create Club Modal */}
+      {isCreateModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl w-full max-w-lg shadow-2xl overflow-hidden flex flex-col">
+            
+            {/* Modal Header */}
+            <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between bg-white">
+              <h2 className="text-xl font-extrabold text-gray-900">Start a New Club</h2>
+              <button 
+                onClick={() => setIsCreateModalOpen(false)}
+                className="p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-900 rounded-full transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-6 flex flex-col gap-6 overflow-y-auto max-h-[70vh]">
+              
+              {/* Media Uploads */}
+              <div className="flex gap-4">
+                <div className="flex-1">
+                  <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-2">Cover Photo</label>
+                  <div className="h-24 bg-gray-50 border-2 border-dashed border-gray-200 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:bg-gray-100 transition-colors">
+                    <ImagePlus className="w-6 h-6 text-gray-400 mb-1" />
+                    <span className="text-xs font-medium text-gray-500">Upload Banner</span>
+                  </div>
+                </div>
+                <div className="w-24">
+                  <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-2">Logo</label>
+                  <div className="h-24 bg-gray-50 border-2 border-dashed border-gray-200 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:bg-gray-100 transition-colors">
+                    <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center mb-1">
+                      <Plus className="w-5 h-5 text-gray-400" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Text Inputs */}
+              <div>
+                <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-2">Club Name</label>
+                <input 
+                  type="text" 
+                  placeholder="e.g., Campus Debate Society" 
+                  className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 font-medium transition-all"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-2">Category</label>
+                <div className="relative">
+                  <select className="w-full appearance-none bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 font-medium transition-all text-gray-900">
+                    <option value="" disabled selected>Select a category...</option>
+                    <option value="Academic">Academic</option>
+                    <option value="STEM">STEM</option>
+                    <option value="Social">Social</option>
+                    <option value="Business">Business</option>
+                    <option value="Sports">Sports</option>
+                    <option value="Arts">Arts</option>
+                  </select>
+                  <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-2">Description</label>
+                <textarea 
+                  placeholder="What is your club about? Who should join?" 
+                  rows="3"
+                  className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 font-medium transition-all resize-none"
+                />
+              </div>
+
+            </div>
+
+            {/* Modal Footer */}
+            <div className="px-6 py-5 border-t border-gray-100 flex justify-end gap-3 bg-gray-50/50">
+              <button 
+                onClick={() => setIsCreateModalOpen(false)}
+                className="bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 rounded-xl px-5 py-2.5 font-bold text-sm transition-all"
+              >
+                Cancel
+              </button>
+              <button className="flex items-center gap-2 bg-black hover:bg-gray-800 text-white rounded-xl px-6 py-2.5 font-bold text-sm shadow-sm transition-all active:scale-95">
+                <Check className="w-4 h-4" /> Create Club
+              </button>
+            </div>
+
+          </div>
         </div>
       )}
 
