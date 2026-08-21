@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Home, Compass, MessageSquare, Bell, User, Settings, Ghost, Plus } from 'lucide-react';
+import { Home, Compass, MessageSquare, Bell, User, Settings, Ghost, Plus, Users } from 'lucide-react';
 import { useGhost } from '../../context/GhostContext';
 
 const Sidebar = () => {
@@ -9,6 +9,7 @@ const Sidebar = () => {
   const mainLinks = [
     { name: 'Home', path: '/home', icon: Home },
     { name: 'Discover', path: '/discover', icon: Compass },
+    { name: 'Clubs', path: '/clubs', icon: Users },
     { name: 'Messages', path: '/chat', icon: MessageSquare },
     { name: 'Notifications', path: '/notifications', icon: Bell },
   ];

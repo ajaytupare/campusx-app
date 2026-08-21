@@ -6,6 +6,7 @@ import Dashboard from './pages/Dashboard';
 import Discover from './pages/Discover';
 import Chat from './pages/chat/Chat';
 import UserProfile from './pages/profile/UserProfile';
+import Clubs from './pages/communities/Clubs';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route element={<DashboardLayout />}>
           <Route path="/home" element={<Dashboard />} />
           <Route path="/discover" element={<Discover />} />
+          <Route path="/clubs" element={<Clubs />} />
           <Route path="/chat" element={<Chat />} />
           <Route path="/profile" element={<UserProfile />} />
         </Route>

@@ -5,7 +5,8 @@ const DashboardLayout = () => {
   const location = useLocation();
   const isDiscover = location.pathname.startsWith('/discover');
   const isChat = location.pathname.startsWith('/chat');
-  const hideRightSidebar = isDiscover || isChat;
+  const isClubs = location.pathname.startsWith('/clubs');
+  const hideRightSidebar = isDiscover || isChat || isClubs;
 
   return (
     /* Full-width, Edge-to-Edge Layout */
@@ -18,7 +19,7 @@ const DashboardLayout = () => {
 
       {/* Center Feed/Content - Flexible width */}
       <main className={`flex-1 min-h-screen flex ${isChat ? '' : 'justify-center py-8'}`}>
-        <div className={`w-full transition-all ${isChat ? 'max-w-full h-screen' : isDiscover ? 'max-w-[1200px] px-4 lg:px-8' : 'max-w-[680px] px-4 lg:px-8'}`}>
+        <div className={`w-full transition-all ${isChat ? 'max-w-full h-screen' : (isDiscover || isClubs) ? 'max-w-[1200px] px-4 lg:px-8' : 'max-w-[680px] px-4 lg:px-8'}`}>
           <Outlet />
         </div>
       </main>
