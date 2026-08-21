@@ -18,9 +18,9 @@ const DashboardLayout = () => {
         <Sidebar />
       </div>
 
-      {/* Center Feed/Content - Flexible width */}
+      {/* Center Feed/Content - Flexible width to kill empty space */}
       <main className={`flex-1 min-h-screen flex ${isChat ? '' : 'justify-center py-8'}`}>
-        <div className={`w-full transition-all ${isChat ? 'max-w-full h-screen' : (isDiscover || isClubs || isSettings) ? 'max-w-[1000px] px-4 lg:px-8' : 'max-w-[680px] px-4 lg:px-8'}`}>
+        <div className={`w-full transition-all ${isChat ? 'max-w-full h-screen' : 'max-w-[1200px] px-6 lg:px-12'}`}>
           <Outlet />
         </div>
       </main>
