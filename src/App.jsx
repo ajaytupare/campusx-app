@@ -7,6 +7,7 @@ import Discover from './pages/Discover';
 import Chat from './pages/chat/Chat';
 import UserProfile from './pages/profile/UserProfile';
 import Clubs from './pages/communities/Clubs';
+import Notifications from './pages/Notifications';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="/clubs" element={<Clubs />} />
           <Route path="/chat" element={<Chat />} />
           <Route path="/profile" element={<UserProfile />} />
+          <Route path="/notifications" element={<Notifications />} />
         </Route>
       </Routes>
     </BrowserRouter>
