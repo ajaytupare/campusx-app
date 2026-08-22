@@ -14,12 +14,8 @@ const UserProfile = () => {
   const [profileData, setProfileData] = useState(null);
   const [loadingProfile, setLoadingProfile] = useState(true);
 
-  // Tab State
-  const [activeTab, setActiveTab] = useState('Posts');
-
   // Posts State
   const [userPosts, setUserPosts] = useState([]);
-  const [repliedPosts, setRepliedPosts] = useState([]);
   const [loadingPosts, setLoadingPosts] = useState(true);
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -67,25 +63,7 @@ const UserProfile = () => {
       setLoadingPosts(false);
     });
 
-    // Fetch Replied Posts
-    const qReplies = query(
-      collection(db, 'posts'), 
-      where('commentedBy', 'array-contains', currentUser.uid),
-      orderBy('createdAt', 'desc')
-    );
-
-    const unsubReplies = onSnapshot(qReplies, (snapshot) => {
-      const fetchedReplies = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
-      setRepliedPosts(fetchedReplies);
-    });
-
-    return () => {
-      unsubPosts();
-      unsubReplies();
-    };
+    return () => unsubPosts();
   }, [currentUser]);
 
   const handleImageSelect = (e, type) => {
@@ -170,8 +148,6 @@ const UserProfile = () => {
     return <div className="flex justify-center p-12"><Loader2 className="w-8 h-8 animate-spin text-black" /></div>;
   }
 
-  const currentFeed = activeTab === 'Posts' ? userPosts : repliedPosts;
-
   return (
     <div className="flex flex-col gap-6 pb-12 relative">
       
@@ -227,24 +203,11 @@ const UserProfile = () => {
           </div>
         </div>
 
-        {/* Profile Tabs */}
+        {/* Feed Header */}
         <div className="flex border-t border-gray-200 bg-gray-50/50">
-          <button 
-            onClick={() => setActiveTab('Posts')}
-            className={`flex-1 py-4 text-sm font-bold transition-colors ${
-              activeTab === 'Posts' ? 'text-gray-900 border-b-2 border-black bg-white' : 'text-gray-500 border-b-2 border-transparent hover:bg-gray-100 hover:text-gray-900'
-            }`}
-          >
-            Posts
-          </button>
-          <button 
-            onClick={() => setActiveTab('Replies')}
-            className={`flex-1 py-4 text-sm font-bold transition-colors ${
-              activeTab === 'Replies' ? 'text-gray-900 border-b-2 border-black bg-white' : 'text-gray-500 border-b-2 border-transparent hover:bg-gray-100 hover:text-gray-900'
-            }`}
-          >
-            Replies
-          </button>
+          <div className="w-full py-4 text-center text-sm font-bold text-gray-900 bg-white">
+            Your Posts
+          </div>
         </div>
       </div>
 
@@ -376,21 +339,15 @@ const UserProfile = () => {
       <div className="flex flex-col gap-5">
         {loadingPosts ? (
           <div className="flex justify-center py-8"><Loader2 className="w-8 h-8 animate-spin text-gray-400" /></div>
-        ) : currentFeed.length === 0 ? (
+        ) : userPosts.length === 0 ? (
           <article className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-200 shadow-sm">
             <div className="text-center py-8">
-              <h4 className="font-bold text-gray-900 mb-2">
-                {activeTab === 'Posts' ? 'No posts yet' : 'No replies yet'}
-              </h4>
-              <p className="text-sm text-gray-500">
-                {activeTab === 'Posts' 
-                  ? 'When you share something on campus, it will appear here.'
-                  : 'When you reply to posts, they will appear here.'}
-              </p>
+              <h4 className="font-bold text-gray-900 mb-2">No posts yet</h4>
+              <p className="text-sm text-gray-500">When you share something on campus, it will appear here.</p>
             </div>
           </article>
         ) : (
-          currentFeed.map(post => (
+          userPosts.map(post => (
             <PostCard key={post.id} post={post} />
           ))
         )}
