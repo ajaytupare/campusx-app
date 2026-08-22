@@ -128,6 +128,7 @@ const Discover = () => {
       setFormData({ name: '', location: '', subject: '', image: null });
     } catch (error) {
       console.error("Failed to add entry:", error);
+      alert("Error adding to directory: " + error.message);
     } finally {
       setIsSubmitting(false);
     }

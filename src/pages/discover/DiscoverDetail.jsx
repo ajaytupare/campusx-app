@@ -43,10 +43,10 @@ const DiscoverDetail = () => {
   useEffect(() => {
     if (!id) return;
 
+    // We remove orderBy() from the query to avoid requiring a Firebase Composite Index.
     const q = query(
       collection(db, 'reviews'),
-      where('targetId', '==', id),
-      orderBy('createdAt', 'desc')
+      where('targetId', '==', id)
     );
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -54,6 +54,14 @@ const DiscoverDetail = () => {
         id: doc.id,
         ...doc.data()
       }));
+      
+      // Sort client-side (newest first)
+      fetched.sort((a, b) => {
+        const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : Date.now();
+        const timeB = b.createdAt?.toMillis ? b.createdAt.toMillis() : Date.now();
+        return timeB - timeA;
+      });
+      
       setReviews(fetched);
     });
 
