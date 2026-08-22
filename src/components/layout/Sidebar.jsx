@@ -2,7 +2,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Home, Compass, MessageSquare, Bell, User, Settings, Ghost, Plus, Users } from 'lucide-react';
 import { useGhost } from '../../context/GhostContext';
 
-const Sidebar = () => {
+const Sidebar = ({ onOpenCompose }) => {
   const location = useLocation();
   const { isGhostMode, toggleGhostMode } = useGhost();
 
@@ -80,12 +80,12 @@ const Sidebar = () => {
 
       {/* Primary Action Button */}
       <div className="px-6 mb-8">
-        <Link 
-          to="/home"
+        <button 
+          onClick={onOpenCompose}
           className="w-full bg-black text-white flex items-center justify-center gap-2 py-3.5 rounded-2xl font-bold text-sm hover:bg-gray-800 transition-all shadow-md active:scale-95"
         >
           <Plus className="w-5 h-5" /> Post
-        </Link>
+        </button>
       </div>
 
       {/* Secondary Navigation */}
