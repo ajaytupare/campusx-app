@@ -3,11 +3,13 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { db } from '../../config/firebase';
 import { doc, getDoc, collection, query, where, onSnapshot, addDoc, serverTimestamp, runTransaction, deleteDoc } from 'firebase/firestore';
 import { useAuth } from '../../context/AuthContext';
-import { ArrowLeft, Star, Loader2, MessageSquare, MapPin, Trash2, X, AlertTriangle } from 'lucide-react';
+import { ArrowLeft, Star, Loader2, MessageSquare, MapPin, Trash2, X, AlertTriangle, Ghost } from 'lucide-react';
+import { useGhost } from '../../context/GhostContext';
 
 const DiscoverDetail = () => {
   const { type, id } = useParams(); // type is 'college' or 'teacher'
   const { currentUser } = useAuth();
+  const { isGhostMode } = useGhost();
   const navigate = useNavigate();
 
   const [entityData, setEntityData] = useState(null);
@@ -113,7 +115,7 @@ const DiscoverDetail = () => {
           targetId: id,
           type: type,
           authorId: currentUser.uid,
-          authorName: currentUser.displayName || 'Campus Student',
+          authorName: isGhostMode ? 'Ghost' : (currentUser.displayName || 'Campus Student'),
           rating: reviewRating,
           text: reviewText.trim(),
           createdAt: serverTimestamp()
@@ -302,8 +304,10 @@ const DiscoverDetail = () => {
                 <div key={review.id} className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm">
                   <div className="flex justify-between items-start mb-3">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold">
-                        {review.authorName?.charAt(0)?.toUpperCase()}
+                      <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${
+                        review.authorName === 'Ghost' ? 'bg-purple-100 text-purple-600' : 'bg-blue-100 text-blue-600'
+                      }`}>
+                        {review.authorName === 'Ghost' ? <Ghost className="w-5 h-5" /> : review.authorName?.charAt(0)?.toUpperCase()}
                       </div>
                       <div>
                         <p className="font-bold text-sm text-gray-900">{review.authorName}</p>
