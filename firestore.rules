@@ -51,6 +51,12 @@ service cloud.firestore {
     match /clubs/{clubId} {
       allow read, create, update: if isAuthenticated();
       allow delete: if isAuthenticated() && resource.data.creatorId == request.auth.uid;
+      
+      match /messages/{messageId} {
+        // Only allow members of the club to read/write messages
+        allow read, create: if isAuthenticated() && (request.auth.uid in get(/databases/$(database)/documents/clubs/$(clubId)).data.memberIds);
+        allow update, delete: if false;
+      }
     }
 
     // DISCOVER SECTION: COLLEGES & TEACHERS

@@ -11,6 +11,7 @@ import DiscoverDetail from './pages/discover/DiscoverDetail';
 import Chat from './pages/chat/Chat';
 import UserProfile from './pages/profile/UserProfile';
 import Clubs from './pages/communities/Clubs';
+import ClubDetail from './pages/communities/ClubDetail';
 import Notifications from './pages/Notifications';
 import Settings from './pages/Settings';
 
@@ -33,6 +34,7 @@ function App() {
             <Route path="/discover" element={<Discover />} />
             <Route path="/discover/:type/:id" element={<DiscoverDetail />} />
             <Route path="/clubs" element={<Clubs />} />
+            <Route path="/clubs/:id" element={<ClubDetail />} />
             <Route path="/chat" element={<Chat />} />
             <Route path="/profile" element={<UserProfile />} />
             <Route path="/profile/:uid" element={<UserProfile />} />

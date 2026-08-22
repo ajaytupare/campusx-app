@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Search, Plus, Users, ChevronDown, X, ImagePlus, Check, Loader2, MapPin, Trash2, AlertTriangle } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { db } from '../../config/firebase';
 import { collection, onSnapshot, query, orderBy, addDoc, doc, updateDoc, arrayUnion, arrayRemove, serverTimestamp, deleteDoc } from 'firebase/firestore';
 import { useAuth } from '../../context/AuthContext';
@@ -250,7 +251,7 @@ const Clubs = () => {
             const memberCount = club.memberIds?.length || 0;
 
             return (
-              <div key={club.id} className="group bg-white rounded-2xl border border-gray-200 overflow-hidden hover:border-gray-300 hover:shadow-md transition-all flex flex-col">
+              <Link to={`/clubs/${club.id}`} key={club.id} className="group bg-white rounded-2xl border border-gray-200 overflow-hidden hover:border-gray-300 hover:shadow-md transition-all flex flex-col">
                 {/* Banner & Logo */}
                 <div className="h-32 bg-gray-100 relative">
                   {club.image ? (
@@ -280,7 +281,7 @@ const Clubs = () => {
                     <h3 className="font-bold text-lg text-gray-900 leading-tight">{club.name}</h3>
                     {currentUser && club.creatorId === currentUser.uid && (
                       <button 
-                        onClick={() => setClubToDelete(club)}
+                        onClick={(e) => { e.preventDefault(); setClubToDelete(club); }}
                         className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors shrink-0"
                         title="Delete Club"
                       >
@@ -298,7 +299,7 @@ const Clubs = () => {
                     </div>
                     
                     <button 
-                      onClick={() => handleJoinLeave(club.id, isMember)}
+                      onClick={(e) => { e.preventDefault(); handleJoinLeave(club.id, isMember); }}
                       className={`px-4 py-1.5 rounded-full text-sm font-bold transition-colors ${
                         isMember 
                         ? 'bg-gray-100 text-gray-700 hover:bg-red-50 hover:text-red-600' 
@@ -309,7 +310,7 @@ const Clubs = () => {
                     </button>
                   </div>
                 </div>
-              </div>
+              </Link>
             );
           })}
         </div>
