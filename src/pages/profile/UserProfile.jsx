@@ -250,6 +250,17 @@ const UserProfile = () => {
         ...(coverPreview && coverPreview !== userData?.coverPhotoURL && { coverPhotoURL: coverPreview })
       });
       
+      // Quick backfill for old posts so they don't break for other users
+      const finalAvatar = avatarPreview || userData?.photoURL || null;
+      for (const p of userPosts) {
+        if (!p.isGhost) {
+          await updateDoc(doc(db, 'posts', p.id), {
+            authorName: editForm.displayName,
+            authorAvatar: finalAvatar
+          });
+        }
+      }
+
       setIsEditModalOpen(false);
     } catch (error) {
       console.error("Failed to update profile:", error);

@@ -212,7 +212,7 @@ const ComposePost = ({ onPostSuccess, isModal = false, onClose }) => {
         {isGhostMode ? (
           <Ghost className="w-6 h-6" />
         ) : (
-          currentUser?.photoURL ? (
+          (userData?.photoURL || currentUser?.photoURL) ? (
             <img src={(userData?.photoURL || currentUser?.photoURL)} alt="Me" className="w-full h-full object-cover" />
           ) : (
             currentUser?.displayName?.charAt(0).toUpperCase() || 'U'

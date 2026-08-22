@@ -12,6 +12,11 @@ const PostCard = ({ post }) => {
   const { currentUser, userData } = useAuth();
   const navigate = useNavigate();
   
+  // Smart fallback for current user's posts to instantly reflect profile changes locally
+  const isOwnPost = post.authorId === currentUser?.uid && !post.isGhost;
+  const displayAvatar = isOwnPost ? (userData?.photoURL || currentUser?.photoURL || post.authorAvatar) : post.authorAvatar;
+  const displayName = isOwnPost ? (userData?.displayName || currentUser?.displayName || post.authorName) : post.authorName;
+
   const [isCommentOpen, setIsCommentOpen] = useState(false);
   const [commentText, setCommentText] = useState('');
 
@@ -188,10 +193,10 @@ const PostCard = ({ post }) => {
               {post.type === 'ghost' ? (
                 <Ghost className="w-5 h-5 text-purple-500" />
               ) : (
-                post.authorAvatar ? (
-                  <img src={post.authorAvatar} alt="User" className="w-full h-full object-cover" />
+                displayAvatar ? (
+                  <img src={displayAvatar} alt="User" className="w-full h-full object-cover" />
                 ) : (
-                  post.authorName?.charAt(0).toUpperCase() || 'U'
+                  displayName?.charAt(0).toUpperCase() || 'U'
                 )
               )}
             </div>
