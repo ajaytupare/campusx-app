@@ -3,11 +3,13 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { X, Ghost, Loader2 } from 'lucide-react';
 import Sidebar from './Sidebar';
 import { useGhost } from '../../context/GhostContext';
+import { useAuth } from '../../context/AuthContext';
 import ComposePost from '../feed/ComposePost';
 
 const DashboardLayout = () => {
   const location = useLocation();
   const { isGhostMode } = useGhost();
+  const { currentUser } = useAuth();
   
   const [isComposeOpen, setIsComposeOpen] = useState(false);
 
@@ -18,17 +20,24 @@ const DashboardLayout = () => {
   const hideRightSidebar = isDiscover || isChat || isClubs || isSettings;
 
   return (
-    /* Full-width, Edge-to-Edge Layout */
-    <div className="min-h-screen w-full bg-gray-50 flex font-sans text-gray-900">
+    <div className="min-h-screen max-h-screen w-full bg-gray-50 flex flex-col font-sans text-gray-900">
       
+      {currentUser && !currentUser.emailVerified && (
+        <div className="bg-yellow-400 text-black px-4 py-2 text-center text-sm font-bold shadow-sm z-50 shrink-0">
+          ⚠️ Please check your inbox and verify your email address to unlock all features.
+        </div>
+      )}
+
+      <div className="flex flex-1 w-full h-full overflow-hidden">
+
       {/* Left Panel - Solid white, anchored to the left edge */}
-      <div className="hidden md:block w-[260px] xl:w-[280px] shrink-0 bg-white border-r border-gray-200 h-screen sticky top-0 z-10">
+      <div className="hidden md:block w-[260px] xl:w-[280px] shrink-0 bg-white border-r border-gray-200 h-full sticky top-0 z-10 overflow-y-auto">
         <Sidebar onOpenCompose={() => setIsComposeOpen(true)} />
       </div>
 
       {/* Center Feed/Content - Flexible width to kill empty space */}
-      <main className={`flex-1 min-h-screen flex ${isChat ? '' : 'justify-center py-8'}`}>
-        <div className={`w-full transition-all ${isChat ? 'max-w-full h-screen' : 'max-w-[1200px] px-6 lg:px-12'}`}>
+      <main className={`flex-1 h-full flex overflow-y-auto ${isChat ? '' : 'justify-center py-8'}`}>
+        <div className={`w-full transition-all ${isChat ? 'max-w-full h-full' : 'max-w-[1200px] px-6 lg:px-12'}`}>
           <Outlet />
         </div>
       </main>
@@ -69,6 +78,7 @@ const DashboardLayout = () => {
         </div>
       )}
 
+      </div>
     </div>
   );
 };

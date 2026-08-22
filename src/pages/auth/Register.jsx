@@ -16,14 +16,32 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+
+    // 1. Frontend Validation
+    if (name.trim().length < 2) {
+      return setError('Please enter your full name.');
+    }
+    
+    if (password.length < 8) {
+      return setError('Password must be at least 8 characters long.');
+    }
+    
+    if (!/(?=.*[0-9])/.test(password)) {
+      return setError('Password must contain at least one number.');
+    }
+
     setLoading(true);
 
     try {
-      // Pass 'Student' as the default role
       await signup(email, password, name, 'Student');
+      // They will be redirected to home, where they'll see the verification banner
       navigate('/home', { replace: true });
     } catch (err) {
-      setError(err.message || 'Failed to create an account.');
+      if (err.code === 'auth/email-already-in-use') {
+        setError('This email is already registered. Please log in.');
+      } else {
+        setError(err.message || 'Failed to create an account.');
+      }
       console.error(err);
     } finally {
       setLoading(false);

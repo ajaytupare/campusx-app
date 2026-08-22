@@ -4,7 +4,8 @@ import {
   signInWithEmailAndPassword, 
   signOut, 
   onAuthStateChanged,
-  updateProfile
+  updateProfile,
+  sendEmailVerification
 } from 'firebase/auth';
 import { auth, db } from '../config/firebase';
 import { doc, setDoc, serverTimestamp, onSnapshot } from 'firebase/firestore';
@@ -24,6 +25,9 @@ export const AuthProvider = ({ children }) => {
   const signup = async (email, password, displayName, role) => {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
+
+    // Send verification email
+    await sendEmailVerification(user);
 
     await updateProfile(user, {
       displayName: displayName
