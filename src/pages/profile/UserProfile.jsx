@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { MapPin, Calendar, X, Loader2, Camera, Image as ImageIcon, UserPlus, Clock, Check } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { db } from '../../config/firebase';
@@ -24,9 +24,15 @@ const UserProfile = () => {
   const [followRequestDocId, setFollowRequestDocId] = useState(null);
   const [isFollowLoading, setIsFollowLoading] = useState(false);
 
+  const [activeTab, setActiveTab] = useState('Posts');
+
   // Posts State
   const [userPosts, setUserPosts] = useState([]);
   const [loadingPosts, setLoadingPosts] = useState(true);
+
+  // Clubs State
+  const [userClubs, setUserClubs] = useState([]);
+  const [loadingClubs, setLoadingClubs] = useState(true);
 
   // Edit Profile State
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -110,6 +116,27 @@ const UserProfile = () => {
 
     return () => unsubscribe();
   }, [isOwnProfile, currentUser?.uid, targetUid, profileData]);
+
+  // Fetch Clubs
+  useEffect(() => {
+    if (!targetUid) return;
+    
+    const qClubs = query(
+      collection(db, 'clubs'),
+      where('memberIds', 'array-contains', targetUid)
+    );
+    
+    const unsubClubs = onSnapshot(qClubs, (snapshot) => {
+      const fetchedClubs = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      setUserClubs(fetchedClubs);
+      setLoadingClubs(false);
+    });
+
+    return () => unsubClubs();
+  }, [targetUid]);
 
   // Fetch Posts
   useEffect(() => {
@@ -374,11 +401,20 @@ const UserProfile = () => {
           </div>
         </div>
 
-        {/* Feed Header */}
-        <div className="flex border-t border-gray-200 bg-gray-50/50">
-          <div className="w-full py-4 text-center text-sm font-bold text-gray-900 bg-white">
+        {/* Feed Tabs */}
+        <div className="flex border-t border-gray-200">
+          <button 
+            onClick={() => setActiveTab('Posts')}
+            className={`flex-1 py-4 text-center text-sm font-bold transition-colors border-b-2 ${activeTab === 'Posts' ? 'border-black text-gray-900 bg-white' : 'border-transparent text-gray-500 hover:bg-gray-50'}`}
+          >
             Posts
-          </div>
+          </button>
+          <button 
+            onClick={() => setActiveTab('Clubs')}
+            className={`flex-1 py-4 text-center text-sm font-bold transition-colors border-b-2 ${activeTab === 'Clubs' ? 'border-black text-gray-900 bg-white' : 'border-transparent text-gray-500 hover:bg-gray-50'}`}
+          >
+            Clubs
+          </button>
         </div>
       </div>
 
@@ -506,31 +542,61 @@ const UserProfile = () => {
         </div>
       )}
 
-      {/* User's Actual Feed */}
+      {/* Tab Content */}
       <div className="flex flex-col gap-5">
-        {loadingPosts ? (
-          <div className="flex justify-center py-8"><Loader2 className="w-8 h-8 animate-spin text-gray-400" /></div>
-        ) : (!isOwnProfile && followStatus !== 'following' && profileData?.isPrivate !== false) ? (
-          <article className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-200 shadow-sm">
-            <div className="text-center py-12">
-              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Clock className="w-8 h-8 text-gray-400" />
+        {activeTab === 'Clubs' ? (
+          loadingClubs ? (
+            <div className="flex justify-center py-8"><Loader2 className="w-8 h-8 animate-spin text-gray-400" /></div>
+          ) : userClubs.length === 0 ? (
+            <article className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-200 shadow-sm">
+              <div className="text-center py-8">
+                <h4 className="font-bold text-gray-900 mb-2">No clubs yet</h4>
+                <p className="text-sm text-gray-500">They haven't joined any clubs or organizations.</p>
               </div>
-              <h4 className="font-bold text-gray-900 mb-2">This account is private</h4>
-              <p className="text-sm text-gray-500">Follow this user to see their photos and posts.</p>
+            </article>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {userClubs.map(club => (
+                <Link to="/clubs" key={club.id} className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm flex flex-col hover:border-gray-300 transition-colors">
+                  <div className="h-20 bg-gray-100 relative">
+                    {club.image ? <img src={club.image} alt="Banner" className="w-full h-full object-cover" /> : <div className="w-full h-full bg-gradient-to-r from-blue-100 to-indigo-100"></div>}
+                    <div className="absolute -bottom-5 left-4 w-10 h-10 bg-white rounded-lg shadow-sm border border-white overflow-hidden flex items-center justify-center font-bold text-gray-400">
+                      {club.logo ? <img src={club.logo} alt="Logo" className="w-full h-full object-cover" /> : club.name?.charAt(0)}
+                    </div>
+                  </div>
+                  <div className="pt-7 p-4">
+                    <h4 className="font-bold text-sm text-gray-900 mb-1">{club.name}</h4>
+                    <p className="text-xs text-gray-500 line-clamp-1">{club.description}</p>
+                  </div>
+                </Link>
+              ))}
             </div>
-          </article>
-        ) : userPosts.length === 0 ? (
-          <article className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-200 shadow-sm">
-            <div className="text-center py-8">
-              <h4 className="font-bold text-gray-900 mb-2">No posts yet</h4>
-              <p className="text-sm text-gray-500">When they share something on campus, it will appear here.</p>
-            </div>
-          </article>
+          )
         ) : (
-          userPosts.map(post => (
-            <PostCard key={post.id} post={post} />
-          ))
+          loadingPosts ? (
+            <div className="flex justify-center py-8"><Loader2 className="w-8 h-8 animate-spin text-gray-400" /></div>
+          ) : (!isOwnProfile && followStatus !== 'following' && profileData?.isPrivate !== false) ? (
+            <article className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-200 shadow-sm">
+              <div className="text-center py-12">
+                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Clock className="w-8 h-8 text-gray-400" />
+                </div>
+                <h4 className="font-bold text-gray-900 mb-2">This account is private</h4>
+                <p className="text-sm text-gray-500">Follow this user to see their photos and posts.</p>
+              </div>
+            </article>
+          ) : userPosts.length === 0 ? (
+            <article className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-200 shadow-sm">
+              <div className="text-center py-8">
+                <h4 className="font-bold text-gray-900 mb-2">No posts yet</h4>
+                <p className="text-sm text-gray-500">When they share something on campus, it will appear here.</p>
+              </div>
+            </article>
+          ) : (
+            userPosts.map(post => (
+              <PostCard key={post.id} post={post} />
+            ))
+          )
         )}
       </div>
 
