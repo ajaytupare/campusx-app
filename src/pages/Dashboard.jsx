@@ -58,6 +58,39 @@ const Dashboard = () => {
     }
   };
 
+  const handleVote = async (post, optionIndex) => {
+    if (!currentUser) return;
+    
+    const votedUsers = post.votedUsers || [];
+    if (votedUsers.includes(currentUser.uid)) {
+      return; // Already voted
+    }
+
+    const newTotalVotes = (post.totalVotes || 0) + 1;
+    const newPollData = post.pollData.map((item, idx) => {
+      let newVotes = item.votes || 0;
+      if (idx === optionIndex) {
+        newVotes += 1;
+      }
+      return {
+        ...item,
+        votes: newVotes,
+        percent: Math.round((newVotes / newTotalVotes) * 100)
+      };
+    });
+
+    const postRef = doc(db, 'posts', post.id);
+    try {
+      await updateDoc(postRef, {
+        pollData: newPollData,
+        totalVotes: newTotalVotes,
+        votedUsers: arrayUnion(currentUser.uid)
+      });
+    } catch (err) {
+      console.error("Error voting:", err);
+    }
+  };
+
   const handleCommentSubmit = async (postId) => {
     if (!currentUser || !commentText.trim()) return;
     
@@ -183,17 +216,35 @@ const Dashboard = () => {
                 {/* Poll Post Type */}
                 {post.type === 'poll' && post.pollData && (
                   <div className="flex flex-col gap-3 mb-4">
-                    {post.pollData.map((pollItem, idx) => (
-                      <div key={idx} className="relative h-10 rounded-lg overflow-hidden bg-gray-50 border border-gray-100 flex items-center px-4 cursor-pointer hover:bg-gray-100 transition-colors">
-                        <div className="absolute left-0 top-0 bottom-0 bg-blue-100/50 z-0" style={{ width: `${pollItem.percent}%` }}></div>
-                        <div className="relative z-10 w-full flex justify-between text-sm font-bold text-gray-800">
-                          <span>{pollItem.option}</span>
-                          <span>{pollItem.percent}%</span>
+                    {post.pollData.map((pollItem, idx) => {
+                      const hasVoted = post.votedUsers?.includes(currentUser?.uid);
+                      return (
+                        <div 
+                          key={idx} 
+                          onClick={() => handleVote(post, idx)}
+                          className={`relative h-10 rounded-lg overflow-hidden flex items-center px-4 transition-colors ${
+                            hasVoted ? 'cursor-default' : 'cursor-pointer hover:bg-gray-100'
+                          } ${
+                            post.isGhost ? 'bg-purple-900/40 border border-purple-500/30 hover:bg-purple-900/60' : 'bg-gray-50 border border-gray-100'
+                          }`}
+                        >
+                          <div 
+                            className={`absolute left-0 top-0 bottom-0 z-0 transition-all duration-500 ${
+                              post.isGhost ? 'bg-purple-500/30' : 'bg-blue-100/50'
+                            }`} 
+                            style={{ width: hasVoted ? `${pollItem.percent}%` : '0%' }}
+                          ></div>
+                          <div className={`relative z-10 w-full flex justify-between text-sm font-bold ${
+                            post.isGhost ? 'text-purple-100' : 'text-gray-800'
+                          }`}>
+                            <span>{pollItem.option}</span>
+                            {hasVoted && <span>{pollItem.percent}%</span>}
+                          </div>
                         </div>
-                      </div>
-                    ))}
-                    <div className="text-xs font-medium text-gray-500 flex items-center gap-1 mt-1">
-                      <BarChart2 className="w-3.5 h-3.5" /> {post.totalVotes} votes
+                      );
+                    })}
+                    <div className={`text-xs font-medium flex items-center gap-1 mt-1 ${post.isGhost ? 'text-purple-400/60' : 'text-gray-500'}`}>
+                      <BarChart2 className="w-3.5 h-3.5" /> {post.totalVotes || 0} votes
                     </div>
                   </div>
                 )}
