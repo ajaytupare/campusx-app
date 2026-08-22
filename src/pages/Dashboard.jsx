@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Ghost, Calendar, BarChart2, MoreHorizontal, Loader2, Heart, MessageCircle, Share2, MapPin } from 'lucide-react';
+import { Ghost, Calendar, BarChart2, MoreHorizontal, Loader2, Heart, MessageCircle, Share2, MapPin, Users, Shield } from 'lucide-react';
 import { useGhost } from '../context/GhostContext';
 import { useAuth } from '../context/AuthContext';
 import { db } from '../config/firebase';
@@ -174,6 +174,22 @@ const Dashboard = () => {
       <div className="flex flex-col gap-5">
         {loadingPosts ? (
           <div className="flex justify-center p-8"><Loader2 className="w-8 h-8 animate-spin text-gray-400" /></div>
+        ) : activeFeedTab === 'Following' ? (
+          <div className="text-center py-16 bg-white rounded-2xl border border-gray-200 shadow-sm">
+            <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Users className="w-8 h-8 text-blue-500" />
+            </div>
+            <h3 className="text-lg font-bold text-gray-900 mb-2">Following System Coming Soon</h3>
+            <p className="text-gray-500 text-sm max-w-sm mx-auto">We are building the Instagram-style request system next! Soon you'll see your friends' posts here.</p>
+          </div>
+        ) : activeFeedTab === 'Clubs' ? (
+           <div className="text-center py-16 bg-white rounded-2xl border border-gray-200 shadow-sm">
+            <div className="w-16 h-16 bg-purple-50 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Shield className="w-8 h-8 text-purple-500" />
+            </div>
+            <h3 className="text-lg font-bold text-gray-900 mb-2">Clubs Directory Coming Soon</h3>
+            <p className="text-gray-500 text-sm max-w-sm mx-auto">Discover and join campus clubs to see their latest events and updates here.</p>
+          </div>
         ) : posts.length === 0 ? (
           <div className="text-center py-10 bg-white rounded-2xl border border-gray-200">
             <h3 className="text-lg font-bold text-gray-900 mb-2">No posts yet</h3>
