@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { Image as ImageIcon, BarChart2, Quote, X, Ghost, Loader2 } from 'lucide-react';
+import { Image as ImageIcon, BarChart2, Quote, X, Ghost, Loader2, Calendar, Tag } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useGhost } from '../../context/GhostContext';
 import { db } from '../../config/firebase';
@@ -12,14 +12,14 @@ const ComposePost = ({ onPostSuccess, isModal = false, onClose }) => {
   const [postText, setPostText] = useState('');
   const [isPosting, setIsPosting] = useState(false);
   
-  // Post Type State: 'text' | 'poll' | 'image'
+  // Post Type State: 'text' | 'poll' | 'image' | 'event' | 'market'
   const [activeType, setActiveType] = useState('text');
   
-  // Poll State
+  // Specific Data States
   const [pollOptions, setPollOptions] = useState(['', '']);
-  
-  // Image State
   const [imageUrl, setImageUrl] = useState('');
+  const [eventData, setEventData] = useState({ title: '', date: '', time: '', location: '' });
+  const [marketData, setMarketData] = useState({ title: '', price: '' });
 
   const handleAddPollOption = () => {
     if (pollOptions.length < 4) {
@@ -37,6 +37,8 @@ const ComposePost = ({ onPostSuccess, isModal = false, onClose }) => {
     setActiveType('text');
     setPollOptions(['', '']);
     setImageUrl('');
+    setEventData({ title: '', date: '', time: '', location: '' });
+    setMarketData({ title: '', price: '' });
   };
 
   const handleSubmit = async () => {
@@ -49,6 +51,16 @@ const ComposePost = ({ onPostSuccess, isModal = false, onClose }) => {
         alert("A poll must have at least 2 options!");
         return;
       }
+    }
+
+    if (activeType === 'event' && (!eventData.title || !eventData.date || !eventData.time || !eventData.location)) {
+      alert("Please fill out all event details!");
+      return;
+    }
+
+    if (activeType === 'market' && (!marketData.title || !marketData.price)) {
+      alert("Please provide an item name and price!");
+      return;
     }
 
     setIsPosting(true);
@@ -65,17 +77,23 @@ const ComposePost = ({ onPostSuccess, isModal = false, onClose }) => {
       };
 
       // Add extra data based on type
+      postData.isGhost = isGhostMode;
+
       if (activeType === 'poll') {
         postData.type = 'poll'; // Override even if ghost, we need it to render as poll
-        postData.isGhost = isGhostMode; // Keep track of ghost status separately
         postData.pollData = pollOptions
           .filter(opt => opt.trim() !== '')
           .map(opt => ({ option: opt.trim(), votes: 0, percent: 0 }));
         postData.totalVotes = 0;
       } else if (activeType === 'image' && imageUrl.trim() !== '') {
         postData.type = 'image';
-        postData.isGhost = isGhostMode;
         postData.postImage = imageUrl.trim();
+      } else if (activeType === 'event') {
+        postData.type = 'event';
+        postData.eventData = eventData;
+      } else if (activeType === 'market') {
+        postData.type = 'market';
+        postData.marketData = marketData;
       }
 
       await addDoc(collection(db, 'posts'), postData);
@@ -94,6 +112,25 @@ const ComposePost = ({ onPostSuccess, isModal = false, onClose }) => {
       setIsPosting(false);
     }
   };
+
+  const getInputClass = () => {
+    return `w-full px-4 py-2 rounded-lg border text-sm font-medium focus:outline-none ${
+      isGhostMode 
+        ? 'bg-purple-900/50 border-purple-500/50 text-white placeholder-purple-300 focus:border-purple-300' 
+        : 'bg-white border-gray-200 focus:border-black'
+    }`;
+  };
+
+  const getContainerClass = () => {
+    return `mt-3 p-4 rounded-xl border ${isGhostMode ? 'border-purple-500/30 bg-purple-900/20' : 'border-gray-200 bg-gray-50'}`;
+  };
+
+  const renderHeader = (title) => (
+    <div className="flex justify-between items-center mb-3">
+      <span className={`text-xs font-bold uppercase tracking-wider ${isGhostMode ? 'text-purple-300' : 'text-gray-500'}`}>{title}</span>
+      <button onClick={removeType} className={`${isGhostMode ? 'text-purple-300 hover:text-white' : 'text-gray-400 hover:text-gray-900'}`}><X className="w-4 h-4" /></button>
+    </div>
+  );
 
   return (
     <div className={`flex gap-4 ${isModal ? 'p-0' : ''}`}>
@@ -120,6 +157,8 @@ const ComposePost = ({ onPostSuccess, isModal = false, onClose }) => {
           onChange={(e) => setPostText(e.target.value)}
           placeholder={
             activeType === 'poll' ? "Ask a question..." : 
+            activeType === 'event' ? "Describe the event..." :
+            activeType === 'market' ? "Provide details about the item..." :
             isGhostMode ? "Share an anonymous secret to campus..." : 
             "What's happening on campus?"
           }
@@ -132,11 +171,8 @@ const ComposePost = ({ onPostSuccess, isModal = false, onClose }) => {
 
         {/* Dynamic Attachments */}
         {activeType === 'poll' && (
-          <div className={`mt-3 p-4 rounded-xl border ${isGhostMode ? 'border-purple-500/30 bg-purple-900/20' : 'border-gray-200 bg-gray-50'}`}>
-            <div className="flex justify-between items-center mb-3">
-              <span className={`text-xs font-bold uppercase tracking-wider ${isGhostMode ? 'text-purple-300' : 'text-gray-500'}`}>Poll Options</span>
-              <button onClick={removeType} className={`${isGhostMode ? 'text-purple-300 hover:text-white' : 'text-gray-400 hover:text-gray-900'}`}><X className="w-4 h-4" /></button>
-            </div>
+          <div className={getContainerClass()}>
+            {renderHeader('Poll Options')}
             <div className="flex flex-col gap-2">
               {pollOptions.map((opt, idx) => (
                 <input 
@@ -145,11 +181,7 @@ const ComposePost = ({ onPostSuccess, isModal = false, onClose }) => {
                   value={opt}
                   onChange={(e) => handlePollChange(idx, e.target.value)}
                   placeholder={`Option ${idx + 1}`}
-                  className={`w-full px-4 py-2 rounded-lg border text-sm font-medium focus:outline-none ${
-                    isGhostMode 
-                      ? 'bg-purple-900/50 border-purple-500/50 text-white placeholder-purple-300 focus:border-purple-300' 
-                      : 'bg-white border-gray-200 focus:border-black'
-                  }`}
+                  className={getInputClass()}
                 />
               ))}
             </div>
@@ -165,21 +197,14 @@ const ComposePost = ({ onPostSuccess, isModal = false, onClose }) => {
         )}
 
         {activeType === 'image' && (
-          <div className={`mt-3 p-4 rounded-xl border ${isGhostMode ? 'border-purple-500/30 bg-purple-900/20' : 'border-gray-200 bg-gray-50'}`}>
-             <div className="flex justify-between items-center mb-3">
-              <span className={`text-xs font-bold uppercase tracking-wider ${isGhostMode ? 'text-purple-300' : 'text-gray-500'}`}>Attach Image URL</span>
-              <button onClick={removeType} className={`${isGhostMode ? 'text-purple-300 hover:text-white' : 'text-gray-400 hover:text-gray-900'}`}><X className="w-4 h-4" /></button>
-            </div>
+          <div className={getContainerClass()}>
+             {renderHeader('Attach Image URL')}
             <input 
               type="url"
               value={imageUrl}
               onChange={(e) => setImageUrl(e.target.value)}
               placeholder="Paste an image URL here (e.g. https://images.unsplash.com/...)"
-              className={`w-full px-4 py-2 rounded-lg border text-sm font-medium focus:outline-none ${
-                isGhostMode 
-                  ? 'bg-purple-900/50 border-purple-500/50 text-white placeholder-purple-300 focus:border-purple-300' 
-                  : 'bg-white border-gray-200 focus:border-black'
-              }`}
+              className={getInputClass()}
             />
             {imageUrl && (
               <div className="mt-3 rounded-lg overflow-hidden border border-gray-200 max-h-48">
@@ -189,34 +214,52 @@ const ComposePost = ({ onPostSuccess, isModal = false, onClose }) => {
           </div>
         )}
 
+        {activeType === 'event' && (
+          <div className={getContainerClass()}>
+             {renderHeader('Event Details')}
+             <div className="flex flex-col gap-2">
+               <input type="text" value={eventData.title} onChange={(e) => setEventData({...eventData, title: e.target.value})} placeholder="Event Title (e.g. Study Session)" className={getInputClass()} />
+               <div className="flex gap-2">
+                 <input type="date" value={eventData.date} onChange={(e) => setEventData({...eventData, date: e.target.value})} className={getInputClass()} />
+                 <input type="time" value={eventData.time} onChange={(e) => setEventData({...eventData, time: e.target.value})} className={getInputClass()} />
+               </div>
+               <input type="text" value={eventData.location} onChange={(e) => setEventData({...eventData, location: e.target.value})} placeholder="Location (e.g. Library 3rd Floor)" className={getInputClass()} />
+             </div>
+          </div>
+        )}
+
+        {activeType === 'market' && (
+          <div className={getContainerClass()}>
+             {renderHeader('Marketplace Listing')}
+             <div className="flex flex-col gap-2">
+               <input type="text" value={marketData.title} onChange={(e) => setMarketData({...marketData, title: e.target.value})} placeholder="What are you selling? (e.g. Bio 101 Textbook)" className={getInputClass()} />
+               <input type="number" min="0" step="0.01" value={marketData.price} onChange={(e) => setMarketData({...marketData, price: e.target.value})} placeholder="Price ($)" className={getInputClass()} />
+             </div>
+          </div>
+        )}
+
         {/* Footer Actions */}
-        <div className={`flex items-center justify-between pt-3 border-t mt-4 transition-colors ${
+        <div className={`flex items-center justify-between pt-3 border-t mt-4 transition-colors flex-wrap gap-y-3 ${
           isGhostMode ? 'border-gray-800' : 'border-gray-100'
         }`}>
           <div className="flex gap-2">
-            <button 
-              onClick={() => setActiveType(activeType === 'image' ? 'text' : 'image')}
-              className={`p-2 rounded-full transition-colors ${
-              activeType === 'image' 
-                ? (isGhostMode ? 'bg-purple-800 text-white' : 'bg-blue-100 text-blue-600')
-                : (isGhostMode ? 'text-purple-300 hover:bg-gray-800' : 'text-gray-500 hover:bg-gray-100')
-            }`}>
+            <button onClick={() => setActiveType(activeType === 'image' ? 'text' : 'image')} className={`p-2 rounded-full transition-colors ${activeType === 'image' ? (isGhostMode ? 'bg-purple-800 text-white' : 'bg-blue-100 text-blue-600') : (isGhostMode ? 'text-purple-300 hover:bg-gray-800' : 'text-gray-500 hover:bg-gray-100')}`} title="Add Image">
               <ImageIcon className="w-5 h-5" />
             </button>
-            <button 
-              onClick={() => setActiveType(activeType === 'poll' ? 'text' : 'poll')}
-              className={`p-2 rounded-full transition-colors ${
-              activeType === 'poll' 
-                ? (isGhostMode ? 'bg-purple-800 text-white' : 'bg-blue-100 text-blue-600')
-                : (isGhostMode ? 'text-purple-300 hover:bg-gray-800' : 'text-gray-500 hover:bg-gray-100')
-            }`}>
+            <button onClick={() => setActiveType(activeType === 'poll' ? 'text' : 'poll')} className={`p-2 rounded-full transition-colors ${activeType === 'poll' ? (isGhostMode ? 'bg-purple-800 text-white' : 'bg-blue-100 text-blue-600') : (isGhostMode ? 'text-purple-300 hover:bg-gray-800' : 'text-gray-500 hover:bg-gray-100')}`} title="Create Poll">
               <BarChart2 className="w-5 h-5" />
+            </button>
+            <button onClick={() => setActiveType(activeType === 'event' ? 'text' : 'event')} className={`p-2 rounded-full transition-colors ${activeType === 'event' ? (isGhostMode ? 'bg-purple-800 text-white' : 'bg-green-100 text-green-600') : (isGhostMode ? 'text-purple-300 hover:bg-gray-800' : 'text-gray-500 hover:bg-gray-100')}`} title="Host Event">
+              <Calendar className="w-5 h-5" />
+            </button>
+            <button onClick={() => setActiveType(activeType === 'market' ? 'text' : 'market')} className={`p-2 rounded-full transition-colors ${activeType === 'market' ? (isGhostMode ? 'bg-purple-800 text-white' : 'bg-yellow-100 text-yellow-600') : (isGhostMode ? 'text-purple-300 hover:bg-gray-800' : 'text-gray-500 hover:bg-gray-100')}`} title="Sell Item">
+              <Tag className="w-5 h-5" />
             </button>
           </div>
           
           <button 
             onClick={handleSubmit}
-            disabled={isPosting || !postText.trim() || (activeType === 'image' && !imageUrl.trim())}
+            disabled={isPosting || !postText.trim()}
             className={`px-6 py-2.5 rounded-full font-bold text-sm transition-colors shadow-sm flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed ${
               isGhostMode ? 'bg-purple-500 hover:bg-purple-400 text-white' : 'bg-black text-white hover:bg-gray-800'
             }`}

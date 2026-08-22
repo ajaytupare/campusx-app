@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Ghost, Calendar, BarChart2, MoreHorizontal, Loader2, Heart, MessageCircle, Share2 } from 'lucide-react';
+import { Ghost, Calendar, BarChart2, MoreHorizontal, Loader2, Heart, MessageCircle, Share2, MapPin } from 'lucide-react';
 import { useGhost } from '../context/GhostContext';
 import { useAuth } from '../context/AuthContext';
 import { db } from '../config/firebase';
@@ -171,6 +171,37 @@ const Dashboard = () => {
                     <div className="text-xs font-medium text-gray-500 flex items-center gap-1 mt-1">
                       <BarChart2 className="w-3.5 h-3.5" /> {post.totalVotes} votes
                     </div>
+                  </div>
+                )}
+
+                {/* Event Post Type */}
+                {post.type === 'event' && post.eventData && (
+                  <div className={`rounded-xl overflow-hidden border mb-4 p-4 ${post.isGhost ? 'bg-purple-900/20 border-purple-500/30' : 'bg-blue-50 border-blue-100'}`}>
+                    <h3 className={`font-bold text-lg mb-2 ${post.isGhost ? 'text-purple-100' : 'text-blue-900'}`}>{post.eventData.title}</h3>
+                    <div className={`flex flex-col gap-2 text-sm font-medium mb-4 ${post.isGhost ? 'text-purple-300' : 'text-blue-800'}`}>
+                      <span className="flex items-center gap-2"><Calendar className="w-4 h-4"/> {post.eventData.date} @ {post.eventData.time}</span>
+                      <span className="flex items-center gap-2"><MapPin className="w-4 h-4"/> {post.eventData.location}</span>
+                    </div>
+                    <button className={`w-full py-2.5 rounded-lg font-bold text-sm transition-colors ${
+                      post.isGhost ? 'bg-purple-600 hover:bg-purple-500 text-white' : 'bg-blue-600 hover:bg-blue-700 text-white'
+                    }`}>
+                      RSVP / Count me in
+                    </button>
+                  </div>
+                )}
+
+                {/* Market Post Type */}
+                {post.type === 'market' && post.marketData && (
+                  <div className={`rounded-xl overflow-hidden border mb-4 p-4 flex justify-between items-center ${post.isGhost ? 'bg-purple-900/20 border-purple-500/30' : 'bg-green-50 border-green-100'}`}>
+                    <div>
+                      <h3 className={`font-bold text-lg leading-tight ${post.isGhost ? 'text-purple-100' : 'text-green-900'}`}>{post.marketData.title}</h3>
+                      <p className={`font-extrabold text-xl mt-1 ${post.isGhost ? 'text-purple-300' : 'text-green-700'}`}>${post.marketData.price}</p>
+                    </div>
+                    <button className={`px-5 py-2.5 rounded-lg font-bold text-sm transition-colors ${
+                      post.isGhost ? 'bg-purple-600 hover:bg-purple-500 text-white' : 'bg-green-600 hover:bg-green-700 text-white'
+                    }`}>
+                      Message Seller
+                    </button>
                   </div>
                 )}
 
