@@ -3,7 +3,7 @@ import { Ghost, Calendar, BarChart2, MoreHorizontal, Loader2, Heart, MessageCirc
 import { useGhost } from '../context/GhostContext';
 import { useAuth } from '../context/AuthContext';
 import { db } from '../config/firebase';
-import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
+import { collection, onSnapshot, query, orderBy, doc, updateDoc, arrayUnion, arrayRemove, increment } from 'firebase/firestore';
 import { formatDistanceToNow } from 'date-fns';
 import ComposePost from '../components/feed/ComposePost';
 
@@ -15,6 +15,10 @@ const Dashboard = () => {
   // Feed State
   const [posts, setPosts] = useState([]);
   const [loadingPosts, setLoadingPosts] = useState(true);
+
+  // Comments State
+  const [activeCommentPost, setActiveCommentPost] = useState(null);
+  const [commentText, setCommentText] = useState('');
 
   // Fetch Posts in Real-Time
   useEffect(() => {
@@ -31,6 +35,50 @@ const Dashboard = () => {
 
     return () => unsubscribe();
   }, []);
+
+  const handleLike = async (postId, likedBy = []) => {
+    if (!currentUser) return;
+    const isLiked = likedBy.includes(currentUser.uid);
+    const postRef = doc(db, 'posts', postId);
+
+    try {
+      if (isLiked) {
+        await updateDoc(postRef, {
+          likedBy: arrayRemove(currentUser.uid),
+          likes: increment(-1)
+        });
+      } else {
+        await updateDoc(postRef, {
+          likedBy: arrayUnion(currentUser.uid),
+          likes: increment(1)
+        });
+      }
+    } catch (err) {
+      console.error("Error liking post:", err);
+    }
+  };
+
+  const handleCommentSubmit = async (postId) => {
+    if (!currentUser || !commentText.trim()) return;
+    
+    const postRef = doc(db, 'posts', postId);
+    try {
+      await updateDoc(postRef, {
+        commentsArray: arrayUnion({
+          id: Date.now().toString(),
+          text: commentText.trim(),
+          authorName: isGhostMode ? 'Ghost' : (currentUser.displayName || 'Campus Student'),
+          authorAvatar: isGhostMode ? null : (currentUser.photoURL || null),
+          createdAt: new Date().toISOString(),
+          isGhost: isGhostMode
+        }),
+        comments: increment(1)
+      });
+      setCommentText('');
+    } catch (err) {
+      console.error("Error adding comment:", err);
+    }
+  };
 
   // Dummy Events (Kept for UI purposes)
   const upcomingEvents = [
@@ -207,16 +255,51 @@ const Dashboard = () => {
 
                 {/* Action Buttons */}
                 <div className="flex items-center gap-6 pt-3 border-t border-gray-100">
-                  <button className="flex items-center gap-2 text-sm font-semibold text-gray-500 hover:text-red-500 transition-colors group">
+                  <button 
+                    onClick={() => handleLike(post.id, post.likedBy || [])}
+                    className={`flex items-center gap-2 text-sm font-semibold transition-colors group ${
+                      post.likedBy?.includes(currentUser?.uid) ? 'text-red-500' : 'text-gray-500 hover:text-red-500'
+                    }`}
+                  >
                     <Heart className="w-[18px] h-[18px] group-active:scale-125 transition-transform" /> {post.likes || 0}
                   </button>
-                  <button className="flex items-center gap-2 text-sm font-semibold text-gray-500 hover:text-blue-500 transition-colors group">
+                  <button 
+                    onClick={() => setActiveCommentPost(activeCommentPost === post.id ? null : post.id)}
+                    className="flex items-center gap-2 text-sm font-semibold text-gray-500 hover:text-blue-500 transition-colors group"
+                  >
                     <MessageCircle className="w-[18px] h-[18px] group-active:scale-125 transition-transform" /> {post.comments || 0}
                   </button>
                   <button className="flex items-center gap-2 text-sm font-semibold text-gray-500 hover:text-green-500 transition-colors ml-auto group">
                     <Share2 className="w-[18px] h-[18px] group-active:scale-125 transition-transform" />
                   </button>
                 </div>
+
+                {/* Comments Section */}
+                {activeCommentPost === post.id && (
+                  <div className="mt-4 pt-4 border-t border-gray-100 flex flex-col gap-3">
+                    {post.commentsArray?.map((comment) => (
+                      <div key={comment.id} className="text-sm bg-gray-50 p-3 rounded-lg">
+                        <span className="font-bold text-gray-900 block">{comment.authorName}</span>
+                        <p className="text-gray-700">{comment.text}</p>
+                      </div>
+                    ))}
+                    <div className="flex gap-2">
+                      <input 
+                        type="text" 
+                        value={commentText}
+                        onChange={(e) => setCommentText(e.target.value)}
+                        placeholder="Write a comment..."
+                        className="flex-1 bg-gray-100 rounded-lg px-3 py-2 text-sm outline-none"
+                      />
+                      <button 
+                        onClick={() => handleCommentSubmit(post.id)}
+                        className="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-blue-600"
+                      >
+                        Send
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             </article>
           ))
