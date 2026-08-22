@@ -260,7 +260,7 @@ const Dashboard = () => {
                     <button className={`w-full py-2.5 rounded-lg font-bold text-sm transition-colors ${
                       post.isGhost ? 'bg-purple-600 hover:bg-purple-500 text-white' : 'bg-blue-600 hover:bg-blue-700 text-white'
                     }`}>
-                      RSVP / Count me in
+                      Count me in
                     </button>
                   </div>
                 )}
