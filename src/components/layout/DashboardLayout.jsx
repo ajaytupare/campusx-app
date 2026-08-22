@@ -25,7 +25,10 @@ const DashboardLayout = () => {
       
       {/* Mobile Top Header */}
       <div className="md:hidden fixed top-0 left-0 right-0 h-14 bg-white border-b border-gray-200 z-40 px-4 flex items-center justify-between">
-        <Link to="/home" className="font-extrabold text-xl tracking-tight text-gray-900">CampusX</Link>
+        <Link to="/home" className="flex items-center gap-1.5 font-extrabold text-xl tracking-tight text-gray-900">
+          CampusX
+          <Ghost className="w-4 h-4 text-purple-600" />
+        </Link>
         <div className="flex items-center gap-3">
           <button 
             onClick={toggleGhostMode}

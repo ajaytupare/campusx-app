@@ -22,10 +22,11 @@ const Sidebar = ({ onOpenCompose }) => {
   return (
     <aside className="h-full flex flex-col py-6">
       {/* Brand */}
-      <Link to="/home" className="px-8 mb-6 block hover:opacity-80 transition-opacity">
+      <Link to="/home" className="px-8 mb-6 flex items-center gap-2 hover:opacity-80 transition-opacity">
         <h1 className="text-2xl font-extrabold tracking-tight text-gray-900">
           CampusX
         </h1>
+        <Ghost className="w-5 h-5 text-purple-600" />
       </Link>
 
       {/* Top Ghost Mode Toggle */}

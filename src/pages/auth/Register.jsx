@@ -63,11 +63,15 @@ const Register = () => {
 
         {/* Hero Text */}
         <div className="relative z-10 max-w-lg px-12 mt-auto pb-24 text-white">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-600/30 border border-purple-500/30 text-purple-100 text-sm font-bold mb-6 backdrop-blur-sm shadow-lg">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-ghost"><path d="M9 10h.01"/><path d="M14 10h.01"/><path d="M10 16c.5.3 1.5.3 2 0"/><path d="M12 2a8 8 0 0 0-8 8v12l3-3 2.5 2.5L12 19l2.5 2.5L17 19l3 3V10a8 8 0 0 0-8-8z"/></svg>
+            Featuring Ghost Mode
+          </div>
           <h2 className="text-4xl font-extrabold tracking-tight mb-4 leading-tight">
             Join your campus community today.
           </h2>
-          <p className="text-lg text-gray-300 font-medium">
-            Find your people, discover exclusive events, and speak your mind anonymously in Ghost Mode.
+          <p className="text-lg text-gray-300 font-medium leading-relaxed">
+            Find your people and discover exclusive events. Toggle <strong className="text-purple-300">Ghost Mode</strong> to speak your mind, review professors, and post completely anonymously.
           </p>
         </div>
       </div>
@@ -77,8 +81,9 @@ const Register = () => {
         
         <div className="w-full max-w-sm">
           {/* Brand Logo */}
-          <div className="mb-10">
+          <div className="mb-10 flex items-center gap-2">
             <h1 className="text-3xl font-extrabold tracking-tight">CampusX</h1>
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-ghost text-purple-600"><path d="M9 10h.01"/><path d="M14 10h.01"/><path d="M10 16c.5.3 1.5.3 2 0"/><path d="M12 2a8 8 0 0 0-8 8v12l3-3 2.5 2.5L12 19l2.5 2.5L17 19l3 3V10a8 8 0 0 0-8-8z"/></svg>
           </div>
 
           {/* Headings */}
