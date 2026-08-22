@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
-import { MapPin, Calendar, Link as LinkIcon, BookOpen, Users, Heart, MessageCircle, Share2, Bookmark, X, Loader2 } from 'lucide-react';
+import { MapPin, Calendar, X, Loader2 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
-import { db, auth } from '../../config/firebase';
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { db } from '../../config/firebase';
+import { doc, getDoc, updateDoc, collection, query, where, orderBy, onSnapshot } from 'firebase/firestore';
 import { updateProfile } from 'firebase/auth';
+import PostCard from '../../components/feed/PostCard';
 
 const UserProfile = () => {
   const { currentUser } = useAuth();
@@ -11,6 +12,10 @@ const UserProfile = () => {
   // State for fetching user profile from Firestore
   const [profileData, setProfileData] = useState(null);
   const [loadingProfile, setLoadingProfile] = useState(true);
+
+  // State for User's Posts
+  const [userPosts, setUserPosts] = useState([]);
+  const [loadingPosts, setLoadingPosts] = useState(true);
 
   // State for Edit Modal
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -45,19 +50,43 @@ const UserProfile = () => {
     fetchProfile();
   }, [currentUser]);
 
+  // Fetch User's Posts
+  useEffect(() => {
+    if (!currentUser?.uid) return;
+    
+    // Query where authorId equals currentUser.uid (Note: Ghost posts by this user won't show here unless we specifically linked them. But actually, they DO have authorId!).
+    // Wait, if ghost mode posts have authorId, they will show on the profile! That breaks anonymity.
+    // We should only fetch posts where isGhost == false.
+    const q = query(
+      collection(db, 'posts'), 
+      where('authorId', '==', currentUser.uid),
+      where('isGhost', '==', false),
+      orderBy('createdAt', 'desc')
+    );
+    
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const fetchedPosts = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      setUserPosts(fetchedPosts);
+      setLoadingPosts(false);
+    });
+
+    return () => unsubscribe();
+  }, [currentUser]);
+
   // Handle Save Profile
   const handleSaveProfile = async (e) => {
     e.preventDefault();
+    if (!currentUser) return;
     setIsSaving(true);
+
     try {
-      // 1. Update Auth Profile (Display Name)
       if (editForm.displayName !== currentUser.displayName) {
-        await updateProfile(auth.currentUser, {
-          displayName: editForm.displayName
-        });
+        await updateProfile(currentUser, { displayName: editForm.displayName });
       }
 
-      // 2. Update Firestore Document (Bio, Location, etc.)
       const userRef = doc(db, 'users', currentUser.uid);
       await updateDoc(userRef, {
         displayName: editForm.displayName,
@@ -65,9 +94,7 @@ const UserProfile = () => {
         location: editForm.location
       });
 
-      // Update local state to reflect changes instantly
       setProfileData(prev => ({ ...prev, bio: editForm.bio, location: editForm.location }));
-      
       setIsEditModalOpen(false);
     } catch (error) {
       console.error("Failed to update profile:", error);
@@ -141,7 +168,7 @@ const UserProfile = () => {
         {/* Profile Tabs */}
         <div className="flex border-t border-gray-200 bg-gray-50/50">
           <button className="flex-1 py-4 text-sm font-bold text-gray-900 border-b-2 border-black hover:bg-gray-100 transition-colors">Posts</button>
-          <button className="flex-1 py-4 text-sm font-bold text-gray-500 border-b-2 border-transparent hover:bg-gray-100 hover:text-gray-900 transition-colors">Replies</button>
+          <button className="flex-1 py-4 text-sm font-bold text-gray-500 border-b-2 border-transparent hover:bg-gray-100 hover:text-gray-900 transition-colors cursor-not-allowed opacity-50">Replies</button>
         </div>
       </div>
 
@@ -217,14 +244,22 @@ const UserProfile = () => {
         </div>
       )}
 
-      {/* User's Dummy Feed (Placeholder) */}
+      {/* User's Actual Feed */}
       <div className="flex flex-col gap-5">
-        <article className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-200 shadow-sm opacity-60">
-          <div className="text-center py-8">
-            <h4 className="font-bold text-gray-900 mb-2">No posts yet</h4>
-            <p className="text-sm text-gray-500">When you post something, it will show up here.</p>
-          </div>
-        </article>
+        {loadingPosts ? (
+          <div className="flex justify-center py-8"><Loader2 className="w-8 h-8 animate-spin text-gray-400" /></div>
+        ) : userPosts.length === 0 ? (
+          <article className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-200 shadow-sm">
+            <div className="text-center py-8">
+              <h4 className="font-bold text-gray-900 mb-2">No posts yet</h4>
+              <p className="text-sm text-gray-500">When you share something on campus, it will appear here.</p>
+            </div>
+          </article>
+        ) : (
+          userPosts.map(post => (
+            <PostCard key={post.id} post={post} />
+          ))
+        )}
       </div>
 
     </div>
