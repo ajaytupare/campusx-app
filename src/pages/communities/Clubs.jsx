@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
-import { Search, Plus, Users, ChevronDown, X, ImagePlus, Check, Loader2, MapPin } from 'lucide-react';
+import { Search, Plus, Users, ChevronDown, X, ImagePlus, Check, Loader2, MapPin, Trash2, AlertTriangle } from 'lucide-react';
 import { db } from '../../config/firebase';
-import { collection, onSnapshot, query, orderBy, addDoc, doc, updateDoc, arrayUnion, arrayRemove, serverTimestamp } from 'firebase/firestore';
+import { collection, onSnapshot, query, orderBy, addDoc, doc, updateDoc, arrayUnion, arrayRemove, serverTimestamp, deleteDoc } from 'firebase/firestore';
 import { useAuth } from '../../context/AuthContext';
 
 // Utility to compress image to a highly efficient Base64 string
@@ -54,6 +54,9 @@ const Clubs = () => {
   // Modal State
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const [clubToDelete, setClubToDelete] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   
   const bannerInputRef = useRef(null);
   const logoInputRef = useRef(null);
@@ -124,6 +127,21 @@ const Clubs = () => {
       alert("Failed to create club: " + error.message);
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  // Handle Delete Club
+  const handleDeleteClub = async () => {
+    if (!clubToDelete) return;
+    setIsDeleting(true);
+    try {
+      await deleteDoc(doc(db, 'clubs', clubToDelete.id));
+      setClubToDelete(null);
+    } catch (error) {
+      console.error("Error deleting club:", error);
+      alert("Failed to delete: " + error.message);
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -260,6 +278,15 @@ const Clubs = () => {
                 <div className="pt-9 p-5 flex flex-col flex-1">
                   <div className="flex items-start justify-between gap-3 mb-2">
                     <h3 className="font-bold text-lg text-gray-900 leading-tight">{club.name}</h3>
+                    {currentUser && club.creatorId === currentUser.uid && (
+                      <button 
+                        onClick={() => setClubToDelete(club)}
+                        className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors shrink-0"
+                        title="Delete Club"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    )}
                   </div>
                   
                   <p className="text-sm text-gray-600 line-clamp-2 mb-4 leading-relaxed">{club.description}</p>
@@ -285,6 +312,41 @@ const Clubs = () => {
               </div>
             );
           })}
+        </div>
+      )}
+
+      {/* Custom Delete Confirmation Modal */}
+      {clubToDelete && (
+        <div className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="w-full max-w-sm bg-white rounded-2xl shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            <div className="p-6 flex flex-col items-center text-center">
+              <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mb-4">
+                <AlertTriangle className="w-6 h-6 text-red-600" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Delete Club?</h3>
+              <p className="text-sm text-gray-500 mb-6">
+                Are you sure you want to delete <strong>{clubToDelete.name}</strong>? This action cannot be undone.
+              </p>
+              
+              <div className="flex w-full gap-3">
+                <button 
+                  onClick={() => setClubToDelete(null)}
+                  disabled={isDeleting}
+                  className="flex-1 px-4 py-2.5 rounded-xl font-bold text-sm bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors disabled:opacity-50"
+                >
+                  Cancel
+                </button>
+                <button 
+                  onClick={handleDeleteClub}
+                  disabled={isDeleting}
+                  className="flex-1 px-4 py-2.5 rounded-xl font-bold text-sm bg-red-600 text-white hover:bg-red-700 transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+                >
+                  {isDeleting && <Loader2 className="w-4 h-4 animate-spin" />}
+                  Yes, Delete
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       )}
 
