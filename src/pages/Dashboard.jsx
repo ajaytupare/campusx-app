@@ -331,11 +331,16 @@ const Dashboard = () => {
                 {/* Market Post Type */}
                 {post.type === 'market' && post.marketData && (
                   <div className={`rounded-xl overflow-hidden border mb-4 p-4 flex justify-between items-center ${post.isGhost ? 'bg-purple-900/20 border-purple-500/30' : 'bg-green-50 border-green-100'}`}>
-                    <div>
-                      <h3 className={`font-bold text-lg leading-tight ${post.isGhost ? 'text-purple-100' : 'text-green-900'}`}>{post.marketData.title}</h3>
-                      <p className={`font-extrabold text-xl mt-1 ${post.isGhost ? 'text-purple-300' : 'text-green-700'}`}>${post.marketData.price}</p>
+                    <div className="flex items-center gap-4">
+                      {post.marketData.image && (
+                        <img src={post.marketData.image} alt={post.marketData.title} className="w-16 h-16 rounded-lg object-cover border border-green-200 shadow-sm shrink-0" />
+                      )}
+                      <div>
+                        <h3 className={`font-bold text-lg leading-tight ${post.isGhost ? 'text-purple-100' : 'text-green-900'}`}>{post.marketData.title}</h3>
+                        <p className={`font-extrabold text-xl mt-1 ${post.isGhost ? 'text-purple-300' : 'text-green-700'}`}>${post.marketData.price}</p>
+                      </div>
                     </div>
-                    <button className={`px-5 py-2.5 rounded-lg font-bold text-sm transition-colors ${
+                    <button className={`px-5 py-2.5 rounded-lg font-bold text-sm transition-colors shrink-0 ${
                       post.isGhost ? 'bg-purple-600 hover:bg-purple-500 text-white' : 'bg-green-600 hover:bg-green-700 text-white'
                     }`}>
                       Message Seller

@@ -157,6 +157,10 @@ const ComposePost = ({ onPostSuccess, isModal = false, onClose }) => {
       } else if (activeType === 'market') {
         postData.type = 'market';
         postData.marketData = marketData;
+        if (imageFile) {
+          const compressedBase64 = await compressImage(imageFile);
+          postData.marketData.image = compressedBase64;
+        }
       } else if (activeType === 'image' && imageFile) {
         // Compress image and save as highly optimized Base64 string to bypass Storage timeout issues
         const compressedBase64 = await compressImage(imageFile);
@@ -323,6 +327,23 @@ const ComposePost = ({ onPostSuccess, isModal = false, onClose }) => {
              <div className="flex flex-col gap-2">
                <input type="text" value={marketData.title} onChange={(e) => setMarketData({...marketData, title: e.target.value})} placeholder="What are you selling? (e.g. Bio 101 Textbook)" className={getInputClass()} />
                <input type="number" min="0" step="0.01" value={marketData.price} onChange={(e) => setMarketData({...marketData, price: e.target.value})} placeholder="Price ($)" className={getInputClass()} />
+               
+               <div className={`mt-2 border-2 border-dashed rounded-xl p-4 text-center cursor-pointer transition-colors ${
+                 isGhostMode ? 'border-gray-700 hover:bg-gray-800' : 'border-gray-300 hover:bg-gray-50'
+               }`} onClick={() => fileInputRef.current?.click()}>
+                 {imagePreview ? (
+                   <div className="relative inline-block">
+                     <img src={imagePreview} alt="Preview" className="h-32 object-contain rounded-lg" />
+                     <button onClick={(e) => { e.stopPropagation(); setImageFile(null); setImagePreview(''); }} className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1"><X className="w-4 h-4" /></button>
+                   </div>
+                 ) : (
+                   <div className={`flex flex-col items-center gap-1 ${isGhostMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                     <UploadCloud className="w-6 h-6" />
+                     <span className="text-sm font-medium">Add a photo of the item</span>
+                   </div>
+                 )}
+               </div>
+               <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={handleImageSelect} />
              </div>
           </div>
         )}
@@ -348,7 +369,7 @@ const ComposePost = ({ onPostSuccess, isModal = false, onClose }) => {
           
           <button 
             onClick={handleSubmit}
-            disabled={isPosting || !postText.trim()}
+            disabled={isPosting || (activeType === 'text' && !postText.trim())}
             className={`px-6 py-2.5 rounded-full font-bold text-sm transition-colors shadow-sm flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed ${
               isGhostMode ? 'bg-purple-500 hover:bg-purple-400 text-white' : 'bg-black text-white hover:bg-gray-800'
             }`}
