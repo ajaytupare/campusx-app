@@ -80,13 +80,6 @@ const Dashboard = () => {
     }
   };
 
-  // Dummy Events (Kept for UI purposes)
-  const upcomingEvents = [
-    { id: 1, title: 'Spring Career Fair', time: 'Today, 2:00 PM', image: 'https://images.unsplash.com/photo-1540317580384-e5d43616b9aa?auto=format&fit=crop&w=300&q=80' },
-    { id: 2, title: 'Campus Hackathon', time: 'Tomorrow, 9:00 AM', image: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=300&q=80' },
-    { id: 3, title: 'Mainstage Concert', time: 'Friday, 8:00 PM', image: 'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?auto=format&fit=crop&w=300&q=80' },
-  ];
-
   return (
     <div className="flex flex-col gap-6 pb-12">
       
@@ -99,37 +92,20 @@ const Dashboard = () => {
         <ComposePost />
       </div>
 
-      {/* Events Carousel */}
-      <div className="flex flex-col gap-3">
-        <div className="flex items-center gap-2 px-1">
-          <Calendar className="w-4 h-4 text-blue-500" />
-          <h3 className="text-sm font-bold text-gray-900">Happening on Campus</h3>
-        </div>
-        <div className="flex gap-4 overflow-x-auto hide-scrollbar pb-2">
-          {upcomingEvents.map((event) => (
-            <div key={event.id} className="relative w-40 h-28 rounded-2xl overflow-hidden shrink-0 group cursor-pointer shadow-sm border border-gray-200">
-              <img src={event.image} alt={event.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
-              <div className="absolute bottom-3 left-3 right-3">
-                <h4 className="text-white text-xs font-bold leading-tight mb-1">{event.title}</h4>
-                <p className="text-gray-300 text-[10px] font-medium">{event.time}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Feed Filters */}
-      <div className="flex items-center border-b border-gray-200 mt-2">
-        {['Campus', 'Following', 'Trending'].map((tab) => (
+      {/* Feed Filter Tabs */}
+      <div className="flex gap-6 border-b border-gray-200 px-2 sticky top-0 bg-gray-50/90 backdrop-blur-md z-10 pt-2">
+        {['Campus', 'Following', 'Clubs'].map((tab) => (
           <button 
             key={tab}
             onClick={() => setActiveFeedTab(tab)}
-            className={`flex-1 pb-3 text-sm font-bold transition-all border-b-2 ${
-              activeFeedTab === tab ? 'border-black text-gray-900' : 'border-transparent text-gray-400 hover:text-gray-700'
+            className={`pb-3 text-sm font-bold transition-all relative ${
+              activeFeedTab === tab ? 'text-black' : 'text-gray-500 hover:text-gray-800'
             }`}
           >
             {tab}
+            {activeFeedTab === tab && (
+              <span className="absolute bottom-0 left-0 w-full h-1 bg-black rounded-t-full"></span>
+            )}
           </button>
         ))}
       </div>

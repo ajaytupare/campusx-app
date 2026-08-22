@@ -36,20 +36,10 @@ const DashboardLayout = () => {
       {/* Right Panel - Solid white, anchored to the right edge (Hidden on Discover and Chat routes) */}
       {!hideRightSidebar && (
         <aside className="hidden lg:block w-[320px] xl:w-[350px] shrink-0 bg-white border-l border-gray-200 h-screen sticky top-0 py-6 px-6 overflow-y-auto z-10">
-          {/* Placeholder for Widgets (Trending, Events, Search) */}
           <div className="flex flex-col gap-8">
-            <div className="bg-gray-50 rounded-xl p-5 border border-gray-100">
-              <h3 className="font-bold text-sm text-gray-900 mb-3">Trending on Campus</h3>
-              <div className="space-y-3">
-                <div className="cursor-pointer">
-                  <p className="text-xs text-gray-500 font-medium">Sports</p>
-                  <p className="text-sm font-bold text-gray-900">Homecoming Game</p>
-                </div>
-                <div className="cursor-pointer">
-                  <p className="text-xs text-gray-500 font-medium">Academics</p>
-                  <p className="text-sm font-bold text-gray-900">Finals Schedule Released</p>
-                </div>
-              </div>
+            <div className="bg-gray-50 rounded-xl p-8 border border-gray-100 text-center">
+              <h3 className="font-bold text-sm text-gray-900 mb-2">More Features</h3>
+              <p className="text-xs text-gray-500">Campus Directory & Events coming soon...</p>
             </div>
           </div>
         </aside>
