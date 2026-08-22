@@ -93,13 +93,15 @@ const UserProfile = () => {
     // Otherwise check for pending requests
     const q = query(
       collection(db, 'follow_requests'),
-      where('from', '==', currentUser.uid),
-      where('to', '==', targetUid)
+      where('from', '==', currentUser.uid)
     );
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      if (!snapshot.empty) {
-        const reqDoc = snapshot.docs[0];
+      // Filter 'to' in memory to avoid composite index requirements
+      const matchingDocs = snapshot.docs.filter(doc => doc.data().to === targetUid);
+      
+      if (matchingDocs.length > 0) {
+        const reqDoc = matchingDocs[0];
         setFollowRequestDocId(reqDoc.id);
         if (reqDoc.data().status === 'pending') {
           setFollowStatus('pending');
@@ -145,16 +147,24 @@ const UserProfile = () => {
     // Fetch Authored Posts
     const qPosts = query(
       collection(db, 'posts'), 
-      where('authorId', '==', targetUid),
-      where('isGhost', '==', false),
-      orderBy('createdAt', 'desc')
+      where('authorId', '==', targetUid)
     );
     
     const unsubPosts = onSnapshot(qPosts, (snapshot) => {
-      const fetchedPosts = snapshot.docs.map(doc => ({
+      let fetchedPosts = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
       }));
+      
+      // Handle filtering and sorting in-memory to bypass Firebase composite index errors
+      fetchedPosts = fetchedPosts
+        .filter(p => p.isGhost === false)
+        .sort((a, b) => {
+          const aTime = a.createdAt?.toMillis() || 0;
+          const bTime = b.createdAt?.toMillis() || 0;
+          return bTime - aTime; // descending
+        });
+
       setUserPosts(fetchedPosts);
       setLoadingPosts(false);
     });
