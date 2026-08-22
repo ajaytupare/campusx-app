@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { db } from '../../config/firebase';
 import { doc, getDoc, collection, query, where, onSnapshot, addDoc, serverTimestamp, runTransaction, deleteDoc } from 'firebase/firestore';
 import { useAuth } from '../../context/AuthContext';
-import { ArrowLeft, Star, Loader2, MessageSquare, MapPin, Trash2 } from 'lucide-react';
+import { ArrowLeft, Star, Loader2, MessageSquare, MapPin, Trash2, X, AlertTriangle } from 'lucide-react';
 
 const DiscoverDetail = () => {
   const { type, id } = useParams(); // type is 'college' or 'teacher'
@@ -13,6 +13,10 @@ const DiscoverDetail = () => {
   const [entityData, setEntityData] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // Delete State
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // Review Form State
   const [isReviewing, setIsReviewing] = useState(false);
@@ -69,7 +73,7 @@ const DiscoverDetail = () => {
   }, [id]);
 
   const handleDeleteEntity = async () => {
-    if (!window.confirm(`Are you sure you want to delete this ${type}?`)) return;
+    setIsDeleting(true);
     try {
       const colName = type === 'college' ? 'colleges' : 'teachers';
       await deleteDoc(doc(db, colName, id));
@@ -77,6 +81,8 @@ const DiscoverDetail = () => {
     } catch (error) {
       console.error("Error deleting entity:", error);
       alert("Failed to delete: " + error.message);
+      setIsDeleting(false);
+      setShowDeleteConfirm(false);
     }
   };
 
@@ -162,7 +168,7 @@ const DiscoverDetail = () => {
         
         {currentUser && entityData.creatorId === currentUser.uid && (
           <button 
-            onClick={handleDeleteEntity}
+            onClick={() => setShowDeleteConfirm(true)}
             className="p-2 text-red-600 hover:bg-red-50 rounded-full transition-colors flex items-center gap-2"
             title="Delete this entry"
           >
@@ -316,6 +322,41 @@ const DiscoverDetail = () => {
           </div>
         )}
       </div>
+
+      {/* Custom Delete Confirmation Modal */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="w-full max-w-sm bg-white rounded-2xl shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            <div className="p-6 flex flex-col items-center text-center">
+              <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mb-4">
+                <AlertTriangle className="w-6 h-6 text-red-600" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Delete {type}?</h3>
+              <p className="text-sm text-gray-500 mb-6">
+                Are you sure you want to delete this {type}? This action cannot be undone and will remove all reviews.
+              </p>
+              
+              <div className="flex w-full gap-3">
+                <button 
+                  onClick={() => setShowDeleteConfirm(false)}
+                  disabled={isDeleting}
+                  className="flex-1 px-4 py-2.5 rounded-xl font-bold text-sm bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors disabled:opacity-50"
+                >
+                  Cancel
+                </button>
+                <button 
+                  onClick={handleDeleteEntity}
+                  disabled={isDeleting}
+                  className="flex-1 px-4 py-2.5 rounded-xl font-bold text-sm bg-red-600 text-white hover:bg-red-700 transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+                >
+                  {isDeleting && <Loader2 className="w-4 h-4 animate-spin" />}
+                  Yes, Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );
