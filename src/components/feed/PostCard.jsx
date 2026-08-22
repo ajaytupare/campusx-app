@@ -101,17 +101,24 @@ const PostCard = ({ post }) => {
     
     const postRef = doc(db, 'posts', post.id);
     try {
-      await updateDoc(postRef, {
+      const payload = {
         commentsArray: arrayUnion({
           id: Date.now().toString(),
           text: commentText.trim(),
           authorName: isGhostMode ? 'Ghost' : (currentUser.displayName || 'Campus Student'),
           authorAvatar: isGhostMode ? null : ((userData?.photoURL || currentUser?.photoURL) || null),
           createdAt: new Date().toISOString(),
-          isGhost: isGhostMode
+          isGhost: isGhostMode,
+          authorId: isGhostMode ? null : currentUser.uid
         }),
         comments: increment(1)
-      });
+      };
+      
+      if (!isGhostMode) {
+        payload.commentedBy = arrayUnion(currentUser.uid);
+      }
+
+      await updateDoc(postRef, payload);
       setCommentText('');
     } catch (err) {
       console.error("Error adding comment:", err);

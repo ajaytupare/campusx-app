@@ -9,12 +9,17 @@ import PostCard from '../../components/feed/PostCard';
 const DEFAULT_COVER = "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=1200&q=80";
 
 const UserProfile = () => {
-  const { currentUser, userData } = useAuth(); // Using userData from Context
+  const { currentUser, userData } = useAuth();
   
   const [profileData, setProfileData] = useState(null);
   const [loadingProfile, setLoadingProfile] = useState(true);
 
+  // Tab State
+  const [activeTab, setActiveTab] = useState('Posts');
+
+  // Posts State
   const [userPosts, setUserPosts] = useState([]);
+  const [repliedPosts, setRepliedPosts] = useState([]);
   const [loadingPosts, setLoadingPosts] = useState(true);
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -25,14 +30,12 @@ const UserProfile = () => {
     location: ''
   });
   
-  // Image upload states
   const [avatarPreview, setAvatarPreview] = useState(null);
   const [coverPreview, setCoverPreview] = useState(null);
   const avatarInputRef = useRef(null);
   const coverInputRef = useRef(null);
 
   useEffect(() => {
-    // We already have userData globally from AuthContext
     if (userData) {
       setProfileData(userData);
       setEditForm(prev => ({
@@ -47,14 +50,15 @@ const UserProfile = () => {
   useEffect(() => {
     if (!currentUser?.uid) return;
     
-    const q = query(
+    // Fetch Authored Posts
+    const qPosts = query(
       collection(db, 'posts'), 
       where('authorId', '==', currentUser.uid),
       where('isGhost', '==', false),
       orderBy('createdAt', 'desc')
     );
     
-    const unsubscribe = onSnapshot(q, (snapshot) => {
+    const unsubPosts = onSnapshot(qPosts, (snapshot) => {
       const fetchedPosts = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
@@ -63,7 +67,25 @@ const UserProfile = () => {
       setLoadingPosts(false);
     });
 
-    return () => unsubscribe();
+    // Fetch Replied Posts
+    const qReplies = query(
+      collection(db, 'posts'), 
+      where('commentedBy', 'array-contains', currentUser.uid),
+      orderBy('createdAt', 'desc')
+    );
+
+    const unsubReplies = onSnapshot(qReplies, (snapshot) => {
+      const fetchedReplies = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      setRepliedPosts(fetchedReplies);
+    });
+
+    return () => {
+      unsubPosts();
+      unsubReplies();
+    };
   }, [currentUser]);
 
   const handleImageSelect = (e, type) => {
@@ -78,7 +100,6 @@ const UserProfile = () => {
         let width = img.width;
         let height = img.height;
         
-        // Dynamic resizing based on image type
         let max_width = type === 'cover' ? 800 : 250;
         let max_height = type === 'cover' ? 400 : 250;
         
@@ -99,7 +120,6 @@ const UserProfile = () => {
         const ctx = canvas.getContext('2d');
         ctx.drawImage(img, 0, 0, width, height);
         
-        // Compress aggressively to JPEG
         const compressedBase64 = canvas.toDataURL('image/jpeg', 0.6);
         
         if (type === 'cover') {
@@ -119,12 +139,10 @@ const UserProfile = () => {
     setIsSaving(true);
 
     try {
-      // ONLY update displayName in Firebase Auth (to prevent photoURL size limit crash)
       if (editForm.displayName !== currentUser.displayName) {
         await updateProfile(currentUser, { displayName: editForm.displayName });
       }
 
-      // Update everything, including photoURL and coverPhotoURL (Base64), inside Firestore!
       const userRef = doc(db, 'users', currentUser.uid);
       await updateDoc(userRef, {
         displayName: editForm.displayName,
@@ -152,13 +170,14 @@ const UserProfile = () => {
     return <div className="flex justify-center p-12"><Loader2 className="w-8 h-8 animate-spin text-black" /></div>;
   }
 
+  const currentFeed = activeTab === 'Posts' ? userPosts : repliedPosts;
+
   return (
     <div className="flex flex-col gap-6 pb-12 relative">
       
       {/* Profile Header Card */}
       <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
         
-        {/* Cover Photo */}
         <div className="h-40 sm:h-48 w-full bg-gray-200 relative">
           <img 
             src={displayCover} 
@@ -167,10 +186,8 @@ const UserProfile = () => {
           />
         </div>
 
-        {/* Profile Info Section */}
         <div className="px-5 sm:px-8 relative">
           
-          {/* Avatar & Edit Button Row */}
           <div className="flex justify-between items-end -mt-12 sm:-mt-16 mb-4 relative z-10">
             <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-4 border-white bg-gray-200 overflow-hidden shadow-sm flex items-center justify-center text-3xl font-bold text-gray-500">
               {displayPhoto ? (
@@ -191,7 +208,6 @@ const UserProfile = () => {
             </button>
           </div>
 
-          {/* Bio & Details */}
           <div className="mb-6">
             <h1 className="text-2xl font-extrabold text-gray-900 leading-tight">
               {displayName}
@@ -213,8 +229,22 @@ const UserProfile = () => {
 
         {/* Profile Tabs */}
         <div className="flex border-t border-gray-200 bg-gray-50/50">
-          <button className="flex-1 py-4 text-sm font-bold text-gray-900 border-b-2 border-black hover:bg-gray-100 transition-colors">Posts</button>
-          <button className="flex-1 py-4 text-sm font-bold text-gray-500 border-b-2 border-transparent hover:bg-gray-100 hover:text-gray-900 transition-colors cursor-not-allowed opacity-50">Replies</button>
+          <button 
+            onClick={() => setActiveTab('Posts')}
+            className={`flex-1 py-4 text-sm font-bold transition-colors ${
+              activeTab === 'Posts' ? 'text-gray-900 border-b-2 border-black bg-white' : 'text-gray-500 border-b-2 border-transparent hover:bg-gray-100 hover:text-gray-900'
+            }`}
+          >
+            Posts
+          </button>
+          <button 
+            onClick={() => setActiveTab('Replies')}
+            className={`flex-1 py-4 text-sm font-bold transition-colors ${
+              activeTab === 'Replies' ? 'text-gray-900 border-b-2 border-black bg-white' : 'text-gray-500 border-b-2 border-transparent hover:bg-gray-100 hover:text-gray-900'
+            }`}
+          >
+            Replies
+          </button>
         </div>
       </div>
 
@@ -235,7 +265,6 @@ const UserProfile = () => {
 
             <form onSubmit={handleSaveProfile} className="flex-1 overflow-y-auto custom-scrollbar p-6 space-y-6">
               
-              {/* Cover Photo Upload Section */}
               <div className="flex flex-col gap-2">
                 <label className="block text-sm font-semibold text-gray-700">Cover Photo</label>
                 <div className="relative group cursor-pointer w-full h-32 rounded-xl overflow-hidden bg-gray-100 border-2 border-gray-100 hover:border-gray-300 transition-colors" onClick={() => coverInputRef.current?.click()}>
@@ -255,7 +284,6 @@ const UserProfile = () => {
                 />
               </div>
 
-              {/* Avatar Upload Section */}
               <div className="flex flex-col gap-2">
                 <label className="block text-sm font-semibold text-gray-700">Profile Photo</label>
                 <div className="flex items-center gap-4">
@@ -348,15 +376,21 @@ const UserProfile = () => {
       <div className="flex flex-col gap-5">
         {loadingPosts ? (
           <div className="flex justify-center py-8"><Loader2 className="w-8 h-8 animate-spin text-gray-400" /></div>
-        ) : userPosts.length === 0 ? (
+        ) : currentFeed.length === 0 ? (
           <article className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-200 shadow-sm">
             <div className="text-center py-8">
-              <h4 className="font-bold text-gray-900 mb-2">No posts yet</h4>
-              <p className="text-sm text-gray-500">When you share something on campus, it will appear here.</p>
+              <h4 className="font-bold text-gray-900 mb-2">
+                {activeTab === 'Posts' ? 'No posts yet' : 'No replies yet'}
+              </h4>
+              <p className="text-sm text-gray-500">
+                {activeTab === 'Posts' 
+                  ? 'When you share something on campus, it will appear here.'
+                  : 'When you reply to posts, they will appear here.'}
+              </p>
             </div>
           </article>
         ) : (
-          userPosts.map(post => (
+          currentFeed.map(post => (
             <PostCard key={post.id} post={post} />
           ))
         )}
