@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
-import { MapPin, Calendar, X, Loader2, Camera } from 'lucide-react';
+import { MapPin, Calendar, X, Loader2, Camera, Image as ImageIcon } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { db } from '../../config/firebase';
-import { doc, getDoc, updateDoc, collection, query, where, orderBy, onSnapshot } from 'firebase/firestore';
+import { doc, updateDoc, collection, query, where, orderBy, onSnapshot } from 'firebase/firestore';
 import { updateProfile } from 'firebase/auth';
 import PostCard from '../../components/feed/PostCard';
+
+const DEFAULT_COVER = "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=1200&q=80";
 
 const UserProfile = () => {
   const { currentUser, userData } = useAuth(); // Using userData from Context
@@ -23,12 +25,14 @@ const UserProfile = () => {
     location: ''
   });
   
-  // Avatar upload state
+  // Image upload states
   const [avatarPreview, setAvatarPreview] = useState(null);
-  const fileInputRef = useRef(null);
+  const [coverPreview, setCoverPreview] = useState(null);
+  const avatarInputRef = useRef(null);
+  const coverInputRef = useRef(null);
 
   useEffect(() => {
-    // We already have userData globally from AuthContext, but we can also rely on it here!
+    // We already have userData globally from AuthContext
     if (userData) {
       setProfileData(userData);
       setEditForm(prev => ({
@@ -62,7 +66,7 @@ const UserProfile = () => {
     return () => unsubscribe();
   }, [currentUser]);
 
-  const handleImageSelect = (e) => {
+  const handleImageSelect = (e, type) => {
     const file = e.target.files[0];
     if (!file) return;
 
@@ -74,17 +78,19 @@ const UserProfile = () => {
         let width = img.width;
         let height = img.height;
         
-        // Resize down to 250x250 max
-        const MAX_SIZE = 250;
+        // Dynamic resizing based on image type
+        let max_width = type === 'cover' ? 800 : 250;
+        let max_height = type === 'cover' ? 400 : 250;
+        
         if (width > height) {
-          if (width > MAX_SIZE) {
-            height = Math.round((height *= MAX_SIZE / width));
-            width = MAX_SIZE;
+          if (width > max_width) {
+            height = Math.round((height *= max_width / width));
+            width = max_width;
           }
         } else {
-          if (height > MAX_SIZE) {
-            width = Math.round((width *= MAX_SIZE / height));
-            height = MAX_SIZE;
+          if (height > max_height) {
+            width = Math.round((width *= max_height / height));
+            height = max_height;
           }
         }
 
@@ -95,7 +101,12 @@ const UserProfile = () => {
         
         // Compress aggressively to JPEG
         const compressedBase64 = canvas.toDataURL('image/jpeg', 0.6);
-        setAvatarPreview(compressedBase64);
+        
+        if (type === 'cover') {
+          setCoverPreview(compressedBase64);
+        } else {
+          setAvatarPreview(compressedBase64);
+        }
       };
       img.src = event.target.result;
     };
@@ -113,13 +124,14 @@ const UserProfile = () => {
         await updateProfile(currentUser, { displayName: editForm.displayName });
       }
 
-      // Update everything, including photoURL (Base64), inside Firestore!
+      // Update everything, including photoURL and coverPhotoURL (Base64), inside Firestore!
       const userRef = doc(db, 'users', currentUser.uid);
       await updateDoc(userRef, {
         displayName: editForm.displayName,
         bio: editForm.bio,
         location: editForm.location,
-        ...(avatarPreview && avatarPreview !== userData?.photoURL && { photoURL: avatarPreview })
+        ...(avatarPreview && avatarPreview !== userData?.photoURL && { photoURL: avatarPreview }),
+        ...(coverPreview && coverPreview !== userData?.coverPhotoURL && { coverPhotoURL: coverPreview })
       });
       
       setIsEditModalOpen(false);
@@ -133,6 +145,7 @@ const UserProfile = () => {
 
   const defaultHandle = currentUser?.email ? currentUser.email.split('@')[0] : 'student';
   const displayPhoto = userData?.photoURL || currentUser?.photoURL;
+  const displayCover = userData?.coverPhotoURL || DEFAULT_COVER;
   const displayName = userData?.displayName || currentUser?.displayName || 'Campus Student';
 
   if (loadingProfile) {
@@ -142,16 +155,22 @@ const UserProfile = () => {
   return (
     <div className="flex flex-col gap-6 pb-12 relative">
       
+      {/* Profile Header Card */}
       <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
+        
+        {/* Cover Photo */}
         <div className="h-40 sm:h-48 w-full bg-gray-200 relative">
           <img 
-            src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=1200&q=80" 
+            src={displayCover} 
             alt="Cover" 
             className="w-full h-full object-cover"
           />
         </div>
 
+        {/* Profile Info Section */}
         <div className="px-5 sm:px-8 relative">
+          
+          {/* Avatar & Edit Button Row */}
           <div className="flex justify-between items-end -mt-12 sm:-mt-16 mb-4 relative z-10">
             <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-4 border-white bg-gray-200 overflow-hidden shadow-sm flex items-center justify-center text-3xl font-bold text-gray-500">
               {displayPhoto ? (
@@ -163,6 +182,7 @@ const UserProfile = () => {
             <button 
               onClick={() => {
                 setAvatarPreview(displayPhoto || null);
+                setCoverPreview(displayCover || null);
                 setIsEditModalOpen(true);
               }}
               className="bg-white border border-gray-300 text-gray-900 px-5 py-2 rounded-full font-bold text-sm hover:bg-gray-50 transition-colors shadow-sm mb-2 sm:mb-4 active:scale-95"
@@ -171,6 +191,7 @@ const UserProfile = () => {
             </button>
           </div>
 
+          {/* Bio & Details */}
           <div className="mb-6">
             <h1 className="text-2xl font-extrabold text-gray-900 leading-tight">
               {displayName}
@@ -190,17 +211,19 @@ const UserProfile = () => {
           </div>
         </div>
 
+        {/* Profile Tabs */}
         <div className="flex border-t border-gray-200 bg-gray-50/50">
           <button className="flex-1 py-4 text-sm font-bold text-gray-900 border-b-2 border-black hover:bg-gray-100 transition-colors">Posts</button>
           <button className="flex-1 py-4 text-sm font-bold text-gray-500 border-b-2 border-transparent hover:bg-gray-100 hover:text-gray-900 transition-colors cursor-not-allowed opacity-50">Replies</button>
         </div>
       </div>
 
+      {/* Edit Profile Modal */}
       {isEditModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white w-full max-w-lg rounded-2xl shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200 my-8">
+          <div className="bg-white w-full max-w-xl rounded-2xl shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200 my-8 flex flex-col max-h-[90vh]">
             
-            <div className="flex items-center justify-between p-4 border-b border-gray-100 sticky top-0 bg-white z-10">
+            <div className="flex items-center justify-between p-4 border-b border-gray-100 shrink-0 bg-white z-10">
               <h3 className="font-bold text-lg">Edit Profile</h3>
               <button 
                 onClick={() => setIsEditModalOpen(false)}
@@ -210,35 +233,59 @@ const UserProfile = () => {
               </button>
             </div>
 
-            <form onSubmit={handleSaveProfile} className="p-6 space-y-6">
+            <form onSubmit={handleSaveProfile} className="flex-1 overflow-y-auto custom-scrollbar p-6 space-y-6">
               
-              <div className="flex flex-col items-center justify-center gap-3">
-                <div className="relative group cursor-pointer" onClick={() => fileInputRef.current?.click()}>
-                  <div className="w-24 h-24 rounded-full border-4 border-gray-100 bg-gray-100 overflow-hidden flex items-center justify-center">
-                    {avatarPreview ? (
-                      <img src={avatarPreview} alt="Preview" className="w-full h-full object-cover" />
-                    ) : (
-                      <Camera className="w-8 h-8 text-gray-400" />
-                    )}
-                  </div>
-                  <div className="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Camera className="w-6 h-6 text-white" />
+              {/* Cover Photo Upload Section */}
+              <div className="flex flex-col gap-2">
+                <label className="block text-sm font-semibold text-gray-700">Cover Photo</label>
+                <div className="relative group cursor-pointer w-full h-32 rounded-xl overflow-hidden bg-gray-100 border-2 border-gray-100 hover:border-gray-300 transition-colors" onClick={() => coverInputRef.current?.click()}>
+                  <img src={coverPreview || DEFAULT_COVER} alt="Cover Preview" className="w-full h-full object-cover" />
+                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="bg-white/20 p-2 rounded-full backdrop-blur-sm">
+                      <ImageIcon className="w-6 h-6 text-white" />
+                    </div>
                   </div>
                 </div>
                 <input 
                   type="file" 
-                  ref={fileInputRef} 
-                  onChange={handleImageSelect} 
+                  ref={coverInputRef} 
+                  onChange={(e) => handleImageSelect(e, 'cover')} 
                   accept="image/*" 
                   className="hidden" 
                 />
-                <button 
-                  type="button" 
-                  onClick={() => fileInputRef.current?.click()}
-                  className="text-sm font-bold text-blue-600 hover:text-blue-700"
-                >
-                  Change Profile Photo
-                </button>
+              </div>
+
+              {/* Avatar Upload Section */}
+              <div className="flex flex-col gap-2">
+                <label className="block text-sm font-semibold text-gray-700">Profile Photo</label>
+                <div className="flex items-center gap-4">
+                  <div className="relative group cursor-pointer w-20 h-20 shrink-0" onClick={() => avatarInputRef.current?.click()}>
+                    <div className="w-full h-full rounded-full border-4 border-gray-100 bg-gray-100 overflow-hidden flex items-center justify-center">
+                      {avatarPreview ? (
+                        <img src={avatarPreview} alt="Preview" className="w-full h-full object-cover" />
+                      ) : (
+                        <Camera className="w-6 h-6 text-gray-400" />
+                      )}
+                    </div>
+                    <div className="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                      <Camera className="w-5 h-5 text-white" />
+                    </div>
+                  </div>
+                  <button 
+                    type="button" 
+                    onClick={() => avatarInputRef.current?.click()}
+                    className="text-sm font-bold text-gray-700 bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-full transition-colors"
+                  >
+                    Change Photo
+                  </button>
+                  <input 
+                    type="file" 
+                    ref={avatarInputRef} 
+                    onChange={(e) => handleImageSelect(e, 'avatar')} 
+                    accept="image/*" 
+                    className="hidden" 
+                  />
+                </div>
               </div>
 
               <div>
@@ -273,25 +320,25 @@ const UserProfile = () => {
                   className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition-all text-sm font-medium"
                 />
               </div>
-
-              <div className="pt-2 flex justify-end gap-3 sticky bottom-0 bg-white">
-                <button 
-                  type="button"
-                  onClick={() => setIsEditModalOpen(false)}
-                  className="px-6 py-2.5 rounded-full font-bold text-sm text-gray-600 hover:bg-gray-100 transition-colors"
-                >
-                  Cancel
-                </button>
-                <button 
-                  type="submit"
-                  disabled={isSaving}
-                  className="px-6 py-2.5 rounded-full font-bold text-sm bg-black text-white hover:bg-gray-800 transition-colors flex items-center gap-2 disabled:opacity-70"
-                >
-                  {isSaving && <Loader2 className="w-4 h-4 animate-spin" />}
-                  Save Changes
-                </button>
-              </div>
             </form>
+
+            <div className="p-4 border-t border-gray-100 flex justify-end gap-3 shrink-0 bg-white">
+              <button 
+                type="button"
+                onClick={() => setIsEditModalOpen(false)}
+                className="px-6 py-2.5 rounded-full font-bold text-sm text-gray-600 hover:bg-gray-100 transition-colors"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={handleSaveProfile}
+                disabled={isSaving}
+                className="px-6 py-2.5 rounded-full font-bold text-sm bg-black text-white hover:bg-gray-800 transition-colors flex items-center gap-2 disabled:opacity-70"
+              >
+                {isSaving && <Loader2 className="w-4 h-4 animate-spin" />}
+                Save Changes
+              </button>
+            </div>
 
           </div>
         </div>
