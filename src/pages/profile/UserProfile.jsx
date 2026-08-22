@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { MapPin, Calendar, X, Loader2 } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { MapPin, Calendar, X, Loader2, Camera } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { db } from '../../config/firebase';
 import { doc, getDoc, updateDoc, collection, query, where, orderBy, onSnapshot } from 'firebase/firestore';
@@ -9,15 +9,12 @@ import PostCard from '../../components/feed/PostCard';
 const UserProfile = () => {
   const { currentUser } = useAuth();
   
-  // State for fetching user profile from Firestore
   const [profileData, setProfileData] = useState(null);
   const [loadingProfile, setLoadingProfile] = useState(true);
 
-  // State for User's Posts
   const [userPosts, setUserPosts] = useState([]);
   const [loadingPosts, setLoadingPosts] = useState(true);
 
-  // State for Edit Modal
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [editForm, setEditForm] = useState({
@@ -25,8 +22,11 @@ const UserProfile = () => {
     bio: '',
     location: ''
   });
+  
+  // Avatar upload state
+  const [avatarPreview, setAvatarPreview] = useState(null);
+  const fileInputRef = useRef(null);
 
-  // Fetch Firestore User Document on mount
   useEffect(() => {
     const fetchProfile = async () => {
       if (!currentUser?.uid) return;
@@ -40,6 +40,7 @@ const UserProfile = () => {
             bio: docSnap.data().bio || '',
             location: docSnap.data().location || ''
           });
+          setAvatarPreview(currentUser.photoURL || null);
         }
       } catch (error) {
         console.error("Error fetching profile:", error);
@@ -50,13 +51,9 @@ const UserProfile = () => {
     fetchProfile();
   }, [currentUser]);
 
-  // Fetch User's Posts
   useEffect(() => {
     if (!currentUser?.uid) return;
     
-    // Query where authorId equals currentUser.uid (Note: Ghost posts by this user won't show here unless we specifically linked them. But actually, they DO have authorId!).
-    // Wait, if ghost mode posts have authorId, they will show on the profile! That breaks anonymity.
-    // We should only fetch posts where isGhost == false.
     const q = query(
       collection(db, 'posts'), 
       where('authorId', '==', currentUser.uid),
@@ -76,29 +73,83 @@ const UserProfile = () => {
     return () => unsubscribe();
   }, [currentUser]);
 
-  // Handle Save Profile
+  const handleImageSelect = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+        
+        // Resize down to 250x250 max to save space in Base64 (Firebase Auth photoURL limit)
+        const MAX_SIZE = 250;
+        if (width > height) {
+          if (width > MAX_SIZE) {
+            height = Math.round((height *= MAX_SIZE / width));
+            width = MAX_SIZE;
+          }
+        } else {
+          if (height > MAX_SIZE) {
+            width = Math.round((width *= MAX_SIZE / height));
+            height = MAX_SIZE;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        
+        // Compress aggressively to JPEG
+        const compressedBase64 = canvas.toDataURL('image/jpeg', 0.6);
+        setAvatarPreview(compressedBase64);
+      };
+      img.src = event.target.result;
+    };
+    reader.readAsDataURL(file);
+  };
+
   const handleSaveProfile = async (e) => {
     e.preventDefault();
     if (!currentUser) return;
     setIsSaving(true);
 
     try {
+      const authUpdates = {};
       if (editForm.displayName !== currentUser.displayName) {
-        await updateProfile(currentUser, { displayName: editForm.displayName });
+        authUpdates.displayName = editForm.displayName;
+      }
+      if (avatarPreview && avatarPreview !== currentUser.photoURL) {
+        authUpdates.photoURL = avatarPreview;
+      }
+
+      if (Object.keys(authUpdates).length > 0) {
+        await updateProfile(currentUser, authUpdates);
       }
 
       const userRef = doc(db, 'users', currentUser.uid);
       await updateDoc(userRef, {
         displayName: editForm.displayName,
         bio: editForm.bio,
-        location: editForm.location
+        location: editForm.location,
+        ...(authUpdates.photoURL && { photoURL: authUpdates.photoURL })
       });
 
-      setProfileData(prev => ({ ...prev, bio: editForm.bio, location: editForm.location }));
+      setProfileData(prev => ({ 
+        ...prev, 
+        bio: editForm.bio, 
+        location: editForm.location,
+        ...(authUpdates.photoURL && { photoURL: authUpdates.photoURL })
+      }));
+      
       setIsEditModalOpen(false);
     } catch (error) {
       console.error("Failed to update profile:", error);
-      alert("Failed to update profile. Please try again.");
+      alert("Failed to update profile. The image might be too large.");
     } finally {
       setIsSaving(false);
     }
@@ -113,10 +164,7 @@ const UserProfile = () => {
   return (
     <div className="flex flex-col gap-6 pb-12 relative">
       
-      {/* Profile Header Card */}
       <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
-        
-        {/* Cover Photo */}
         <div className="h-40 sm:h-48 w-full bg-gray-200 relative">
           <img 
             src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=1200&q=80" 
@@ -125,10 +173,7 @@ const UserProfile = () => {
           />
         </div>
 
-        {/* Profile Info Section */}
         <div className="px-5 sm:px-8 relative">
-          
-          {/* Avatar & Edit Button Row */}
           <div className="flex justify-between items-end -mt-12 sm:-mt-16 mb-4 relative z-10">
             <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-4 border-white bg-gray-200 overflow-hidden shadow-sm flex items-center justify-center text-3xl font-bold text-gray-500">
               {currentUser?.photoURL ? (
@@ -138,14 +183,16 @@ const UserProfile = () => {
               )}
             </div>
             <button 
-              onClick={() => setIsEditModalOpen(true)}
+              onClick={() => {
+                setAvatarPreview(currentUser?.photoURL || null);
+                setIsEditModalOpen(true);
+              }}
               className="bg-white border border-gray-300 text-gray-900 px-5 py-2 rounded-full font-bold text-sm hover:bg-gray-50 transition-colors shadow-sm mb-2 sm:mb-4 active:scale-95"
             >
               Edit Profile
             </button>
           </div>
 
-          {/* Bio & Details */}
           <div className="mb-6">
             <h1 className="text-2xl font-extrabold text-gray-900 leading-tight">
               {currentUser?.displayName || 'Campus Student'}
@@ -165,19 +212,17 @@ const UserProfile = () => {
           </div>
         </div>
 
-        {/* Profile Tabs */}
         <div className="flex border-t border-gray-200 bg-gray-50/50">
           <button className="flex-1 py-4 text-sm font-bold text-gray-900 border-b-2 border-black hover:bg-gray-100 transition-colors">Posts</button>
           <button className="flex-1 py-4 text-sm font-bold text-gray-500 border-b-2 border-transparent hover:bg-gray-100 hover:text-gray-900 transition-colors cursor-not-allowed opacity-50">Replies</button>
         </div>
       </div>
 
-      {/* Edit Profile Modal */}
       {isEditModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white w-full max-w-lg rounded-2xl shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-white w-full max-w-lg rounded-2xl shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200 my-8">
             
-            <div className="flex items-center justify-between p-4 border-b border-gray-100">
+            <div className="flex items-center justify-between p-4 border-b border-gray-100 sticky top-0 bg-white z-10">
               <h3 className="font-bold text-lg">Edit Profile</h3>
               <button 
                 onClick={() => setIsEditModalOpen(false)}
@@ -187,7 +232,38 @@ const UserProfile = () => {
               </button>
             </div>
 
-            <form onSubmit={handleSaveProfile} className="p-6 space-y-5">
+            <form onSubmit={handleSaveProfile} className="p-6 space-y-6">
+              
+              {/* Avatar Upload Section */}
+              <div className="flex flex-col items-center justify-center gap-3">
+                <div className="relative group cursor-pointer" onClick={() => fileInputRef.current?.click()}>
+                  <div className="w-24 h-24 rounded-full border-4 border-gray-100 bg-gray-100 overflow-hidden flex items-center justify-center">
+                    {avatarPreview ? (
+                      <img src={avatarPreview} alt="Preview" className="w-full h-full object-cover" />
+                    ) : (
+                      <Camera className="w-8 h-8 text-gray-400" />
+                    )}
+                  </div>
+                  <div className="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Camera className="w-6 h-6 text-white" />
+                  </div>
+                </div>
+                <input 
+                  type="file" 
+                  ref={fileInputRef} 
+                  onChange={handleImageSelect} 
+                  accept="image/*" 
+                  className="hidden" 
+                />
+                <button 
+                  type="button" 
+                  onClick={() => fileInputRef.current?.click()}
+                  className="text-sm font-bold text-blue-600 hover:text-blue-700"
+                >
+                  Change Profile Photo
+                </button>
+              </div>
+
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-1.5">Name</label>
                 <input 
@@ -221,7 +297,7 @@ const UserProfile = () => {
                 />
               </div>
 
-              <div className="pt-4 flex justify-end gap-3">
+              <div className="pt-2 flex justify-end gap-3 sticky bottom-0 bg-white">
                 <button 
                   type="button"
                   onClick={() => setIsEditModalOpen(false)}
