@@ -2,9 +2,45 @@ import { useState, useRef } from 'react';
 import { Image as ImageIcon, BarChart2, Quote, X, Ghost, Loader2, Calendar, Tag, UploadCloud } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useGhost } from '../../context/GhostContext';
-import { db, storage } from '../../config/firebase';
+import { db } from '../../config/firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+
+// Utility to compress image to a highly efficient Base64 string (avoids Firebase Storage issues)
+const compressImage = (file) => {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (event) => {
+      const img = new Image();
+      img.src = event.target.result;
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const MAX_WIDTH = 800;
+        const MAX_HEIGHT = 800;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > MAX_WIDTH) {
+            height *= MAX_WIDTH / width;
+            width = MAX_WIDTH;
+          }
+        } else {
+          if (height > MAX_HEIGHT) {
+            width *= MAX_HEIGHT / height;
+            height = MAX_HEIGHT;
+          }
+        }
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        // Compress to 0.7 quality JPEG (usually 50-100kb, perfectly safe for Firestore 1MB limit)
+        resolve(canvas.toDataURL('image/jpeg', 0.7));
+      };
+    };
+  });
+};
 
 const ComposePost = ({ onPostSuccess, isModal = false, onClose }) => {
   const { currentUser } = useAuth();
@@ -42,7 +78,6 @@ const ComposePost = ({ onPostSuccess, isModal = false, onClose }) => {
     const file = e.target.files[0];
     if (!file) return;
     
-    // Check file size (limit to 5MB)
     if (file.size > 5 * 1024 * 1024) {
       alert("Image is too large. Please select an image under 5MB.");
       return;
@@ -67,7 +102,6 @@ const ComposePost = ({ onPostSuccess, isModal = false, onClose }) => {
   const handleSubmit = async () => {
     if (!postText.trim() || !currentUser) return;
     
-    // Validate poll
     if (activeType === 'poll') {
       const validOptions = pollOptions.filter(opt => opt.trim() !== '');
       if (validOptions.length < 2) {
@@ -106,7 +140,7 @@ const ComposePost = ({ onPostSuccess, isModal = false, onClose }) => {
       };
 
       if (activeType === 'poll') {
-        postData.type = 'poll'; // Override even if ghost, we need it to render as poll
+        postData.type = 'poll';
         postData.pollData = pollOptions
           .filter(opt => opt.trim() !== '')
           .map(opt => ({ option: opt.trim(), votes: 0, percent: 0 }));
@@ -118,33 +152,14 @@ const ComposePost = ({ onPostSuccess, isModal = false, onClose }) => {
         postData.type = 'market';
         postData.marketData = marketData;
       } else if (activeType === 'image' && imageFile) {
-        try {
-          // Upload Image to Firebase Storage
-          const fileExtension = imageFile.name.split('.').pop();
-          const fileName = `posts/${currentUser.uid}_${Date.now()}.${fileExtension}`;
-          const storageRef = ref(storage, fileName);
-          
-          const snapshot = await uploadBytes(storageRef, imageFile);
-          const downloadUrl = await getDownloadURL(snapshot.ref);
-          
-          postData.type = 'image';
-          postData.postImage = downloadUrl;
-        } catch (storageError) {
-          console.error("Firebase Storage Error:", storageError);
-          // Check if it's an unauthorized error (meaning Storage isn't enabled or rules block it)
-          if (storageError.code === 'storage/unauthorized' || storageError.code === 'storage/unknown') {
-            alert("Storage Error: It looks like Firebase Storage is not enabled in your Firebase Console. Please go to your Firebase project, click 'Storage', and click 'Get Started' to enable uploads.");
-          } else {
-            alert(`Image upload failed: ${storageError.message}`);
-          }
-          setIsPosting(false);
-          return; // Abort the post creation
-        }
+        // Compress image and save as highly optimized Base64 string to bypass Storage timeout issues
+        const compressedBase64 = await compressImage(imageFile);
+        postData.type = 'image';
+        postData.postImage = compressedBase64;
       }
 
       await addDoc(collection(db, 'posts'), postData);
       
-      // Reset
       setPostText('');
       removeType();
       
