@@ -18,6 +18,7 @@ const DiscoverDetail = () => {
 
   // Delete State
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [reviewToDelete, setReviewToDelete] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
   // Review Form State
@@ -73,6 +74,45 @@ const DiscoverDetail = () => {
 
     return () => unsubscribe();
   }, [id]);
+
+  const handleDeleteReview = async () => {
+    if (!reviewToDelete) return;
+    setIsDeleting(true);
+    try {
+      const colName = type === 'college' ? 'colleges' : 'teachers';
+      const entityRef = doc(db, colName, id);
+      const reviewRef = doc(db, 'reviews', reviewToDelete.id);
+
+      await runTransaction(db, async (transaction) => {
+        const entityDoc = await transaction.get(entityRef);
+        if (!entityDoc.exists()) throw new Error("Entity missing");
+
+        const currentData = entityDoc.data();
+        const currentCount = currentData.reviewCount || 1;
+        const currentAvg = currentData.rating || 0;
+
+        const newCount = Math.max(0, currentCount - 1);
+        let newAvg = 0;
+        if (newCount > 0) {
+           newAvg = ((currentAvg * currentCount) - reviewToDelete.rating) / newCount;
+           newAvg = Math.max(0, newAvg);
+        }
+
+        transaction.delete(reviewRef);
+        transaction.update(entityRef, {
+          reviewCount: newCount,
+          rating: newAvg
+        });
+      });
+
+      setReviewToDelete(null);
+    } catch (error) {
+      console.error("Error deleting review:", error);
+      alert("Failed to delete review: " + error.message);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   const handleDeleteEntity = async () => {
     setIsDeleting(true);
@@ -314,9 +354,22 @@ const DiscoverDetail = () => {
                         <p className="text-xs text-gray-500">{dateString}</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-1 bg-yellow-50 text-yellow-700 px-2.5 py-1 rounded-lg text-xs font-bold border border-yellow-200">
-                      <Star className="w-3.5 h-3.5 fill-current" />
-                      {review.rating}
+                    
+                    <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-1 bg-yellow-50 text-yellow-700 px-2.5 py-1 rounded-lg text-xs font-bold border border-yellow-200">
+                        <Star className="w-3.5 h-3.5 fill-current" />
+                        {review.rating}
+                      </div>
+                      
+                      {currentUser && currentUser.uid === review.authorId && (
+                        <button 
+                          onClick={() => setReviewToDelete(review)}
+                          className="text-gray-400 hover:text-red-500 transition-colors p-1"
+                          title="Delete review"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      )}
                     </div>
                   </div>
                   <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">{review.text}</p>
@@ -326,6 +379,41 @@ const DiscoverDetail = () => {
           </div>
         )}
       </div>
+
+      {/* Custom Review Delete Modal */}
+      {reviewToDelete && (
+        <div className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="w-full max-w-sm bg-white rounded-2xl shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            <div className="p-6 flex flex-col items-center text-center">
+              <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mb-4">
+                <AlertTriangle className="w-6 h-6 text-red-600" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Delete Review?</h3>
+              <p className="text-sm text-gray-500 mb-6">
+                Are you sure you want to delete your review? This will also correctly update the average rating math.
+              </p>
+              
+              <div className="flex w-full gap-3">
+                <button 
+                  onClick={() => setReviewToDelete(null)}
+                  disabled={isDeleting}
+                  className="flex-1 px-4 py-2.5 rounded-xl font-bold text-sm bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors disabled:opacity-50"
+                >
+                  Cancel
+                </button>
+                <button 
+                  onClick={handleDeleteReview}
+                  disabled={isDeleting}
+                  className="flex-1 px-4 py-2.5 rounded-xl font-bold text-sm bg-red-600 text-white hover:bg-red-700 transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+                >
+                  {isDeleting && <Loader2 className="w-4 h-4 animate-spin" />}
+                  Yes, Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Custom Delete Confirmation Modal */}
       {showDeleteConfirm && (
