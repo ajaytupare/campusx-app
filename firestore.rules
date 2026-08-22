@@ -50,12 +50,12 @@ service cloud.firestore {
     // DISCOVER SECTION: COLLEGES & TEACHERS
     match /colleges/{collegeId} {
       allow read, create, update: if isAuthenticated();
-      allow delete: if false;
+      allow delete: if isAuthenticated() && resource.data.creatorId == request.auth.uid;
     }
 
     match /teachers/{teacherId} {
       allow read, create, update: if isAuthenticated();
-      allow delete: if false;
+      allow delete: if isAuthenticated() && resource.data.creatorId == request.auth.uid;
     }
 
     // DISCOVER SECTION: REVIEWS

@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { db } from '../../config/firebase';
-import { doc, getDoc, collection, query, where, orderBy, onSnapshot, addDoc, serverTimestamp, runTransaction } from 'firebase/firestore';
+import { doc, getDoc, collection, query, where, onSnapshot, addDoc, serverTimestamp, runTransaction, deleteDoc } from 'firebase/firestore';
 import { useAuth } from '../../context/AuthContext';
-import { ArrowLeft, Star, Loader2, MessageSquare, MapPin } from 'lucide-react';
+import { ArrowLeft, Star, Loader2, MessageSquare, MapPin, Trash2 } from 'lucide-react';
 
 const DiscoverDetail = () => {
   const { type, id } = useParams(); // type is 'college' or 'teacher'
@@ -67,6 +67,18 @@ const DiscoverDetail = () => {
 
     return () => unsubscribe();
   }, [id]);
+
+  const handleDeleteEntity = async () => {
+    if (!window.confirm(`Are you sure you want to delete this ${type}?`)) return;
+    try {
+      const colName = type === 'college' ? 'colleges' : 'teachers';
+      await deleteDoc(doc(db, colName, id));
+      navigate('/discover');
+    } catch (error) {
+      console.error("Error deleting entity:", error);
+      alert("Failed to delete: " + error.message);
+    }
+  };
 
   const handleSubmitReview = async (e) => {
     e.preventDefault();
@@ -140,11 +152,23 @@ const DiscoverDetail = () => {
     <div className="w-full flex flex-col min-h-screen pb-12 animate-in fade-in">
       
       {/* Header / Nav */}
-      <div className="flex items-center gap-4 mb-6">
-        <button onClick={() => navigate(-1)} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-          <ArrowLeft className="w-5 h-5 text-gray-700" />
-        </button>
-        <h1 className="text-xl font-bold text-gray-900 capitalize">{type} Details</h1>
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-4">
+          <button onClick={() => navigate(-1)} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+            <ArrowLeft className="w-5 h-5 text-gray-700" />
+          </button>
+          <h1 className="text-xl font-bold text-gray-900 capitalize">{type} Details</h1>
+        </div>
+        
+        {currentUser && entityData.creatorId === currentUser.uid && (
+          <button 
+            onClick={handleDeleteEntity}
+            className="p-2 text-red-600 hover:bg-red-50 rounded-full transition-colors flex items-center gap-2"
+            title="Delete this entry"
+          >
+            <Trash2 className="w-5 h-5" />
+          </button>
+        )}
       </div>
 
       {/* Hero Banner */}

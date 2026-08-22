@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Search, MapPin, Star, Plus, Loader2, X, Image as ImageIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { db } from '../config/firebase';
+import { useAuth } from '../context/AuthContext';
 import { collection, onSnapshot, query, orderBy, addDoc, serverTimestamp } from 'firebase/firestore';
 
 const compressImage = (file) => {
@@ -42,6 +43,7 @@ const compressImage = (file) => {
 };
 
 const Discover = () => {
+  const { currentUser } = useAuth();
   const [activeTab, setActiveTab] = useState('colleges');
   const [colleges, setColleges] = useState([]);
   const [teachers, setTeachers] = useState([]);
@@ -111,7 +113,8 @@ const Discover = () => {
         location: formData.location.trim(),
         rating: 0,
         reviewCount: 0,
-        createdAt: serverTimestamp()
+        createdAt: serverTimestamp(),
+        creatorId: currentUser?.uid || null
       };
 
       if (activeTab === 'teachers') {
