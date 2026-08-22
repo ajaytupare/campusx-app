@@ -60,7 +60,7 @@ const Chat = () => {
   const displayChats = activeTab === 'Primary' ? primaryChats : requestChats;
 
   return (
-    <div className="flex w-full h-full bg-white overflow-hidden">
+    <div className="flex h-full bg-white overflow-hidden -mx-4 sm:-mx-6 lg:-mx-8 -mb-8 sm:-mb-8 lg:-mb-12 border-t border-gray-200">
       
       {/* Left Pane: Inbox List */}
       <div className={`w-full md:w-80 lg:w-96 flex-col border-r border-gray-200 bg-white z-20 h-full ${activeChatId ? 'hidden md:flex' : 'flex'}`}>
