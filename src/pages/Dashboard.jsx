@@ -1,19 +1,16 @@
 import { useState, useEffect } from 'react';
-import { Image as ImageIcon, Smile, MessageCircle, Heart, Share2, Ghost, MapPin, Calendar, BarChart2, MoreHorizontal, Loader2 } from 'lucide-react';
+import { Ghost, Calendar, BarChart2, MoreHorizontal, Loader2, Heart, MessageCircle, Share2 } from 'lucide-react';
 import { useGhost } from '../context/GhostContext';
 import { useAuth } from '../context/AuthContext';
 import { db } from '../config/firebase';
-import { collection, addDoc, onSnapshot, query, orderBy, serverTimestamp } from 'firebase/firestore';
+import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
 import { formatDistanceToNow } from 'date-fns';
+import ComposePost from '../components/feed/ComposePost';
 
 const Dashboard = () => {
   const { isGhostMode } = useGhost();
   const { currentUser } = useAuth();
   const [activeFeedTab, setActiveFeedTab] = useState('Campus');
-  
-  // Post Composer State
-  const [postText, setPostText] = useState('');
-  const [isPosting, setIsPosting] = useState(false);
   
   // Feed State
   const [posts, setPosts] = useState([]);
@@ -35,31 +32,6 @@ const Dashboard = () => {
     return () => unsubscribe();
   }, []);
 
-  // Handle Post Creation
-  const handleCreatePost = async () => {
-    if (!postText.trim() || !currentUser) return;
-    
-    setIsPosting(true);
-    try {
-      await addDoc(collection(db, 'posts'), {
-        content: postText.trim(),
-        authorId: currentUser.uid,
-        authorName: isGhostMode ? 'Ghost' : (currentUser.displayName || 'Campus Student'),
-        authorAvatar: isGhostMode ? null : (currentUser.photoURL || null),
-        type: isGhostMode ? 'ghost' : 'text',
-        createdAt: serverTimestamp(),
-        likes: 0,
-        comments: 0
-      });
-      setPostText(''); // Clear composer
-    } catch (error) {
-      console.error('Error creating post:', error);
-      alert('Failed to post. Please try again.');
-    } finally {
-      setIsPosting(false);
-    }
-  };
-
   // Dummy Events (Kept for UI purposes)
   const upcomingEvents = [
     { id: 1, title: 'Spring Career Fair', time: 'Today, 2:00 PM', image: 'https://images.unsplash.com/photo-1540317580384-e5d43616b9aa?auto=format&fit=crop&w=300&q=80' },
@@ -76,53 +48,7 @@ const Dashboard = () => {
           ? 'bg-gray-900 border-purple-500/50 shadow-[0_0_20px_rgba(168,85,247,0.15)]' 
           : 'bg-white border-gray-200'
       }`}>
-        <div className="flex gap-4">
-          <div className={`w-12 h-12 rounded-full overflow-hidden shrink-0 flex items-center justify-center font-bold text-xl transition-colors ${
-            isGhostMode ? 'bg-purple-600 text-white' : 'bg-gray-200 text-gray-500'
-          }`}>
-            {isGhostMode ? (
-              <Ghost className="w-6 h-6" />
-            ) : (
-              currentUser?.photoURL ? (
-                <img src={currentUser.photoURL} alt="Me" className="w-full h-full object-cover" />
-              ) : (
-                currentUser?.displayName?.charAt(0).toUpperCase() || 'U'
-              )
-            )}
-          </div>
-          
-          <div className="flex-1">
-            <textarea 
-              value={postText}
-              onChange={(e) => setPostText(e.target.value)}
-              placeholder={isGhostMode ? "Share an anonymous secret to campus..." : "What's happening on campus?"}
-              className={`w-full bg-transparent border-none text-base outline-none resize-none min-h-[60px] font-medium pt-2 transition-colors ${
-                isGhostMode ? 'text-white placeholder-purple-300' : 'text-gray-900 placeholder-gray-400'
-              }`}
-            />
-            <div className={`flex items-center justify-between pt-3 border-t mt-2 transition-colors ${
-              isGhostMode ? 'border-gray-800' : 'border-gray-100'
-            }`}>
-              <div className="flex gap-2">
-                <button className={`p-2 rounded-full transition-colors ${
-                  isGhostMode ? 'text-purple-300 hover:bg-gray-800' : 'text-gray-500 hover:bg-gray-100'
-                }`}>
-                  <ImageIcon className="w-5 h-5" />
-                </button>
-              </div>
-              <button 
-                onClick={handleCreatePost}
-                disabled={isPosting || !postText.trim()}
-                className={`px-6 py-2 rounded-full font-bold text-sm transition-colors shadow-sm flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed ${
-                  isGhostMode ? 'bg-purple-500 hover:bg-purple-400 text-white' : 'bg-black text-white hover:bg-gray-800'
-                }`}
-              >
-                {isPosting && <Loader2 className="w-4 h-4 animate-spin" />}
-                {isGhostMode ? 'Post as Ghost' : 'Post'}
-              </button>
-            </div>
-          </div>
-        </div>
+        <ComposePost />
       </div>
 
       {/* Events Carousel */}
