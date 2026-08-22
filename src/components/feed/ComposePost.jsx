@@ -1,9 +1,10 @@
 import { useState, useRef } from 'react';
-import { Image as ImageIcon, BarChart2, Quote, X, Ghost, Loader2, Calendar, Tag } from 'lucide-react';
+import { Image as ImageIcon, BarChart2, Quote, X, Ghost, Loader2, Calendar, Tag, UploadCloud } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useGhost } from '../../context/GhostContext';
-import { db } from '../../config/firebase';
+import { db, storage } from '../../config/firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 const ComposePost = ({ onPostSuccess, isModal = false, onClose }) => {
   const { currentUser } = useAuth();
@@ -17,9 +18,13 @@ const ComposePost = ({ onPostSuccess, isModal = false, onClose }) => {
   
   // Specific Data States
   const [pollOptions, setPollOptions] = useState(['', '']);
-  const [imageUrl, setImageUrl] = useState('');
   const [eventData, setEventData] = useState({ title: '', date: '', time: '', location: '' });
   const [marketData, setMarketData] = useState({ title: '', price: '' });
+  
+  // Image Upload States
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState('');
+  const fileInputRef = useRef(null);
 
   const handleAddPollOption = () => {
     if (pollOptions.length < 4) {
@@ -33,12 +38,30 @@ const ComposePost = ({ onPostSuccess, isModal = false, onClose }) => {
     setPollOptions(newOptions);
   };
 
+  const handleImageSelect = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    // Check file size (limit to 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert("Image is too large. Please select an image under 5MB.");
+      return;
+    }
+    
+    setImageFile(file);
+    const reader = new FileReader();
+    reader.onloadend = () => setImagePreview(reader.result);
+    reader.readAsDataURL(file);
+  };
+
   const removeType = () => {
     setActiveType('text');
     setPollOptions(['', '']);
-    setImageUrl('');
+    setImageFile(null);
+    setImagePreview('');
     setEventData({ title: '', date: '', time: '', location: '' });
     setMarketData({ title: '', price: '' });
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   const handleSubmit = async () => {
@@ -63,6 +86,11 @@ const ComposePost = ({ onPostSuccess, isModal = false, onClose }) => {
       return;
     }
 
+    if (activeType === 'image' && !imageFile) {
+      alert("Please select an image to upload!");
+      return;
+    }
+
     setIsPosting(true);
     try {
       const postData = {
@@ -73,11 +101,9 @@ const ComposePost = ({ onPostSuccess, isModal = false, onClose }) => {
         type: isGhostMode ? 'ghost' : activeType, 
         createdAt: serverTimestamp(),
         likes: 0,
-        comments: 0
+        comments: 0,
+        isGhost: isGhostMode
       };
-
-      // Add extra data based on type
-      postData.isGhost = isGhostMode;
 
       if (activeType === 'poll') {
         postData.type = 'poll'; // Override even if ghost, we need it to render as poll
@@ -85,15 +111,35 @@ const ComposePost = ({ onPostSuccess, isModal = false, onClose }) => {
           .filter(opt => opt.trim() !== '')
           .map(opt => ({ option: opt.trim(), votes: 0, percent: 0 }));
         postData.totalVotes = 0;
-      } else if (activeType === 'image' && imageUrl.trim() !== '') {
-        postData.type = 'image';
-        postData.postImage = imageUrl.trim();
       } else if (activeType === 'event') {
         postData.type = 'event';
         postData.eventData = eventData;
       } else if (activeType === 'market') {
         postData.type = 'market';
         postData.marketData = marketData;
+      } else if (activeType === 'image' && imageFile) {
+        try {
+          // Upload Image to Firebase Storage
+          const fileExtension = imageFile.name.split('.').pop();
+          const fileName = `posts/${currentUser.uid}_${Date.now()}.${fileExtension}`;
+          const storageRef = ref(storage, fileName);
+          
+          const snapshot = await uploadBytes(storageRef, imageFile);
+          const downloadUrl = await getDownloadURL(snapshot.ref);
+          
+          postData.type = 'image';
+          postData.postImage = downloadUrl;
+        } catch (storageError) {
+          console.error("Firebase Storage Error:", storageError);
+          // Check if it's an unauthorized error (meaning Storage isn't enabled or rules block it)
+          if (storageError.code === 'storage/unauthorized' || storageError.code === 'storage/unknown') {
+            alert("Storage Error: It looks like Firebase Storage is not enabled in your Firebase Console. Please go to your Firebase project, click 'Storage', and click 'Get Started' to enable uploads.");
+          } else {
+            alert(`Image upload failed: ${storageError.message}`);
+          }
+          setIsPosting(false);
+          return; // Abort the post creation
+        }
       }
 
       await addDoc(collection(db, 'posts'), postData);
@@ -159,6 +205,7 @@ const ComposePost = ({ onPostSuccess, isModal = false, onClose }) => {
             activeType === 'poll' ? "Ask a question..." : 
             activeType === 'event' ? "Describe the event..." :
             activeType === 'market' ? "Provide details about the item..." :
+            activeType === 'image' ? "Add a caption for your image..." :
             isGhostMode ? "Share an anonymous secret to campus..." : 
             "What's happening on campus?"
           }
@@ -198,19 +245,40 @@ const ComposePost = ({ onPostSuccess, isModal = false, onClose }) => {
 
         {activeType === 'image' && (
           <div className={getContainerClass()}>
-             {renderHeader('Attach Image URL')}
-            <input 
-              type="url"
-              value={imageUrl}
-              onChange={(e) => setImageUrl(e.target.value)}
-              placeholder="Paste an image URL here (e.g. https://images.unsplash.com/...)"
-              className={getInputClass()}
-            />
-            {imageUrl && (
-              <div className="mt-3 rounded-lg overflow-hidden border border-gray-200 max-h-48">
-                <img src={imageUrl} alt="Preview" className="w-full h-full object-cover" onError={(e) => e.target.style.display = 'none'} />
+            {renderHeader('Upload Image')}
+            
+            {!imagePreview ? (
+              <div 
+                onClick={() => fileInputRef.current?.click()}
+                className={`w-full border-2 border-dashed rounded-xl p-8 flex flex-col items-center justify-center cursor-pointer transition-colors ${
+                  isGhostMode 
+                    ? 'border-purple-500/50 hover:bg-purple-900/40' 
+                    : 'border-gray-300 hover:bg-gray-100'
+                }`}
+              >
+                <UploadCloud className={`w-8 h-8 mb-2 ${isGhostMode ? 'text-purple-400' : 'text-gray-400'}`} />
+                <p className={`text-sm font-bold ${isGhostMode ? 'text-purple-300' : 'text-gray-600'}`}>Click to upload an image</p>
+                <p className={`text-xs mt-1 ${isGhostMode ? 'text-purple-400/70' : 'text-gray-400'}`}>PNG, JPG, GIF up to 5MB</p>
+              </div>
+            ) : (
+              <div className="relative rounded-lg overflow-hidden border border-gray-200 mt-2">
+                <img src={imagePreview} alt="Preview" className="w-full h-auto max-h-64 object-cover" />
+                <button 
+                  onClick={(e) => { e.stopPropagation(); setImageFile(null); setImagePreview(''); if(fileInputRef.current) fileInputRef.current.value = ''; }}
+                  className="absolute top-2 right-2 bg-black/70 text-white p-1.5 rounded-full hover:bg-black transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                </button>
               </div>
             )}
+            
+            <input 
+              type="file"
+              accept="image/*"
+              className="hidden"
+              ref={fileInputRef}
+              onChange={handleImageSelect}
+            />
           </div>
         )}
 
