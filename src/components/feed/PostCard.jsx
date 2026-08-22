@@ -3,7 +3,7 @@ import { Ghost, Calendar, BarChart2, MoreHorizontal, Heart, MessageCircle, Share
 import { useGhost } from '../../context/GhostContext';
 import { useAuth } from '../../context/AuthContext';
 import { db } from '../../config/firebase';
-import { doc, updateDoc, arrayUnion, arrayRemove, increment, setDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, updateDoc, arrayUnion, arrayRemove, increment, setDoc, serverTimestamp, collection, addDoc } from 'firebase/firestore';
 import { formatDistanceToNow } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 
@@ -73,6 +73,22 @@ const PostCard = ({ post }) => {
           likedBy: arrayUnion(currentUser.uid),
           likes: increment(1)
         });
+        
+        // Notification
+        if (post.authorId !== currentUser.uid) {
+          await addDoc(collection(db, 'notifications'), {
+            toUserId: post.authorId,
+            fromUserId: currentUser.uid,
+            fromUserName: isGhostMode ? 'Ghost' : (userData?.displayName || currentUser.displayName || 'Someone'),
+            fromUserAvatar: isGhostMode ? null : (userData?.photoURL || currentUser.photoURL || null),
+            isGhost: isGhostMode,
+            type: 'like',
+            postId: post.id,
+            postText: post.text ? post.text.substring(0, 40) + '...' : 'their post',
+            read: false,
+            createdAt: serverTimestamp()
+          });
+        }
       }
     } catch (err) {
       console.error("Error liking post:", err);
@@ -94,12 +110,28 @@ const PostCard = ({ post }) => {
         await updateDoc(postRef, {
           attendees: arrayUnion({
             uid: currentUser.uid,
-            name: isGhostMode ? 'Ghost' : (currentUser.displayName || 'Campus Student'),
-            avatar: isGhostMode ? null : ((userData?.photoURL || currentUser?.photoURL) || null),
+            name: isGhostMode ? 'Ghost' : (userData?.displayName || currentUser.displayName || 'Campus Student'),
+            avatar: isGhostMode ? null : (userData?.photoURL || currentUser?.photoURL || null),
             isGhost: isGhostMode,
             rsvpAt: new Date().toISOString()
           })
         });
+
+        // Notification
+        if (post.authorId !== currentUser.uid) {
+          await addDoc(collection(db, 'notifications'), {
+            toUserId: post.authorId,
+            fromUserId: currentUser.uid,
+            fromUserName: isGhostMode ? 'Ghost' : (userData?.displayName || currentUser.displayName || 'Someone'),
+            fromUserAvatar: isGhostMode ? null : (userData?.photoURL || currentUser.photoURL || null),
+            isGhost: isGhostMode,
+            type: 'rsvp',
+            postId: post.id,
+            postTitle: post.title || 'their event',
+            read: false,
+            createdAt: serverTimestamp()
+          });
+        }
       }
     } catch (err) {
       console.error("Error updating RSVP:", err);

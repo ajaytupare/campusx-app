@@ -47,6 +47,13 @@ service cloud.firestore {
       }
     }
 
+    // NOTIFICATIONS COLLECTION
+    match /notifications/{notificationId} {
+      allow read, update: if isAuthenticated() && resource.data.toUserId == request.auth.uid;
+      allow create: if isAuthenticated();
+      allow delete: if isAuthenticated() && resource.data.toUserId == request.auth.uid;
+    }
+
     // CLUBS SECTION
     match /clubs/{clubId} {
       allow read, create, update: if isAuthenticated();
