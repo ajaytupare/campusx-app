@@ -3,15 +3,51 @@ import { Ghost, Calendar, BarChart2, MoreHorizontal, Heart, MessageCircle, Share
 import { useGhost } from '../../context/GhostContext';
 import { useAuth } from '../../context/AuthContext';
 import { db } from '../../config/firebase';
-import { doc, updateDoc, arrayUnion, arrayRemove, increment } from 'firebase/firestore';
+import { doc, updateDoc, arrayUnion, arrayRemove, increment, setDoc, serverTimestamp } from 'firebase/firestore';
 import { formatDistanceToNow } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
 
 const PostCard = ({ post }) => {
   const { isGhostMode } = useGhost();
   const { currentUser, userData } = useAuth();
+  const navigate = useNavigate();
   
   const [isCommentOpen, setIsCommentOpen] = useState(false);
   const [commentText, setCommentText] = useState('');
+
+  const handleMessageSeller = async () => {
+    if (!currentUser || currentUser.uid === post.authorId) {
+      alert("You cannot message yourself!");
+      return;
+    }
+
+    const chatId = [currentUser.uid, post.authorId].sort().join('_');
+    const chatRef = doc(db, 'chats', chatId);
+
+    try {
+      // Use setDoc with merge:true to create it if it doesn't exist, without overwriting existing data
+      await setDoc(chatRef, {
+        participants: [currentUser.uid, post.authorId],
+        participantDetails: {
+          [currentUser.uid]: {
+            name: userData?.displayName || currentUser.displayName || 'Buyer',
+            avatar: userData?.photoURL || currentUser.photoURL || null
+          },
+          [post.authorId]: {
+            name: post.authorName,
+            avatar: post.authorAvatar
+          }
+        },
+        // Only set this if the document is brand new (will be overwritten if existing, which is fine to bump it)
+        lastMessageAt: serverTimestamp()
+      }, { merge: true });
+
+      navigate(`/chat?id=${chatId}`);
+    } catch (err) {
+      console.error("Error creating chat:", err);
+      alert("Failed to start chat.");
+    }
+  };
 
   const handleLike = async () => {
     if (!currentUser) return;
@@ -286,9 +322,9 @@ const PostCard = ({ post }) => {
             </div>
             <button className={`px-5 py-2.5 rounded-lg font-bold text-sm transition-colors shrink-0 ${
               post.isGhost ? 'bg-purple-600 hover:bg-purple-500 text-white' : 'bg-green-600 hover:bg-green-700 text-white'
-            }`}>
+            }`} onClick={handleMessageSeller}>
               Message Seller
-            </button>
+              </button>
           </div>
         )}
 
