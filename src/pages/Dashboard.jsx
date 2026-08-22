@@ -58,6 +58,33 @@ const Dashboard = () => {
     }
   };
 
+  const handleRSVP = async (post) => {
+    if (!currentUser) return;
+    
+    const attendees = post.attendees || [];
+    const hasRSVPd = attendees.some(a => a.uid === currentUser.uid);
+    const postRef = doc(db, 'posts', post.id);
+
+    try {
+      if (hasRSVPd) {
+        const updatedAttendees = attendees.filter(a => a.uid !== currentUser.uid);
+        await updateDoc(postRef, { attendees: updatedAttendees });
+      } else {
+        await updateDoc(postRef, {
+          attendees: arrayUnion({
+            uid: currentUser.uid,
+            name: isGhostMode ? 'Ghost' : (currentUser.displayName || 'Campus Student'),
+            avatar: isGhostMode ? null : (currentUser.photoURL || null),
+            isGhost: isGhostMode,
+            rsvpAt: new Date().toISOString()
+          })
+        });
+      }
+    } catch (err) {
+      console.error("Error updating RSVP:", err);
+    }
+  };
+
   const handleVote = async (post, optionIndex) => {
     if (!currentUser) return;
     
@@ -250,20 +277,56 @@ const Dashboard = () => {
                 )}
 
                 {/* Event Post Type */}
-                {post.type === 'event' && post.eventData && (
-                  <div className={`rounded-xl overflow-hidden border mb-4 p-4 ${post.isGhost ? 'bg-purple-900/20 border-purple-500/30' : 'bg-blue-50 border-blue-100'}`}>
-                    <h3 className={`font-bold text-lg mb-2 ${post.isGhost ? 'text-purple-100' : 'text-blue-900'}`}>{post.eventData.title}</h3>
-                    <div className={`flex flex-col gap-2 text-sm font-medium mb-4 ${post.isGhost ? 'text-purple-300' : 'text-blue-800'}`}>
-                      <span className="flex items-center gap-2"><Calendar className="w-4 h-4"/> {post.eventData.date} @ {post.eventData.time}</span>
-                      <span className="flex items-center gap-2"><MapPin className="w-4 h-4"/> {post.eventData.location}</span>
+                {post.type === 'event' && post.eventData && (() => {
+                  const hasRSVPd = post.attendees?.some(a => a.uid === currentUser?.uid);
+                  const isHost = post.authorId === currentUser?.uid;
+                  
+                  return (
+                    <div className={`rounded-xl overflow-hidden border mb-4 p-4 ${post.isGhost ? 'bg-purple-900/20 border-purple-500/30' : 'bg-blue-50 border-blue-100'}`}>
+                      <h3 className={`font-bold text-lg mb-2 ${post.isGhost ? 'text-purple-100' : 'text-blue-900'}`}>{post.eventData.title}</h3>
+                      <div className={`flex flex-col gap-2 text-sm font-medium mb-4 ${post.isGhost ? 'text-purple-300' : 'text-blue-800'}`}>
+                        <span className="flex items-center gap-2"><Calendar className="w-4 h-4"/> {post.eventData.date} @ {post.eventData.time}</span>
+                        <span className="flex items-center gap-2"><MapPin className="w-4 h-4"/> {post.eventData.location}</span>
+                      </div>
+                      
+                      <button 
+                        onClick={() => handleRSVP(post)}
+                        className={`w-full py-2.5 rounded-lg font-bold text-sm transition-colors ${
+                          hasRSVPd 
+                            ? 'bg-green-500 hover:bg-green-600 text-white' 
+                            : (post.isGhost ? 'bg-purple-600 hover:bg-purple-500 text-white' : 'bg-blue-600 hover:bg-blue-700 text-white')
+                        }`}
+                      >
+                        {hasRSVPd ? '✅ You\'re going!' : 'Count me in'}
+                      </button>
+
+                      {/* Attendee List (Host Only) */}
+                      {isHost && post.attendees && post.attendees.length > 0 && (
+                        <div className={`mt-4 pt-3 border-t ${post.isGhost ? 'border-purple-500/30' : 'border-blue-200'}`}>
+                          <p className={`text-xs font-bold mb-2 ${post.isGhost ? 'text-purple-300' : 'text-blue-900'}`}>
+                            People Attending ({post.attendees.length})
+                          </p>
+                          <div className="flex flex-col gap-2 max-h-32 overflow-y-auto custom-scrollbar pr-1">
+                            {post.attendees.map(attendee => (
+                              <div key={attendee.uid} className={`flex items-center gap-2 p-1.5 rounded-md ${post.isGhost ? 'bg-purple-900/40' : 'bg-white/60'}`}>
+                                <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 overflow-hidden ${attendee.isGhost ? 'bg-purple-900 text-purple-400' : 'bg-gray-200'}`}>
+                                  {attendee.isGhost ? (
+                                    <Ghost className="w-3.5 h-3.5" />
+                                  ) : (
+                                    attendee.avatar ? <img src={attendee.avatar} className="w-full h-full object-cover" /> : <span className="text-[10px] font-bold text-gray-500">{attendee.name?.charAt(0)}</span>
+                                  )}
+                                </div>
+                                <span className={`text-xs font-semibold truncate ${attendee.isGhost ? 'text-purple-200' : 'text-gray-800'}`}>
+                                  {attendee.name}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                     </div>
-                    <button className={`w-full py-2.5 rounded-lg font-bold text-sm transition-colors ${
-                      post.isGhost ? 'bg-purple-600 hover:bg-purple-500 text-white' : 'bg-blue-600 hover:bg-blue-700 text-white'
-                    }`}>
-                      Count me in
-                    </button>
-                  </div>
-                )}
+                  );
+                })()}
 
                 {/* Market Post Type */}
                 {post.type === 'market' && post.marketData && (
