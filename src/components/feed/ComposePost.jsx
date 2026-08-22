@@ -100,7 +100,13 @@ const ComposePost = ({ onPostSuccess, isModal = false, onClose }) => {
   };
 
   const handleSubmit = async () => {
-    if (!postText.trim() || !currentUser) return;
+    if (!currentUser) return;
+    
+    // Require main text only if it's a standard text post
+    if (activeType === 'text' && !postText.trim()) {
+      alert("Please write something to post!");
+      return;
+    }
     
     if (activeType === 'poll') {
       const validOptions = pollOptions.filter(opt => opt.trim() !== '');
