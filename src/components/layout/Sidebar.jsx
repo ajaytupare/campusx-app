@@ -80,9 +80,12 @@ const Sidebar = () => {
 
       {/* Primary Action Button */}
       <div className="px-6 mb-8">
-        <button className="w-full bg-black text-white flex items-center justify-center gap-2 py-3.5 rounded-2xl font-bold text-sm hover:bg-gray-800 transition-all shadow-md active:scale-95">
+        <Link 
+          to="/home"
+          className="w-full bg-black text-white flex items-center justify-center gap-2 py-3.5 rounded-2xl font-bold text-sm hover:bg-gray-800 transition-all shadow-md active:scale-95"
+        >
           <Plus className="w-5 h-5" /> Post
-        </button>
+        </Link>
       </div>
 
       {/* Secondary Navigation */}
