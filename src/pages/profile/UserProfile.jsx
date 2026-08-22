@@ -1,23 +1,34 @@
 import { useState, useEffect, useRef } from 'react';
-import { MapPin, Calendar, X, Loader2, Camera, Image as ImageIcon } from 'lucide-react';
+import { useParams } from 'react-router-dom';
+import { MapPin, Calendar, X, Loader2, Camera, Image as ImageIcon, UserPlus, Clock, Check } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { db } from '../../config/firebase';
-import { doc, updateDoc, collection, query, where, orderBy, onSnapshot } from 'firebase/firestore';
+import { doc, getDoc, updateDoc, collection, query, where, orderBy, onSnapshot, setDoc, serverTimestamp, arrayUnion, arrayRemove, deleteDoc } from 'firebase/firestore';
 import { updateProfile } from 'firebase/auth';
 import PostCard from '../../components/feed/PostCard';
 
 const DEFAULT_COVER = "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=1200&q=80";
 
 const UserProfile = () => {
+  const { uid } = useParams();
   const { currentUser, userData } = useAuth();
   
+  const isOwnProfile = !uid || uid === currentUser?.uid;
+  const targetUid = isOwnProfile ? currentUser?.uid : uid;
+
   const [profileData, setProfileData] = useState(null);
   const [loadingProfile, setLoadingProfile] = useState(true);
+
+  // Follow State
+  const [followStatus, setFollowStatus] = useState('none'); // 'none', 'pending', 'following'
+  const [followRequestDocId, setFollowRequestDocId] = useState(null);
+  const [isFollowLoading, setIsFollowLoading] = useState(false);
 
   // Posts State
   const [userPosts, setUserPosts] = useState([]);
   const [loadingPosts, setLoadingPosts] = useState(true);
 
+  // Edit Profile State
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [editForm, setEditForm] = useState({
@@ -31,8 +42,11 @@ const UserProfile = () => {
   const avatarInputRef = useRef(null);
   const coverInputRef = useRef(null);
 
+  // Fetch Profile Data
   useEffect(() => {
-    if (userData) {
+    if (!targetUid) return;
+
+    if (isOwnProfile && userData) {
       setProfileData(userData);
       setEditForm(prev => ({
         displayName: userData.displayName || currentUser?.displayName || '',
@@ -40,16 +54,71 @@ const UserProfile = () => {
         location: userData.location || ''
       }));
       setLoadingProfile(false);
+    } else if (!isOwnProfile) {
+      const fetchOtherProfile = async () => {
+        try {
+          const docRef = doc(db, 'users', targetUid);
+          const docSnap = await getDoc(docRef);
+          if (docSnap.exists()) {
+            setProfileData(docSnap.data());
+          } else {
+            console.error("User not found");
+          }
+        } catch (error) {
+          console.error("Error fetching profile", error);
+        } finally {
+          setLoadingProfile(false);
+        }
+      };
+      fetchOtherProfile();
     }
-  }, [userData, currentUser]);
+  }, [targetUid, isOwnProfile, userData, currentUser]);
 
+  // Fetch Follow Status (if looking at someone else)
   useEffect(() => {
-    if (!currentUser?.uid) return;
+    if (isOwnProfile || !currentUser?.uid || !targetUid) return;
+
+    // First check if already following via the users' arrays
+    if (profileData?.followers?.includes(currentUser.uid)) {
+      setFollowStatus('following');
+      return;
+    }
+
+    // Otherwise check for pending requests
+    const q = query(
+      collection(db, 'follow_requests'),
+      where('from', '==', currentUser.uid),
+      where('to', '==', targetUid)
+    );
+
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      if (!snapshot.empty) {
+        const reqDoc = snapshot.docs[0];
+        setFollowRequestDocId(reqDoc.id);
+        if (reqDoc.data().status === 'pending') {
+          setFollowStatus('pending');
+        } else if (reqDoc.data().status === 'accepted') {
+          setFollowStatus('following');
+        } else {
+          setFollowStatus('none');
+        }
+      } else {
+        setFollowStatus('none');
+        setFollowRequestDocId(null);
+      }
+    });
+
+    return () => unsubscribe();
+  }, [isOwnProfile, currentUser?.uid, targetUid, profileData]);
+
+  // Fetch Posts
+  useEffect(() => {
+    if (!targetUid) return;
     
     // Fetch Authored Posts
     const qPosts = query(
       collection(db, 'posts'), 
-      where('authorId', '==', currentUser.uid),
+      where('authorId', '==', targetUid),
       where('isGhost', '==', false),
       orderBy('createdAt', 'desc')
     );
@@ -64,7 +133,58 @@ const UserProfile = () => {
     });
 
     return () => unsubPosts();
-  }, [currentUser]);
+  }, [targetUid]);
+
+  const handleFollowAction = async () => {
+    if (!currentUser || !profileData) return;
+    setIsFollowLoading(true);
+
+    try {
+      if (followStatus === 'none') {
+        // Send Follow Request
+        if (profileData.isPrivate !== false) { // Default to private behavior if undefined
+          const reqRef = doc(collection(db, 'follow_requests'));
+          await setDoc(reqRef, {
+            from: currentUser.uid,
+            to: targetUid,
+            status: 'pending',
+            createdAt: serverTimestamp(),
+            fromName: userData?.displayName || currentUser.displayName,
+            fromAvatar: userData?.photoURL || currentUser.photoURL || null
+          });
+        } else {
+          // Public account: directly follow (not implemented for MVP, assuming all accounts require requests for safety)
+          const reqRef = doc(collection(db, 'follow_requests'));
+          await setDoc(reqRef, {
+            from: currentUser.uid,
+            to: targetUid,
+            status: 'pending', // We will keep it simple and make all requests pending for MVP
+            createdAt: serverTimestamp(),
+            fromName: userData?.displayName || currentUser.displayName,
+            fromAvatar: userData?.photoURL || currentUser.photoURL || null
+          });
+        }
+      } else if (followStatus === 'pending' && followRequestDocId) {
+        // Cancel request
+        await deleteDoc(doc(db, 'follow_requests', followRequestDocId));
+      } else if (followStatus === 'following') {
+        // Unfollow
+        await updateDoc(doc(db, 'users', targetUid), {
+          followers: arrayRemove(currentUser.uid)
+        });
+        await updateDoc(doc(db, 'users', currentUser.uid), {
+          following: arrayRemove(targetUid)
+        });
+        if (followRequestDocId) {
+          await deleteDoc(doc(db, 'follow_requests', followRequestDocId));
+        }
+      }
+    } catch (err) {
+      console.error("Follow error:", err);
+    } finally {
+      setIsFollowLoading(false);
+    }
+  };
 
   const handleImageSelect = (e, type) => {
     const file = e.target.files[0];
@@ -113,7 +233,7 @@ const UserProfile = () => {
 
   const handleSaveProfile = async (e) => {
     e.preventDefault();
-    if (!currentUser) return;
+    if (!currentUser || !isOwnProfile) return;
     setIsSaving(true);
 
     try {
@@ -139,13 +259,24 @@ const UserProfile = () => {
     }
   };
 
-  const defaultHandle = currentUser?.email ? currentUser.email.split('@')[0] : 'student';
-  const displayPhoto = userData?.photoURL || currentUser?.photoURL;
-  const displayCover = userData?.coverPhotoURL || DEFAULT_COVER;
-  const displayName = userData?.displayName || currentUser?.displayName || 'Campus Student';
+  const defaultHandle = (profileData?.email || currentUser?.email || '').split('@')[0] || 'student';
+  const displayPhoto = profileData?.photoURL || (isOwnProfile ? currentUser?.photoURL : null);
+  const displayCover = profileData?.coverPhotoURL || DEFAULT_COVER;
+  const displayName = profileData?.displayName || (isOwnProfile ? currentUser?.displayName : 'Campus Student');
 
   if (loadingProfile) {
     return <div className="flex justify-center p-12"><Loader2 className="w-8 h-8 animate-spin text-black" /></div>;
+  }
+
+  if (!profileData && !isOwnProfile) {
+    return (
+      <div className="flex justify-center p-12">
+        <div className="text-center">
+          <h2 className="text-xl font-bold text-gray-900">User not found</h2>
+          <p className="text-gray-500">This account doesn't exist or was deleted.</p>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -172,16 +303,34 @@ const UserProfile = () => {
                 displayName.charAt(0).toUpperCase()
               )}
             </div>
-            <button 
-              onClick={() => {
-                setAvatarPreview(displayPhoto || null);
-                setCoverPreview(displayCover || null);
-                setIsEditModalOpen(true);
-              }}
-              className="bg-white border border-gray-300 text-gray-900 px-5 py-2 rounded-full font-bold text-sm hover:bg-gray-50 transition-colors shadow-sm mb-2 sm:mb-4 active:scale-95"
-            >
-              Edit Profile
-            </button>
+            
+            {isOwnProfile ? (
+              <button 
+                onClick={() => {
+                  setAvatarPreview(displayPhoto || null);
+                  setCoverPreview(displayCover || null);
+                  setIsEditModalOpen(true);
+                }}
+                className="bg-white border border-gray-300 text-gray-900 px-5 py-2 rounded-full font-bold text-sm hover:bg-gray-50 transition-colors shadow-sm mb-2 sm:mb-4 active:scale-95"
+              >
+                Edit Profile
+              </button>
+            ) : (
+              <button 
+                onClick={handleFollowAction}
+                disabled={isFollowLoading}
+                className={`px-6 py-2 rounded-full font-bold text-sm transition-colors shadow-sm mb-2 sm:mb-4 active:scale-95 flex items-center gap-2 ${
+                  followStatus === 'following' ? 'bg-gray-100 text-gray-900 border border-gray-200 hover:bg-gray-200' :
+                  followStatus === 'pending' ? 'bg-white text-gray-900 border border-gray-300 hover:bg-gray-50' :
+                  'bg-black text-white hover:bg-gray-800'
+                }`}
+              >
+                {isFollowLoading ? <Loader2 className="w-4 h-4 animate-spin" /> :
+                 followStatus === 'following' ? <><Check className="w-4 h-4"/> Following</> :
+                 followStatus === 'pending' ? <><Clock className="w-4 h-4"/> Requested</> :
+                 <><UserPlus className="w-4 h-4"/> Follow</>}
+              </button>
+            )}
           </div>
 
           <div className="mb-6">
@@ -191,7 +340,7 @@ const UserProfile = () => {
             <p className="text-gray-500 font-medium text-sm mb-3">@{defaultHandle} &bull; {profileData?.role || 'Member'}</p>
             
             <p className="text-gray-800 text-sm leading-relaxed mb-4 whitespace-pre-wrap">
-              {profileData?.bio || "Welcome to my CampusX profile! I haven't written a bio yet."}
+              {profileData?.bio || (isOwnProfile ? "Welcome to my CampusX profile! I haven't written a bio yet." : "")}
             </p>
 
             <div className="flex flex-wrap items-center gap-4 text-xs font-medium text-gray-500">
@@ -200,19 +349,30 @@ const UserProfile = () => {
               )}
               <div className="flex items-center gap-1.5"><Calendar className="w-4 h-4" /> Joined recently</div>
             </div>
+            
+            <div className="flex gap-4 mt-4 pt-4 border-t border-gray-100">
+              <div className="flex gap-1.5 items-center">
+                <span className="font-bold text-gray-900">{profileData?.following?.length || 0}</span>
+                <span className="text-sm text-gray-500 font-medium">Following</span>
+              </div>
+              <div className="flex gap-1.5 items-center">
+                <span className="font-bold text-gray-900">{profileData?.followers?.length || 0}</span>
+                <span className="text-sm text-gray-500 font-medium">Followers</span>
+              </div>
+            </div>
           </div>
         </div>
 
         {/* Feed Header */}
         <div className="flex border-t border-gray-200 bg-gray-50/50">
           <div className="w-full py-4 text-center text-sm font-bold text-gray-900 bg-white">
-            Your Posts
+            Posts
           </div>
         </div>
       </div>
 
       {/* Edit Profile Modal */}
-      {isEditModalOpen && (
+      {isOwnProfile && isEditModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
           <div className="bg-white w-full max-w-xl rounded-2xl shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200 my-8 flex flex-col max-h-[90vh]">
             
@@ -339,11 +499,21 @@ const UserProfile = () => {
       <div className="flex flex-col gap-5">
         {loadingPosts ? (
           <div className="flex justify-center py-8"><Loader2 className="w-8 h-8 animate-spin text-gray-400" /></div>
+        ) : (!isOwnProfile && followStatus !== 'following' && profileData?.isPrivate !== false) ? (
+          <article className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-200 shadow-sm">
+            <div className="text-center py-12">
+              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Clock className="w-8 h-8 text-gray-400" />
+              </div>
+              <h4 className="font-bold text-gray-900 mb-2">This account is private</h4>
+              <p className="text-sm text-gray-500">Follow this user to see their photos and posts.</p>
+            </div>
+          </article>
         ) : userPosts.length === 0 ? (
           <article className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-200 shadow-sm">
             <div className="text-center py-8">
               <h4 className="font-bold text-gray-900 mb-2">No posts yet</h4>
-              <p className="text-sm text-gray-500">When you share something on campus, it will appear here.</p>
+              <p className="text-sm text-gray-500">When they share something on campus, it will appear here.</p>
             </div>
           </article>
         ) : (

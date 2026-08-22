@@ -1,16 +1,21 @@
 import { useState, useEffect, useRef } from 'react';
 import { Send, Phone, Video, MoreVertical, Smile, Paperclip, Image as ImageIcon, Loader2 } from 'lucide-react';
 import { db } from '../../config/firebase';
-import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, doc, updateDoc } from 'firebase/firestore';
+import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { useAuth } from '../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const ChatRoom = ({ chat, otherUser }) => {
   const { currentUser } = useAuth();
+  const navigate = useNavigate();
+  
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [newMessage, setNewMessage] = useState('');
   
   const messagesEndRef = useRef(null);
+
+  const isPendingRequest = chat?.status === 'pending' && chat?.requesterId !== currentUser?.uid;
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -44,7 +49,7 @@ const ChatRoom = ({ chat, otherUser }) => {
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
-    if (!newMessage.trim() || !currentUser || !chat?.id) return;
+    if (!newMessage.trim() || !currentUser || !chat?.id || isPendingRequest) return;
 
     const text = newMessage.trim();
     setNewMessage(''); // optimistic clear
@@ -61,10 +66,30 @@ const ChatRoom = ({ chat, otherUser }) => {
       await updateDoc(doc(db, 'chats', chat.id), {
         lastMessage: text,
         lastMessageAt: serverTimestamp(),
-        // We can add unread counts here later
       });
     } catch (error) {
       console.error("Error sending message:", error);
+    }
+  };
+
+  const handleAcceptRequest = async () => {
+    if (!chat?.id) return;
+    try {
+      await updateDoc(doc(db, 'chats', chat.id), {
+        status: 'active'
+      });
+    } catch (error) {
+      console.error("Failed to accept message request:", error);
+    }
+  };
+
+  const handleDeclineRequest = async () => {
+    if (!chat?.id) return;
+    try {
+      await deleteDoc(doc(db, 'chats', chat.id));
+      navigate('/chat', { replace: true });
+    } catch (error) {
+      console.error("Failed to decline message request:", error);
     }
   };
 
@@ -77,7 +102,7 @@ const ChatRoom = ({ chat, otherUser }) => {
 
   if (!chat) {
     return (
-      <div className="flex-1 flex items-center justify-center bg-[#F5F8FA]">
+      <div className="flex-1 flex items-center justify-center bg-[#F5F8FA] h-full">
         <div className="text-center">
           <div className="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
             <Send className="w-8 h-8 text-gray-400" />
@@ -158,29 +183,52 @@ const ChatRoom = ({ chat, otherUser }) => {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input Area */}
-      <div className="bg-white p-3 sm:p-4 border-t border-gray-200 shrink-0">
-        <form onSubmit={handleSendMessage} className="flex items-end gap-2 sm:gap-3 bg-gray-100 rounded-2xl p-1.5 sm:p-2 sm:pr-3">
-          <div className="flex items-center gap-0.5 sm:gap-1 shrink-0 pb-1 pl-1">
-            <button type="button" className="p-1.5 sm:p-2 text-gray-500 hover:text-blue-500 hover:bg-gray-200 rounded-full transition-colors"><Smile className="w-5 h-5" /></button>
-            <button type="button" className="p-1.5 sm:p-2 text-gray-500 hover:text-blue-500 hover:bg-gray-200 rounded-full transition-colors"><Paperclip className="w-5 h-5" /></button>
+      {/* Input Area / Accept Request Prompt */}
+      <div className="bg-white border-t border-gray-200 shrink-0">
+        {isPendingRequest ? (
+          <div className="p-4 sm:p-6 bg-gray-50 flex flex-col items-center text-center">
+            <h4 className="font-bold text-gray-900 mb-1">Accept message request from {otherUser?.name}?</h4>
+            <p className="text-sm text-gray-500 mb-4">If you accept, they will be able to message you and see when you've read messages.</p>
+            <div className="flex gap-3">
+              <button 
+                onClick={handleDeclineRequest}
+                className="px-6 py-2 rounded-full font-bold text-sm bg-gray-200 text-gray-900 hover:bg-gray-300 transition-colors"
+              >
+                Delete
+              </button>
+              <button 
+                onClick={handleAcceptRequest}
+                className="px-6 py-2 rounded-full font-bold text-sm bg-black text-white hover:bg-gray-800 transition-colors"
+              >
+                Accept
+              </button>
+            </div>
           </div>
-          <textarea 
-            value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Type a message..."
-            className="flex-1 bg-transparent border-none focus:outline-none resize-none max-h-32 min-h-[40px] text-sm py-2.5 text-gray-900 placeholder-gray-500 font-medium"
-            rows="1"
-          />
-          <button 
-            type="submit" 
-            disabled={!newMessage.trim()}
-            className="bg-[#1D9BF0] text-white p-2.5 rounded-full hover:bg-blue-600 transition-colors shrink-0 mb-0.5 shadow-sm disabled:opacity-50 disabled:hover:bg-[#1D9BF0]"
-          >
-            <Send className="w-4 h-4 ml-0.5" />
-          </button>
-        </form>
+        ) : (
+          <div className="p-3 sm:p-4">
+            <form onSubmit={handleSendMessage} className="flex items-end gap-2 sm:gap-3 bg-gray-100 rounded-2xl p-1.5 sm:p-2 sm:pr-3">
+              <div className="flex items-center gap-0.5 sm:gap-1 shrink-0 pb-1 pl-1">
+                <button type="button" className="p-1.5 sm:p-2 text-gray-500 hover:text-blue-500 hover:bg-gray-200 rounded-full transition-colors"><Smile className="w-5 h-5" /></button>
+                <button type="button" className="p-1.5 sm:p-2 text-gray-500 hover:text-blue-500 hover:bg-gray-200 rounded-full transition-colors"><Paperclip className="w-5 h-5" /></button>
+              </div>
+              <textarea 
+                value={newMessage}
+                onChange={(e) => setNewMessage(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Type a message..."
+                className="flex-1 bg-transparent border-none focus:outline-none resize-none max-h-32 min-h-[40px] text-sm py-2.5 text-gray-900 placeholder-gray-500 font-medium"
+                rows="1"
+              />
+              <button 
+                type="submit" 
+                disabled={!newMessage.trim()}
+                className="bg-[#1D9BF0] text-white p-2.5 rounded-full hover:bg-blue-600 transition-colors shrink-0 mb-0.5 shadow-sm disabled:opacity-50 disabled:hover:bg-[#1D9BF0]"
+              >
+                <Send className="w-4 h-4 ml-0.5" />
+              </button>
+            </form>
+          </div>
+        )}
       </div>
 
     </div>

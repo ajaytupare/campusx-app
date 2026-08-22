@@ -33,6 +33,7 @@ function App() {
             <Route path="/clubs" element={<Clubs />} />
             <Route path="/chat" element={<Chat />} />
             <Route path="/profile" element={<UserProfile />} />
+            <Route path="/profile/:uid" element={<UserProfile />} />
             <Route path="/notifications" element={<Notifications />} />
             <Route path="/settings" element={<Settings />} />
           </Route>

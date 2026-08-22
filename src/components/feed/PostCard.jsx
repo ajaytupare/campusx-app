@@ -39,7 +39,9 @@ const PostCard = ({ post }) => {
           }
         },
         // Only set this if the document is brand new (will be overwritten if existing, which is fine to bump it)
-        lastMessageAt: serverTimestamp()
+        lastMessageAt: serverTimestamp(),
+        status: 'pending',
+        requesterId: currentUser.uid
       }, { merge: true });
 
       navigate(`/chat?id=${chatId}`);

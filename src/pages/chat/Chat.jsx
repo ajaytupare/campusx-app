@@ -11,6 +11,8 @@ const Chat = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const activeChatId = searchParams.get('id');
 
+  const [activeTab, setActiveTab] = useState('Primary'); // 'Primary' or 'Requests'
+
   const [chats, setChats] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -46,16 +48,51 @@ const Chat = () => {
     setSearchParams({ id: chatId });
   };
 
+  // Filter chats based on tab
+  const primaryChats = chats.filter(c => 
+    c.status !== 'pending' || c.requesterId === currentUser?.uid
+  );
+  
+  const requestChats = chats.filter(c => 
+    c.status === 'pending' && c.requesterId !== currentUser?.uid
+  );
+
+  const displayChats = activeTab === 'Primary' ? primaryChats : requestChats;
+
   return (
-    <div className="flex h-[calc(100vh-64px)] max-h-[calc(100vh-64px)] bg-white overflow-hidden -mx-4 sm:-mx-6 lg:-mx-8 -mb-8 sm:-mb-8 lg:-mb-12 border-t border-gray-200">
+    <div className="flex h-full bg-white overflow-hidden -mx-4 sm:-mx-6 lg:-mx-8 -mb-8 sm:-mb-8 lg:-mb-12 border-t border-gray-200">
       
       {/* Left Pane: Inbox List */}
-      {/* Hide on mobile if a chat is active */}
-      <div className={`w-full md:w-80 lg:w-96 flex-col border-r border-gray-200 bg-white z-20 ${activeChatId ? 'hidden md:flex' : 'flex'}`}>
+      <div className={`w-full md:w-80 lg:w-96 flex-col border-r border-gray-200 bg-white z-20 h-full ${activeChatId ? 'hidden md:flex' : 'flex'}`}>
         
         {/* Header */}
         <div className="px-5 py-4 border-b border-gray-200 flex items-center justify-between bg-white shrink-0">
           <h2 className="font-extrabold text-xl text-gray-900 tracking-tight">Messages</h2>
+        </div>
+
+        {/* Tabs */}
+        <div className="flex px-2 border-b border-gray-200 bg-white shrink-0">
+          {['Primary', 'Requests'].map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`flex-1 px-6 py-3.5 text-sm font-bold transition-all relative ${
+                activeTab === tab 
+                  ? 'text-gray-900' 
+                  : 'text-gray-500 hover:bg-gray-50 hover:text-gray-700'
+              }`}
+            >
+              {tab}
+              {tab === 'Requests' && requestChats.length > 0 && (
+                <span className="ml-2 bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded-full">
+                  {requestChats.length}
+                </span>
+              )}
+              {activeTab === tab && (
+                <div className="absolute bottom-0 left-0 right-0 h-1 bg-black rounded-t-full" />
+              )}
+            </button>
+          ))}
         </div>
 
         {/* Search */}
@@ -74,13 +111,19 @@ const Chat = () => {
         <div className="flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar">
           {loading ? (
             <div className="flex justify-center py-8"><Loader2 className="w-8 h-8 animate-spin text-gray-400" /></div>
-          ) : chats.length === 0 ? (
+          ) : displayChats.length === 0 ? (
             <div className="text-center px-4 py-8">
-              <p className="text-sm text-gray-500 font-medium">No messages yet.</p>
-              <p className="text-xs text-gray-400 mt-1">When you message a seller or connect with someone, it will appear here.</p>
+              <p className="text-sm text-gray-500 font-medium">
+                {activeTab === 'Primary' ? 'No messages yet.' : 'No message requests.'}
+              </p>
+              <p className="text-xs text-gray-400 mt-1">
+                {activeTab === 'Primary' 
+                  ? 'When you message someone, it will appear here.' 
+                  : 'Messages from people you don\'t know will appear here.'}
+              </p>
             </div>
           ) : (
-            chats.map((chat) => {
+            displayChats.map((chat) => {
               const partnerId = chat.participants?.find(uid => uid !== currentUser.uid);
               const partnerInfo = chat.participantDetails?.[partnerId] || { name: 'Unknown' };
               
@@ -126,7 +169,6 @@ const Chat = () => {
       </div>
 
       {/* Right Pane: Active Conversation */}
-      {/* Hide on mobile if NO chat is active */}
       <div className={`flex-1 md:flex flex-col bg-[#F5F8FA] h-full relative ${!activeChatId ? 'hidden md:flex' : 'flex'}`}>
         <ChatRoom chat={activeChatObj} otherUser={otherUserDetails} />
       </div>
