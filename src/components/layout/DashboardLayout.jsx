@@ -8,7 +8,7 @@ import ComposePost from '../feed/ComposePost';
 
 const DashboardLayout = () => {
   const location = useLocation();
-  const { isGhostMode } = useGhost();
+  const { isGhostMode, toggleGhostMode } = useGhost();
   const { currentUser } = useAuth();
   
   const [isComposeOpen, setIsComposeOpen] = useState(false);
