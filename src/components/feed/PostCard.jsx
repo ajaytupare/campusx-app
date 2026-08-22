@@ -8,7 +8,7 @@ import { formatDistanceToNow } from 'date-fns';
 
 const PostCard = ({ post }) => {
   const { isGhostMode } = useGhost();
-  const { currentUser } = useAuth();
+  const { currentUser, userData } = useAuth();
   
   const [isCommentOpen, setIsCommentOpen] = useState(false);
   const [commentText, setCommentText] = useState('');
@@ -52,7 +52,7 @@ const PostCard = ({ post }) => {
           attendees: arrayUnion({
             uid: currentUser.uid,
             name: isGhostMode ? 'Ghost' : (currentUser.displayName || 'Campus Student'),
-            avatar: isGhostMode ? null : (currentUser.photoURL || null),
+            avatar: isGhostMode ? null : ((userData?.photoURL || currentUser?.photoURL) || null),
             isGhost: isGhostMode,
             rsvpAt: new Date().toISOString()
           })
@@ -106,7 +106,7 @@ const PostCard = ({ post }) => {
           id: Date.now().toString(),
           text: commentText.trim(),
           authorName: isGhostMode ? 'Ghost' : (currentUser.displayName || 'Campus Student'),
-          authorAvatar: isGhostMode ? null : (currentUser.photoURL || null),
+          authorAvatar: isGhostMode ? null : ((userData?.photoURL || currentUser?.photoURL) || null),
           createdAt: new Date().toISOString(),
           isGhost: isGhostMode
         }),

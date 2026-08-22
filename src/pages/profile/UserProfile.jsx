@@ -7,7 +7,7 @@ import { updateProfile } from 'firebase/auth';
 import PostCard from '../../components/feed/PostCard';
 
 const UserProfile = () => {
-  const { currentUser } = useAuth();
+  const { currentUser, userData } = useAuth(); // Using userData from Context
   
   const [profileData, setProfileData] = useState(null);
   const [loadingProfile, setLoadingProfile] = useState(true);
@@ -28,28 +28,17 @@ const UserProfile = () => {
   const fileInputRef = useRef(null);
 
   useEffect(() => {
-    const fetchProfile = async () => {
-      if (!currentUser?.uid) return;
-      try {
-        const docRef = doc(db, 'users', currentUser.uid);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          setProfileData(docSnap.data());
-          setEditForm({
-            displayName: currentUser.displayName || '',
-            bio: docSnap.data().bio || '',
-            location: docSnap.data().location || ''
-          });
-          setAvatarPreview(currentUser.photoURL || null);
-        }
-      } catch (error) {
-        console.error("Error fetching profile:", error);
-      } finally {
-        setLoadingProfile(false);
-      }
-    };
-    fetchProfile();
-  }, [currentUser]);
+    // We already have userData globally from AuthContext, but we can also rely on it here!
+    if (userData) {
+      setProfileData(userData);
+      setEditForm(prev => ({
+        displayName: userData.displayName || currentUser?.displayName || '',
+        bio: userData.bio || '',
+        location: userData.location || ''
+      }));
+      setLoadingProfile(false);
+    }
+  }, [userData, currentUser]);
 
   useEffect(() => {
     if (!currentUser?.uid) return;
@@ -85,7 +74,7 @@ const UserProfile = () => {
         let width = img.width;
         let height = img.height;
         
-        // Resize down to 250x250 max to save space in Base64 (Firebase Auth photoURL limit)
+        // Resize down to 250x250 max
         const MAX_SIZE = 250;
         if (width > height) {
           if (width > MAX_SIZE) {
@@ -119,43 +108,32 @@ const UserProfile = () => {
     setIsSaving(true);
 
     try {
-      const authUpdates = {};
+      // ONLY update displayName in Firebase Auth (to prevent photoURL size limit crash)
       if (editForm.displayName !== currentUser.displayName) {
-        authUpdates.displayName = editForm.displayName;
-      }
-      if (avatarPreview && avatarPreview !== currentUser.photoURL) {
-        authUpdates.photoURL = avatarPreview;
+        await updateProfile(currentUser, { displayName: editForm.displayName });
       }
 
-      if (Object.keys(authUpdates).length > 0) {
-        await updateProfile(currentUser, authUpdates);
-      }
-
+      // Update everything, including photoURL (Base64), inside Firestore!
       const userRef = doc(db, 'users', currentUser.uid);
       await updateDoc(userRef, {
         displayName: editForm.displayName,
         bio: editForm.bio,
         location: editForm.location,
-        ...(authUpdates.photoURL && { photoURL: authUpdates.photoURL })
+        ...(avatarPreview && avatarPreview !== userData?.photoURL && { photoURL: avatarPreview })
       });
-
-      setProfileData(prev => ({ 
-        ...prev, 
-        bio: editForm.bio, 
-        location: editForm.location,
-        ...(authUpdates.photoURL && { photoURL: authUpdates.photoURL })
-      }));
       
       setIsEditModalOpen(false);
     } catch (error) {
       console.error("Failed to update profile:", error);
-      alert("Failed to update profile. The image might be too large.");
+      alert("Failed to update profile. Please try again.");
     } finally {
       setIsSaving(false);
     }
   };
 
   const defaultHandle = currentUser?.email ? currentUser.email.split('@')[0] : 'student';
+  const displayPhoto = userData?.photoURL || currentUser?.photoURL;
+  const displayName = userData?.displayName || currentUser?.displayName || 'Campus Student';
 
   if (loadingProfile) {
     return <div className="flex justify-center p-12"><Loader2 className="w-8 h-8 animate-spin text-black" /></div>;
@@ -176,15 +154,15 @@ const UserProfile = () => {
         <div className="px-5 sm:px-8 relative">
           <div className="flex justify-between items-end -mt-12 sm:-mt-16 mb-4 relative z-10">
             <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-4 border-white bg-gray-200 overflow-hidden shadow-sm flex items-center justify-center text-3xl font-bold text-gray-500">
-              {currentUser?.photoURL ? (
-                <img src={currentUser.photoURL} alt="Profile" className="w-full h-full object-cover" />
+              {displayPhoto ? (
+                <img src={displayPhoto} alt="Profile" className="w-full h-full object-cover" />
               ) : (
-                currentUser?.displayName ? currentUser.displayName.charAt(0).toUpperCase() : 'U'
+                displayName.charAt(0).toUpperCase()
               )}
             </div>
             <button 
               onClick={() => {
-                setAvatarPreview(currentUser?.photoURL || null);
+                setAvatarPreview(displayPhoto || null);
                 setIsEditModalOpen(true);
               }}
               className="bg-white border border-gray-300 text-gray-900 px-5 py-2 rounded-full font-bold text-sm hover:bg-gray-50 transition-colors shadow-sm mb-2 sm:mb-4 active:scale-95"
@@ -195,7 +173,7 @@ const UserProfile = () => {
 
           <div className="mb-6">
             <h1 className="text-2xl font-extrabold text-gray-900 leading-tight">
-              {currentUser?.displayName || 'Campus Student'}
+              {displayName}
             </h1>
             <p className="text-gray-500 font-medium text-sm mb-3">@{defaultHandle} &bull; {profileData?.role || 'Member'}</p>
             
@@ -234,7 +212,6 @@ const UserProfile = () => {
 
             <form onSubmit={handleSaveProfile} className="p-6 space-y-6">
               
-              {/* Avatar Upload Section */}
               <div className="flex flex-col items-center justify-center gap-3">
                 <div className="relative group cursor-pointer" onClick={() => fileInputRef.current?.click()}>
                   <div className="w-24 h-24 rounded-full border-4 border-gray-100 bg-gray-100 overflow-hidden flex items-center justify-center">

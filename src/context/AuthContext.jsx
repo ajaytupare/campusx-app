@@ -7,7 +7,7 @@ import {
   updateProfile
 } from 'firebase/auth';
 import { auth, db } from '../config/firebase';
-import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, setDoc, serverTimestamp, onSnapshot } from 'firebase/firestore';
 
 const AuthContext = createContext();
 
@@ -17,27 +17,25 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
+  const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   // Sign Up
   const signup = async (email, password, displayName, role) => {
-    // 1. Create the user in Firebase Auth
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
 
-    // 2. Update their display name in Firebase Auth
     await updateProfile(user, {
       displayName: displayName
     });
 
-    // 3. Create a corresponding user document in Firestore to store extra data (like role)
     await setDoc(doc(db, 'users', user.uid), {
       uid: user.uid,
       displayName: displayName,
       email: email,
-      role: role || 'Student', // Student, Teacher, Club, etc.
+      role: role || 'Student',
       createdAt: serverTimestamp(),
-      avatar: null, // Can be updated later
+      photoURL: null,
       bio: '',
       isPrivate: false
     });
@@ -57,17 +55,42 @@ export const AuthProvider = ({ children }) => {
 
   // Listen to Auth State Changes
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setCurrentUser(user);
-      setLoading(false); // Done loading once we know if they are logged in or not
+    let unsubscribeUserDoc = null;
+
+    const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setCurrentUser(user);
+        
+        // Listen to the user's Firestore document in real-time
+        const userDocRef = doc(db, 'users', user.uid);
+        unsubscribeUserDoc = onSnapshot(userDocRef, (docSnap) => {
+          if (docSnap.exists()) {
+            setUserData(docSnap.data());
+          } else {
+            setUserData(null);
+          }
+          setLoading(false);
+        });
+      } else {
+        setCurrentUser(null);
+        setUserData(null);
+        if (unsubscribeUserDoc) {
+          unsubscribeUserDoc();
+          unsubscribeUserDoc = null;
+        }
+        setLoading(false);
+      }
     });
 
-    // Cleanup subscription on unmount
-    return unsubscribe;
+    return () => {
+      unsubscribeAuth();
+      if (unsubscribeUserDoc) unsubscribeUserDoc();
+    };
   }, []);
 
   const value = {
     currentUser,
+    userData,
     signup,
     login,
     logout

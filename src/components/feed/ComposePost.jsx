@@ -43,7 +43,7 @@ const compressImage = (file) => {
 };
 
 const ComposePost = ({ onPostSuccess, isModal = false, onClose }) => {
-  const { currentUser } = useAuth();
+  const { currentUser, userData } = useAuth();
   const { isGhostMode } = useGhost();
   
   const [postText, setPostText] = useState('');
@@ -137,7 +137,7 @@ const ComposePost = ({ onPostSuccess, isModal = false, onClose }) => {
         content: postText.trim(),
         authorId: currentUser.uid,
         authorName: isGhostMode ? 'Ghost' : (currentUser.displayName || 'Campus Student'),
-        authorAvatar: isGhostMode ? null : (currentUser.photoURL || null),
+        authorAvatar: isGhostMode ? null : ((userData?.photoURL || currentUser?.photoURL) || null),
         type: isGhostMode ? 'ghost' : activeType, 
         createdAt: serverTimestamp(),
         likes: 0,
@@ -213,7 +213,7 @@ const ComposePost = ({ onPostSuccess, isModal = false, onClose }) => {
           <Ghost className="w-6 h-6" />
         ) : (
           currentUser?.photoURL ? (
-            <img src={currentUser.photoURL} alt="Me" className="w-full h-full object-cover" />
+            <img src={(userData?.photoURL || currentUser?.photoURL)} alt="Me" className="w-full h-full object-cover" />
           ) : (
             currentUser?.displayName?.charAt(0).toUpperCase() || 'U'
           )
