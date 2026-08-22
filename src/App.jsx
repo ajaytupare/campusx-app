@@ -7,6 +7,7 @@ import Register from './pages/auth/Register';
 import DashboardLayout from './components/layout/DashboardLayout';
 import Dashboard from './pages/Dashboard';
 import Discover from './pages/Discover';
+import DiscoverDetail from './pages/discover/DiscoverDetail';
 import Chat from './pages/chat/Chat';
 import UserProfile from './pages/profile/UserProfile';
 import Clubs from './pages/communities/Clubs';
@@ -30,6 +31,7 @@ function App() {
           }>
             <Route path="/home" element={<Dashboard />} />
             <Route path="/discover" element={<Discover />} />
+            <Route path="/discover/:type/:id" element={<DiscoverDetail />} />
             <Route path="/clubs" element={<Clubs />} />
             <Route path="/chat" element={<Chat />} />
             <Route path="/profile" element={<UserProfile />} />
