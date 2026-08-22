@@ -36,12 +36,7 @@ const DashboardLayout = () => {
       {/* Right Panel - Solid white, anchored to the right edge (Hidden on Discover and Chat routes) */}
       {!hideRightSidebar && (
         <aside className="hidden lg:block w-[320px] xl:w-[350px] shrink-0 bg-white border-l border-gray-200 h-screen sticky top-0 py-6 px-6 overflow-y-auto z-10">
-          <div className="flex flex-col gap-8">
-            <div className="bg-gray-50 rounded-xl p-8 border border-gray-100 text-center">
-              <h3 className="font-bold text-sm text-gray-900 mb-2">More Features</h3>
-              <p className="text-xs text-gray-500">Campus Directory & Events coming soon...</p>
-            </div>
-          </div>
+          {/* Content stripped cleanly until backend systems for Trending/Clubs are built */}
         </aside>
       )}
 
